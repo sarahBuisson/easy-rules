@@ -30,24 +30,25 @@ import org.jeasy.rules.core.DefaultRulesEngine
 import org.jeasy.rules.core.RulesEngineParameters
 
 object FizzBuzzWithEasyRules {
-    fun main(args: Array<String>) {
-        // create rules engine
-        val parameters = RulesEngineParameters().skipOnFirstAppliedRule(true)
-        val fizzBuzzEngine = DefaultRulesEngine(parameters)
 
-        // create rules
-        val rules = Rules()
-        rules.register(FizzRule())
-        rules.register(BuzzRule())
-        rules.register(FizzBuzzRule(FizzRule(), BuzzRule()))
-        rules.register(NonFizzBuzzRule())
+}
+fun main(args: Array<String>) {
+    // create rules engine
+    val parameters = RulesEngineParameters().skipOnFirstAppliedRule(true)
+    val fizzBuzzEngine = DefaultRulesEngine(parameters)
 
-        // fire rules
-        val facts = Facts()
-        for (i in 1..100) {
-            facts.put("number", i)
-            fizzBuzzEngine.fire(rules, facts)
-            System.out.println()
-        }
+    // create rules
+    val rules = Rules()
+    rules.register(FizzRule())
+    rules.register(BuzzRule())
+    rules.register(FizzBuzzRule(FizzRule(), BuzzRule()))
+    rules.register(NonFizzBuzzRule())
+
+    // fire rules
+    val facts = Facts()
+    for (i in 1..100) {
+        facts.put("number", i)
+        fizzBuzzEngine.fire(rules, facts)
+        System.out.println()
     }
 }

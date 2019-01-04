@@ -41,15 +41,16 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.functions
+import kotlin.reflect.full.memberProperties
 
 /**
  * Main class to create rule proxies from annotated objects.
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class RuleProxy private constructor(private val target: Any) : InvocationHandler {
+open class RuleProxy private constructor(private val target: Any) : InvocationHandler {
 
-    private val rulePriority: Int
+    protected val rulePriority: Int
         @Throws(Exception::class)
         get() {
             var priority = Rule.DEFAULT_PRIORITY
@@ -61,7 +62,7 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
 
             val methods = methods
             for (method in methods) {
-                if ((method.annotations.filter { it is Priority }.isNotEmpty())) {
+                if (method.findAnnotation<Priority>()!=null) {
                     priority = method.call(target) as Int
                     break
                 }
@@ -77,7 +78,7 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
             return rulePriority
         }
 
-    private val conditionMethod: KCallable<*>?
+    protected val conditionMethod: KCallable<*>?
         get() {
             val methods = methods
             for (method in methods) {
@@ -93,10 +94,9 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
             val methods = methods
             val actionMethodBeans = TreeSet<ActionMethodOrderBean>()
             for (method in methods) {
-                val actionAnnotation = method.annotations.filter { it == Action::class.java }.first()
+                val actionAnnotation = method.annotations.filter { it.annotationClass == Action::class }.firstOrNull()
                 if (actionAnnotation != null) {
-
-                    val order = 1;//actionAnnotation.order //TODO
+                    val order =  method.annotations.indexOf(actionAnnotation) //TODO
                     actionMethodBeans.add(ActionMethodOrderBean(method, order))
                 }
             }
@@ -114,20 +114,20 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
             return null
         }
 
-    private val methods: Collection<KCallable<*>>
+    protected val methods: Collection<KCallable<*>>
         get() = targetClass.members
 
-    private val ruleAnnotation: org.jeasy.rules.annotation.Rule
+    protected val ruleAnnotation: org.jeasy.rules.annotation.Rule
         get() = Utils.findAnnotation(org.jeasy.rules.annotation.Rule::class, targetClass)!!
 
-    private val ruleName: String
+    protected val ruleName: String
         get() {
             val rule = ruleAnnotation
             return if (rule.name.equals(Rule.DEFAULT_NAME)) targetClass.simpleName!! else rule.name
         }
 
-    private// Default description = "when " + conditionMethodName + " then " + comma separated actionMethodsNames
-    val ruleDescription: String?
+    protected// Default description = "when " + conditionMethodName + " then " + comma separated actionMethodsNames
+    val ruleDescription: String
         get() {
             val description = StringBuilder()
             appendConditionMethodName(description)
@@ -137,7 +137,7 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
             return if (rule.description.equals(Rule.DEFAULT_DESCRIPTION)) description.toString() else rule.description
         }
 
-    private val targetClass: KClass<*>
+    protected val targetClass: KClass<*>
         get() = target::class
 
     @Override
@@ -298,13 +298,8 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
     }
 
     private fun appendActionMethodsNames(description: StringBuilder) {
-        val iterator = actionMethodBeans.iterator()
-        while (iterator.hasNext()) {
-            description.append(iterator.next().method.name)
-            if (iterator.hasNext()) {
-                description.append(",")
-            }
-        }
+        description.append(actionMethodBeans.map { it.method.name }
+                .joinToString(","))
     }
 
     companion object {
@@ -327,26 +322,36 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
                 val annotation = Utils.findAnnotation<org.jeasy.rules.annotation.Rule>(org.jeasy.rules.annotation.Rule::class, rule::class as KClass<org.jeasy.rules.annotation.Rule>)
 
                 ruleDefinitionValidator.validateRuleDefinition(rule)
-                result = object : Rule, Comparable<Rule> {
+
+                result = object :RuleProxy(rule), Rule, Comparable<Rule>  {
 
                     override val name: String
-                        get() = annotation!!.name //To change initializer of created properties use File | Settings | File Templates.
+                        get() = this.ruleName//To change initializer of created properties use File | Settings | File Templates.
 
                     override val description: String
-                        get() = annotation!!.description//To change initializer of created properties use File | Settings | File Templates.
+                        get() = this.ruleDescription!!//To change initializer of created properties use File | Settings | File Templates.
 
                     override val priority: Int
-                        get() = annotation!!.priority //To change initializer of created properties use File | Settings | File Templates.
+                        get() = this.rulePriority //To change initializer of created properties use File | Settings | File Templates.
 
                     override fun evaluate(facts: Facts): Boolean {
-                        return rule::class.functions.filter { it.findAnnotation<Condition>() != null }
-                                .map { it.callBy(toArg(it, facts, rule)) as Boolean }
-                                .reduce { acc: Boolean, it: Boolean -> return acc && it }//To change body of created functions use File | Settings | File Templates.
+                        try {
+                            return rule::class.functions.filter { it.findAnnotation<Condition>() != null }
+                                    .map { it.callBy(toArg(it, facts, rule)) as Boolean }
+                                    .reduce { acc: Boolean, it: Boolean -> return acc && it }//To change body of created functions use File | Settings | File Templates.
+                        }catch (e:java.lang.Exception){
+                            e.printStackTrace()
+                            return false
+                        }
                     }
 
                     override fun execute(facts: Facts) {
+                        try {
                         rule::class.functions.filter { it.findAnnotation<Action>() != null }
                                 .map { it.callBy(toArg(it, facts, rule)) }//To change body of created functions use File | Settings | File Templates.
+                        }catch (e:java.lang.Exception){
+                            e.printStackTrace()
+                        }
                     }
 
                     override fun compareTo(other: Rule): Int {
@@ -358,6 +363,9 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
                             val otherName = other.name
                             return name.compareTo(otherName)
                         }
+                    }
+                    override fun toString():String{
+                        return rule.toString()
                     }
 
                 }

@@ -7,19 +7,21 @@ import org.jeasy.rules.core.DefaultRulesEngine
 
 object Launcher {
 
-    fun main(args: Array<String>) {
-        // define facts
-        val facts = Facts()
-        facts.put("rain", true)
 
-        // define rules
-        val weatherRule = WeatherRule()
-        val rules = Rules()
-        rules.register(weatherRule)
+}
 
-        // fire rules on known facts
-        val rulesEngine = DefaultRulesEngine()
-        rulesEngine.fire(rules, facts)
-    }
 
+fun main(args: Array<String>) {
+    // define facts
+    val facts = Facts()
+    facts.put("rain", true)
+
+    // define rules
+    val weatherRule = WeatherRule()
+    val rules = Rules()
+    rules.register(weatherRule)
+
+    // fire rules on known facts
+    val rulesEngine = DefaultRulesEngine()
+    rulesEngine.fire(rules, facts)
 }

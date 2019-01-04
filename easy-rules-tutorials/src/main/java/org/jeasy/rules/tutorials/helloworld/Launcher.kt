@@ -30,18 +30,19 @@ import org.jeasy.rules.core.DefaultRulesEngine
 
 object Launcher {
 
-    fun main(args: Array<String>) {
+}
 
-        // create facts
-        val facts = Facts()
+fun main(args: Array<String>) {
 
-        // create rules
-        val rules = Rules()
-        rules.register(HelloWorldRule())
+    // create facts
+    val facts = Facts()
 
-        // create a rules engine and fire rules on known facts
-        val rulesEngine = DefaultRulesEngine()
-        rulesEngine.fire(rules, facts)
+    // create rules
+    val rules = Rules()
+    rules.register(HelloWorldRule())
 
-    }
+    // create a rules engine and fire rules on known facts
+    val rulesEngine = DefaultRulesEngine()
+    rulesEngine.fire(rules, facts)
+
 }

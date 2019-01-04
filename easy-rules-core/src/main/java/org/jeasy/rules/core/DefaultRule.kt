@@ -29,10 +29,8 @@ import org.jeasy.rules.api.Facts
 
 import java.util.ArrayList
 
-internal class DefaultRule(name: String, description: String, priority: Int, condition: Condition, actions: List<Action>) : BasicRule(name, description, priority) {
-
-    private val condition = Condition.FALSE
-    private val actions = ArrayList<Action>()
+internal class DefaultRule(name: String, description: String, priority: Int, private val  condition: Condition = Condition.FALSE, private val actions: List<Action> = ArrayList<Action>()) :
+        BasicRule(name, description, priority) {
 
 
 

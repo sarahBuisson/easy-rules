@@ -65,15 +65,9 @@ class AnnotationInheritanceTest : AbstractTest() {
             isExecuted = true
         }
 
-        fun thsssen() {
-            isExecuted = true
-        }
     }
 
     open internal  class MyChildRule : MyBaseRule(){
-        fun thsssddden() {
-            isExecuted = true
-        }
 
     }
 }

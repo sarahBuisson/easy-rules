@@ -24,22 +24,33 @@
 package org.jeasy.rules.core
 
 import kotlin.reflect.KClass
+import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.superclasses
 
 internal object Utils {
 
     fun <A : Annotation> findAnnotation(targetAnnotation: KClass<A>, annotatedType: KClass<*>): A? {
 
-        var foundAnnotation = annotatedType.annotations.find { it.annotationClass == targetAnnotation }
-        //TODO what the fuck ?
-        if (foundAnnotation  == null) {
+        var foundAnnotation = annotatedType.annotations
+                .find {
+                    it.annotationClass==(targetAnnotation)
+                }
+        //        //TODO what the fuck ?
+        if (foundAnnotation == null) {
             for (superC in annotatedType.superclasses) {
-                val annotationType = superC.annotations.find { it.annotationClass == targetAnnotation }
+                val annotationType = superC.annotations.find { it.annotationClass==(targetAnnotation)  }
                 if (annotationType != null) {
                     foundAnnotation = annotationType
                     break
                 }
             }
+
+        }
+        if (foundAnnotation == null) {
+            foundAnnotation = annotatedType.annotations.flatMap { it.annotationClass.annotations }
+                    .find {
+                        it.annotationClass==(targetAnnotation)
+                    }
         }
         return foundAnnotation as A?
     }

@@ -137,6 +137,7 @@ class RuleDefinitionValidatorTest {
             ruleDefinitionValidator!!.validateRuleDefinition(AnnotatedRuleWithMultipleAnnotatedParametersAndOneParameterOfSubTypeFacts())
             ruleDefinitionValidator!!.validateRuleDefinition(AnnotatedRuleWithActionMethodHavingOneArgumentOfTypeFacts())
         } catch (throwable: Throwable) {
+            throwable.printStackTrace()
             Assertions.fail("Should not throw exception for valid rule definitions")
         }
 

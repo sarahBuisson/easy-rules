@@ -23,30 +23,36 @@
  */
 package org.jeasy.rules.core
 
+import com.nhaarman.mockitokotlin2.*
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
-import org.jeasy.rules.api.Rule
 import org.junit.Test
-import org.mockito.InOrder
-import org.mockito.Mock
 import org.mockito.Mockito
-
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
 
 class DefaultRuleTest : AbstractTest() {
 
-    @Mock
-    private lateinit var condition: Condition
-    @Mock
-    private lateinit var action1: Action
-    @Mock
-    private lateinit var action2: Action
+
+    private  var condition: Condition = mock<Condition> {
+
+    }
+
+    private  var action1: Action = mock<Action> {
+
+    }
+
+    private  var action2: Action = mock<Action> {
+
+    }
 
     @Test
     @Throws(Exception::class)
     fun WhenConditionIsTrue_ThenActionsShouldBeExecutedInOrder() {
         // given
-        `when`(condition!!.evaluate(facts)).thenReturn(true)
+        condition = mock<Condition> {
+            on { evaluate(facts) } doReturn true
+        }
+
         val rule = RuleBuilder()
                 .`when`(condition)
                 .then(action1)

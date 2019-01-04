@@ -34,7 +34,7 @@ import org.assertj.core.api.Assertions.assertThat
 class MVELActionTest {
 
     @Rule
-    val systemOutRule = SystemOutRule().enableLog()
+    public open val systemOutRule = SystemOutRule().enableLog()
 
     @Test
     @Throws(Exception::class)

@@ -29,13 +29,11 @@ class AnnotatedRuleWithMoreThanOnePriorityMethod {
     var isExecuted: Boolean = false
         private set
 
-    val priority: Int
-        @Priority
-        get() = 0
+    @Priority
+    fun get1(): Int = 0
 
-    val rulePriority: Int
-        @Priority
-        get() = 1
+    @Priority
+    fun get2(): Int = 1
 
     @Condition
     fun `when`(): Boolean {

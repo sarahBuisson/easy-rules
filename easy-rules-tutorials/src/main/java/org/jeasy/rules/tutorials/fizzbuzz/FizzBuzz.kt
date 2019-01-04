@@ -27,19 +27,21 @@ package org.jeasy.rules.tutorials.fizzbuzz
  * source: http://examples.oreilly.com/jenut/FizzBuzz.java
  */
 object FizzBuzz {                      // Everything in Java is a class
-    fun main(args: Array<String>) {   // Every program must have main()
-        for (i in 1..100) {                    // count from 1 to 100
-            if (i % 5 == 0 && i % 7 == 0)
-            // A multiple of both?
-                System.out.print("fizzbuzz")
-            else if (i % 5 == 0)
-                System.out.print("fizz") // else a multiple of 5?
-            else if (i % 7 == 0)
-                System.out.print("buzz") // else a multiple of 7?
-            else
-                System.out.print(i)                        // else just print it
-            System.out.println()
-        }
+
+}
+
+fun main(args: Array<String>) {   // Every program must have main()
+    for (i in 1..100) {                    // count from 1 to 100
+        if (i % 5 == 0 && i % 7 == 0)
+        // A multiple of both?
+            System.out.print("fizzbuzz")
+        else if (i % 5 == 0)
+            System.out.print("fizz") // else a multiple of 5?
+        else if (i % 7 == 0)
+            System.out.print("buzz") // else a multiple of 7?
+        else
+            System.out.print(i)                        // else just print it
         System.out.println()
     }
+    System.out.println()
 }

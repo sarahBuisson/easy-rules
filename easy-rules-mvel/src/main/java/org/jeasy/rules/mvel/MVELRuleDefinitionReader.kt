@@ -52,7 +52,7 @@ internal class MVELRuleDefinitionReader {
     private fun createRuleDefinitionFrom(map: Map<String, Object>): MVELRuleDefinition {
         val ruleDefinition = MVELRuleDefinition()
 
-        val name = map["name"] as String
+        val name = map["name"] as String?
         ruleDefinition.name = (name ?: Rule.DEFAULT_NAME)
 
         val description = map["description"] as String?

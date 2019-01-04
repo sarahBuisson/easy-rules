@@ -24,6 +24,7 @@
 package org.jeasy.rules.annotation
 
 import org.jeasy.rules.api.Rule.Companion.DEFAULT_NAME
+import org.jeasy.rules.api.Rule.Companion.DEFAULT_PRIORITY
 import java.lang.annotation.*
 
 /**
@@ -50,4 +51,4 @@ annotation class Rule(
          * The rule priority.
          * @return The rule priority
          */
-        val priority: Int = 1) //TODO
+        val priority: Int = Integer.MAX_VALUE - 1) //TODO

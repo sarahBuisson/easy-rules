@@ -52,13 +52,7 @@ open class BasicRule
                            */
                           override var priority: Int = Rule.DEFAULT_PRIORITY) : Rule {
 
-    /**
-     * Rule name.
-     */
 
-    init {
-        this.name = name
-    }
 
     /**
      * {@inheritDoc}

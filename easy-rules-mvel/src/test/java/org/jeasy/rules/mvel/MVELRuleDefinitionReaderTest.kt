@@ -106,7 +106,7 @@ class MVELRuleDefinitionReaderTest {
         // expected exception
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = TypeCastException::class)
     @Throws(Exception::class)
     fun testInvalidRuleDefinitionReading_whenNoActions() {
         // given

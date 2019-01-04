@@ -35,32 +35,34 @@ import java.io.FileReader
 
 object Launcher {
 
-    @Throws(FileNotFoundException::class)
-    fun main(args: Array<String>) {
-        //create a person instance (fact)
-        val tom = Person("Tom", 14)
-        val facts = Facts()
-        facts.put("person", tom)
 
-        // create rules
-        val ageRule = MVELRule()
-                .name("age rule")
-                .description("Check if person's age is > 18 and marks the person as adult")
-                .priority(1)
-                .`when`("person.age > 18")
-                .then("person.setAdult(true);")
-        val alcoholRule = MVELRuleFactory.createRuleFrom(FileReader("src/main/java/org/jeasy/rules/tutorials/shop/alcohol-rule.yml"))
+}
 
-        // create a rule set
-        val rules = Rules()
-        rules.register(ageRule)
-        rules.register(alcoholRule)
 
-        //create a default rules engine and fire rules on known facts
-        val rulesEngine = DefaultRulesEngine()
+@Throws(FileNotFoundException::class)
+fun main(args: Array<String>) {
+    //create a person instance (fact)
+    val tom = Person("Tom", 14)
+    val facts = Facts()
+    facts.put("person", tom)
 
-        System.out.println("Tom: Hi! can I have some Vodka please?")
-        rulesEngine.fire(rules, facts)
-    }
+    // create rules
+    val ageRule = MVELRule()
+            .name("age rule")
+            .description("Check if person's age is > 18 and marks the person as adult")
+            .priority(1)
+            .`when`("person.age > 18")
+            .then("person.setAdult(true);")
+    val alcoholRule = MVELRuleFactory.createRuleFrom(FileReader("src/main/java/org/jeasy/rules/tutorials/shop/alcohol-rule.yml"))
 
+    // create a rule set
+    val rules = Rules()
+    rules.register(ageRule)
+    rules.register(alcoholRule)
+
+    //create a default rules engine and fire rules on known facts
+    val rulesEngine = DefaultRulesEngine()
+
+    System.out.println("Tom: Hi! can I have some Vodka please?")
+    rulesEngine.fire(rules, facts)
 }

@@ -28,11 +28,8 @@ import org.jeasy.rules.annotation.AnnotatedRuleWithMetaRuleAnnotation
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Priority
 import org.jeasy.rules.api.Rule
+import org.junit.Assert.*
 import org.junit.Test
-
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNotNull
 
 class RuleProxyTest {
 
@@ -173,9 +170,8 @@ class RuleProxyTest {
         @org.jeasy.rules.annotation.Rule
         class MyRule {
 
-            val priority: Int
                 @Priority
-                get() = 2
+                fun get(): Int = 2
 
             @Condition
             fun `when`(): Boolean {
@@ -198,9 +194,9 @@ class RuleProxyTest {
         @org.jeasy.rules.annotation.Rule(priority = 1)
         class MyRule {
 
-            val priority: Int
-                @Priority
-                get() = 2
+
+            @Priority
+            public fun getPriority():Int = 2
 
             @Condition
             fun `when`(): Boolean {
