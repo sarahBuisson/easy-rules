@@ -41,7 +41,7 @@ class RuleBuilder {
     private var priority = Rule.DEFAULT_PRIORITY
 
     private var condition = Condition.FALSE
-    private val actions = ArrayList<Action>()
+    private val actions = mutableListOf<Action>()
 
     /**
      * Set rule name.

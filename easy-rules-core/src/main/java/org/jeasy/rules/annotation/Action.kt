@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.annotation
 
-import java.lang.annotation.*
 
 /**
  * Annotation to mark a method as a rule action.
@@ -33,7 +32,6 @@ import java.lang.annotation.*
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 
-@Inherited
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class Action(

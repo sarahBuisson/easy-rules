@@ -24,8 +24,6 @@
 package org.jeasy.rules.core
 
 import org.jeasy.rules.annotation.*
-import java.lang.String.format
-import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
@@ -49,36 +47,36 @@ internal class RuleDefinitionValidator {
 
     private fun checkRuleClass(rule: Any) {
         if (!isRuleClassWellDefined(rule)) {
-            throw IllegalArgumentException(format("Rule '%s' is not annotated with '%s'", rule::class.qualifiedName, Rule::class.qualifiedName))
+            throw IllegalArgumentException(String.format("Rule '%s' is not annotated with '%s'", rule::class.qualifiedName, Rule::class.qualifiedName))
         }
     }
 
     private fun checkConditionMethod(rule: Any) {
         val conditionMethods = getMethodsAnnotatedWith(Condition::class, rule)
         if (conditionMethods.isEmpty()) {
-            throw IllegalArgumentException(format("Rule '%s' must have a public method annotated with '%s'", rule::class.qualifiedName, Condition::class.qualifiedName))
+            throw IllegalArgumentException(String.format("Rule '%s' must have a public method annotated with '%s'", rule::class.qualifiedName, Condition::class.qualifiedName))
         }
 
         if (conditionMethods.size > 1) {
-            throw IllegalArgumentException(format("Rule '%s' must have exactly one method annotated with '%s'", rule::class.qualifiedName, Condition::class.qualifiedName))
+            throw IllegalArgumentException(String.format("Rule '%s' must have exactly one method annotated with '%s'", rule::class.qualifiedName, Condition::class.qualifiedName))
         }
 
         val conditionMethod = conditionMethods[0]
 
         if (!isConditionMethodWellDefined(conditionMethod)) {
-            throw IllegalArgumentException(format("Condition method '%s' defined in rule '%s' must be public, may have parameters annotated with @Fact (and/or exactly one parameter of type or extending Facts) and return boolean type.", conditionMethod, rule::class.qualifiedName))
+            throw IllegalArgumentException(String.format("Condition method '%s' defined in rule '%s' must be public, may have parameters annotated with @Fact (and/or exactly one parameter of type or extending Facts) and return boolean type.", conditionMethod, rule::class.qualifiedName))
         }
     }
 
     private fun checkActionMethods(rule: Any) {
         val actionMethods = getMethodsAnnotatedWith(Action::class, rule)
         if (actionMethods.isEmpty()) {
-            throw IllegalArgumentException(format("Rule '%s' must have at least one public method annotated with '%s'", rule::class.qualifiedName, Action::class.qualifiedName))
+            throw IllegalArgumentException(String.format("Rule '%s' must have at least one public method annotated with '%s'", rule::class.qualifiedName, Action::class.qualifiedName))
         }
 
         for (actionMethod in actionMethods) {
             if (!isActionMethodWellDefined(actionMethod)) {
-                throw IllegalArgumentException(format("Action method '%s' defined in rule '%s' must be public, must return void type and may have parameters annotated with @Fact (and/or exactly one parameter of type or extending Facts).", actionMethod, rule::class.qualifiedName))
+                throw IllegalArgumentException(String.format("Action method '%s' defined in rule '%s' must be public, must return void type and may have parameters annotated with @Fact (and/or exactly one parameter of type or extending Facts).", actionMethod, rule::class.qualifiedName))
             }
         }
     }
@@ -92,13 +90,13 @@ internal class RuleDefinitionValidator {
         }
 
         if (priorityMethods.size > 1) {
-            throw IllegalArgumentException(format("Rule '%s' must have exactly one method annotated with '%s'", rule::class.qualifiedName, Priority::class.qualifiedName))
+            throw IllegalArgumentException(String.format("Rule '%s' must have exactly one method annotated with '%s'", rule::class.qualifiedName, Priority::class.qualifiedName))
         }
 
         val priorityMethod = priorityMethods[0]
 
         if (!isPriorityMethodWellDefined(priorityMethod)) {
-            throw IllegalArgumentException(format("Priority method '%s' defined in rule '%s' must be public, have no parameters and return integer type.", priorityMethod, rule::class.qualifiedName))
+            throw IllegalArgumentException(String.format("Priority method '%s' defined in rule '%s' must be public, have no parameters and return integer type.", priorityMethod, rule::class.qualifiedName))
         }
     }
 

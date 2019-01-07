@@ -23,13 +23,13 @@
  */
 package org.jeasy.rules.core
 
+import mu.KotlinLogging
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Fact
 import org.jeasy.rules.annotation.Priority
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
-import org.slf4j.LoggerFactory
 import java.lang.String.format
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.InvocationTargetException
@@ -306,7 +306,7 @@ open class RuleProxy private constructor(private val target: Any) : InvocationHa
 
         private val ruleDefinitionValidator = RuleDefinitionValidator()
 
-        private val LOGGER = LoggerFactory.getLogger(RuleProxy::class.java)
+        private val LOGGER = KotlinLogging.logger {}
 
         /**
          * Makes the rule object implement the [Rule] interface.

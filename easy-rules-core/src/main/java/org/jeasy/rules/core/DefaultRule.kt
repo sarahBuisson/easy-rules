@@ -27,9 +27,8 @@ import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
 import org.jeasy.rules.api.Facts
 
-import java.util.ArrayList
 
-internal class DefaultRule(name: String, description: String, priority: Int, private val  condition: Condition = Condition.FALSE, private val actions: List<Action> = ArrayList<Action>()) :
+internal class DefaultRule(name: String, description: String, priority: Int, private val  condition: Condition = Condition.FALSE, private val actions: List<Action> = mutableListOf<Action>()) :
         BasicRule(name, description, priority) {
 
 

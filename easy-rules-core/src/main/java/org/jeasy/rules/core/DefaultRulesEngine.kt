@@ -23,6 +23,7 @@
  */
 package org.jeasy.rules.core
 
+import mu.KotlinLogging
 import java.util.ArrayList
 import java.util.HashMap
 import org.jeasy.rules.api.Facts
@@ -31,8 +32,6 @@ import org.jeasy.rules.api.RuleListener
 import org.jeasy.rules.api.RulesEngineListener
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.api.RulesEngine
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 /**
  * Default [RulesEngine] implementation.
@@ -214,7 +213,7 @@ class DefaultRulesEngine
 
     companion object {
 
-        private val LOGGER = LoggerFactory.getLogger(DefaultRuleListener::class.java)
+        private val LOGGER = KotlinLogging.logger {}
     }
 }
 /**

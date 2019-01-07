@@ -23,12 +23,10 @@
  */
 package org.jeasy.rules.core
 
+import mu.KotlinLogging
 import org.jeasy.rules.api.Facts
-import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.api.RulesEngineListener
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 internal class DefaultRulesEngineListener(private val parameters: RulesEngineParameters) : RulesEngineListener {
 
@@ -71,6 +69,6 @@ internal class DefaultRulesEngineListener(private val parameters: RulesEnginePar
 
     companion object {
 
-        private val LOGGER = LoggerFactory.getLogger(DefaultRulesEngineListener::class.java)
+        private val LOGGER =  KotlinLogging.logger {}
     }
 }

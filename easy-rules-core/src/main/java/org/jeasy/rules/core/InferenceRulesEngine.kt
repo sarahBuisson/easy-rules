@@ -23,8 +23,8 @@
  */
 package org.jeasy.rules.core
 
+import mu.KotlinLogging
 import org.jeasy.rules.api.*
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import java.util.*
@@ -125,7 +125,7 @@ class InferenceRulesEngine
 
     companion object {
 
-        private val LOGGER = LoggerFactory.getLogger(InferenceRulesEngine::class.java)
+        private val LOGGER = KotlinLogging.logger {}
     }
 }
 /**

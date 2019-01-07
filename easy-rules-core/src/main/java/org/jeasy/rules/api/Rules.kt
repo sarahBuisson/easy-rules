@@ -25,7 +25,6 @@ package org.jeasy.rules.api
 
 import org.jeasy.rules.core.RuleProxy
 
-import java.util.*
 
 /**
  * This class encapsulates a set of rules and represents a rules namespace.
@@ -35,7 +34,7 @@ import java.util.*
  */
 class Rules : Iterable<Rule> {
 
-    private var rules=TreeSet<Rule>();
+    private var rules=mutableSetOf<Rule>();
 
     /**
      * Check if the rule set is empty.
@@ -51,7 +50,7 @@ class Rules : Iterable<Rule> {
      * @param rules to register
      */
     constructor(rules: Set<Rule>) {
-        this.rules = TreeSet(rules)
+        this.rules = mutableSetOf<Rule>().plus(rules).toMutableSet()
     }
 
     /**
@@ -75,7 +74,6 @@ class Rules : Iterable<Rule> {
      * @param rule to register
      */
     fun register(rule: Any) {
-        Objects.requireNonNull(rule)
         rules.add(RuleProxy.asRule(rule))
     }
 
@@ -85,7 +83,6 @@ class Rules : Iterable<Rule> {
      * @param rule to unregister
      */
     fun unregister(rule: Any) {
-        Objects.requireNonNull(rule)
         rules.remove(RuleProxy.asRule(rule))
     }
 
@@ -95,7 +92,6 @@ class Rules : Iterable<Rule> {
      * @param ruleName the name of the rule to unregister
      */
     fun unregister(ruleName: String) {
-        Objects.requireNonNull(ruleName)
         val rule = findRuleByName(ruleName)
         if (rule != null) {
             unregister(rule)
