@@ -23,10 +23,11 @@
  */
 package org.jeasy.rules.core
 
+import io.mockk.Called
+import io.mockk.every
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-
-import org.mockito.Mockito.*
 
 class SkipOnFirstFailedRuleTest : AbstractTest() {
 
@@ -42,10 +43,10 @@ class SkipOnFirstFailedRuleTest : AbstractTest() {
     @Throws(Exception::class)
     fun testSkipOnFirstFailedRule() {
         // Given
-        `when`(rule1.evaluate(facts)).thenReturn(true)
-        `when`(rule2.compareTo(rule1)).thenReturn(1)
+        every { rule1.evaluate(any()) } returns (true)
+        every { rule2.compareTo(rule1) } returns (1)
         val exception = Exception("fatal error!")
-        doThrow(exception).`when`(rule1).execute(facts)
+        every { rule1.execute(facts) }.throws(exception)
         rules.register(rule1)
         rules.register(rule2)
 
@@ -54,9 +55,10 @@ class SkipOnFirstFailedRuleTest : AbstractTest() {
 
         // Then
         //Rule 1 should be executed
-        verify(rule1).execute(facts)
+        verify { rule1.execute(facts) }
         //Rule 2 should be skipped since Rule 1 has failed
-        verify(rule2, never()).execute(facts)
+        verify(atMost = 0, atLeast = 0) { rule2.execute(facts)  }
     }
-
 }
+
+

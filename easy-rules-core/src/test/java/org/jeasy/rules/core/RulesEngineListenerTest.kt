@@ -23,20 +23,20 @@
  */
 package org.jeasy.rules.core
 
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.verifyOrder
 import org.jeasy.rules.api.RulesEngineListener
 import org.junit.Before
 import org.junit.Test
-import org.mockito.InOrder
-import org.mockito.Mock
-
 import java.util.Arrays.asList
-import org.mockito.Mockito.*
+
 
 class RulesEngineListenerTest : AbstractTest() {
 
-    @Mock
+    @MockK
     private lateinit var rulesEngineListener1: RulesEngineListener
-    @Mock
+    @MockK
     private lateinit var rulesEngineListener2: RulesEngineListener
 
     @Before
@@ -50,39 +50,62 @@ class RulesEngineListenerTest : AbstractTest() {
     @Throws(Exception::class)
     fun rulesEngineListenersShouldBeCalledInOrderWhenFiringRules() {
         // Given
-        `when`(rule1.evaluate(facts)).thenReturn(true)
+        every {rule1.evaluate(facts)} returns (true)
         rules.register(rule1)
 
         // When
         rulesEngine.fire(rules, facts)
 
         // Then
+
+        //TODO : order
+        /*
         val inOrder = inOrder(rule1, fact1, fact2, rulesEngineListener1, rulesEngineListener2)
-        inOrder.verify(rulesEngineListener1).beforeEvaluate(rules, facts)
-        inOrder.verify(rulesEngineListener2).beforeEvaluate(rules, facts)
-        inOrder.verify(rule1).evaluate(facts)
-        inOrder.verify(rule1).execute(facts)
-        inOrder.verify(rulesEngineListener1).afterExecute(rules, facts)
-        inOrder.verify(rulesEngineListener2).afterExecute(rules, facts)
+        inOrder.verify {rulesEngineListener1).beforeEvaluate(rules, facts)
+        inOrder.verify {rulesEngineListener2).beforeEvaluate(rules, facts)
+        inOrder.verify {rule1).evaluate(facts)
+        inOrder.verify {rule1).execute(facts)
+        inOrder.verify {rulesEngineListener1).afterExecute(rules, facts)
+        inOrder.verify {rulesEngineListener2).afterExecute(rules, facts)*/
+        verifyOrder {
+            rulesEngineListener1.beforeEvaluate(rules, facts)
+            rulesEngineListener2.beforeEvaluate(rules, facts)
+            rule1.evaluate(facts)
+            rule1.execute(facts)
+            rulesEngineListener1.afterExecute(rules, facts)
+            rulesEngineListener2.afterExecute(rules, facts)
+        }
     }
 
     @Test
     @Throws(Exception::class)
     fun rulesEngineListenersShouldBeCalledInOrderWhenCheckingRules() {
         // Given
-        `when`(rule1.evaluate(facts)).thenReturn(true)
+        every { rule1.evaluate(facts) } returns (true)
         rules.register(rule1)
 
         // When
         rulesEngine.check(rules, facts)
 
         // Then
+        /*
         val inOrder = inOrder(rule1, fact1, fact2, rulesEngineListener1, rulesEngineListener2)
-        inOrder.verify(rulesEngineListener1).beforeEvaluate(rules, facts)
-        inOrder.verify(rulesEngineListener2).beforeEvaluate(rules, facts)
-        inOrder.verify(rule1).evaluate(facts)
-        inOrder.verify(rulesEngineListener1).afterExecute(rules, facts)
-        inOrder.verify(rulesEngineListener2).afterExecute(rules, facts)
+        inOrder.verify {rulesEngineListener1).beforeEvaluate(rules, facts)
+        inOrder.verify {rulesEngineListener2).beforeEvaluate(rules, facts)
+        inOrder.verify {rule1).evaluate(facts)
+        inOrder.verify {rulesEngineListener1).afterExecute(rules, facts)
+        inOrder.verify {rulesEngineListener2).afterExecute(rules, facts)
+
+        */
+        verifyOrder {
+
+            rulesEngineListener1.beforeEvaluate(rules, facts)
+            rulesEngineListener2.beforeEvaluate(rules, facts)
+            rule1.evaluate(facts)
+            rulesEngineListener1.afterExecute(rules, facts)
+            rulesEngineListener2.afterExecute(rules, facts)
+        }
+
     }
 
 }

@@ -24,10 +24,11 @@
 package org.jeasy.rules.core
 
 
-import org.assertj.core.api.Assertions
+
 import org.jeasy.rules.annotation.*
 import org.junit.Before
 import org.junit.Test
+import kotlin.test.fail
 
 class RuleDefinitionValidatorTest {
 
@@ -138,7 +139,7 @@ class RuleDefinitionValidatorTest {
             ruleDefinitionValidator!!.validateRuleDefinition(AnnotatedRuleWithActionMethodHavingOneArgumentOfTypeFacts())
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
-            Assertions.fail("Should not throw exception for valid rule definitions")
+            fail("Should not throw exception for valid rule definitions")
         }
 
     }

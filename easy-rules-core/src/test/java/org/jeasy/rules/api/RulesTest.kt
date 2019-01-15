@@ -26,22 +26,26 @@ package org.jeasy.rules.api
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.core.BasicRule
-import org.junit.Test
-
+import org.jeasy.rules.core.RuleProxy
 import java.util.HashSet
-
-import org.assertj.core.api.Assertions.assertThat
+import kotlin.test.*
 
 class RulesTest {
 
     private var rules = Rules()
+
+
+    @BeforeTest
+    fun setup(){
+        rules = Rules()
+    }
 
     @Test
     @Throws(Exception::class)
     fun register() {
         rules.register(DummyRule())
 
-        assertThat(rules).hasSize(1)
+        assertEquals(rules.size,1)
     }
 
     @Test
@@ -49,13 +53,13 @@ class RulesTest {
     fun rulesMustHaveUniqueName() {
         val r1 = BasicRule("rule")
         val r2 = BasicRule("rule")
-        val ruleSet = HashSet<Rule>()
+        val ruleSet = mutableSetOf<Rule>()
         ruleSet.add(r1)
         ruleSet.add(r2)
 
         rules = Rules(ruleSet)
 
-        assertThat(rules).hasSize(1)
+        assertEquals(rules.size,1)
     }
 
     @Test
@@ -65,7 +69,7 @@ class RulesTest {
         rules.register(rule)
         rules.unregister(rule)
 
-        assertThat(rules).isEmpty()
+        assertTrue(rules.isEmpty)
     }
 
     @Test
@@ -73,14 +77,14 @@ class RulesTest {
     fun unregisterByName() {
         val r1 = BasicRule("rule1")
         val r2 = BasicRule("rule2")
-        val ruleSet = HashSet<Rule>()
+        val ruleSet = mutableSetOf<Rule>()
         ruleSet.add(r1)
         ruleSet.add(r2)
 
         rules = Rules(ruleSet)
         rules.unregister("rule2")
-
-        assertThat(rules).hasSize(1).containsExactly(r1)
+        assertEquals(rules.size,1)
+        assertTrue(rules.contains(r1))
     }
 
     @Test
@@ -93,13 +97,15 @@ class RulesTest {
         rules = Rules(ruleSet)
         rules.unregister("rule2")
 
-        assertThat(rules).hasSize(1).containsExactly(r1)
+
+        assertEquals(rules.size,1)
+        assertTrue(rules.contains(r1))
     }
 
     @Test
     @Throws(Exception::class)
     fun isEmpty() {
-        assertThat(rules.isEmpty).isTrue()
+        assertTrue (rules.isEmpty)
     }
 
     @Test
@@ -108,7 +114,7 @@ class RulesTest {
         rules.register(DummyRule())
         rules.clear()
 
-        assertThat(rules).isEmpty()
+        assertTrue (rules.isEmpty)
     }
 
     @Test
@@ -122,7 +128,9 @@ class RulesTest {
         rules.register(r1)
         rules.register(r2)
 
-        assertThat(rules).startsWith(r1).endsWith(r2)
+        assertEquals(rules[0],r1)
+        assertEquals<Any>(rules[1].name, "DummyRule")//r3
+        assertEquals(rules[2],r2)
     }
     /* //TODO: useless
         @Test(expected = NullPointerException::class)

@@ -23,7 +23,10 @@
  */
 package org.jeasy.rules.support
 
-import org.assertj.core.api.Assertions.assertThat
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Priority
@@ -33,21 +36,18 @@ import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.DefaultRulesEngine
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mock
-import org.mockito.Mockito.*
-import org.mockito.junit.MockitoJUnitRunner
 import java.lang.reflect.InvocationTargetException
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
-@RunWith(MockitoJUnitRunner::class)
 class ConditionalRuleGroupTest {
 
-    @Mock
+    @MockK
     lateinit var rule1: Rule
-    @Mock
+    @MockK
     lateinit var rule2: Rule
-    @Mock
+    @MockK
     lateinit var conditionalRule: Rule
 
     private val facts = Facts()
@@ -59,14 +59,15 @@ class ConditionalRuleGroupTest {
 
     @Before
     fun setUp() {
-        `when`(rule1!!.evaluate(facts)).thenReturn(false)
-        `when`(rule1!!.priority).thenReturn(2)
-        `when`(rule2!!.evaluate(facts)).thenReturn(true)
-        `when`(rule2!!.priority).thenReturn(3)
-        `when`(rule2!!.compareTo(rule1)).thenReturn(1)
-        `when`(conditionalRule!!.compareTo(rule1)).thenReturn(1)
-        `when`(conditionalRule!!.compareTo(rule2)).thenReturn(1)
-        `when`(conditionalRule!!.priority).thenReturn(100)
+        MockKAnnotations.init(this, relaxed = true)
+        every { rule1!!.evaluate(facts) } returns (false)
+        every { rule1!!.priority } returns (2)
+        every { rule2!!.evaluate(facts) } returns (true)
+        every { rule2!!.priority } returns (3)
+        every { rule2!!.compareTo(rule1) } returns (1)
+        every { conditionalRule!!.compareTo(rule1) } returns (1)
+        every { conditionalRule!!.compareTo(rule2) } returns (1)
+        every { conditionalRule!!.priority } returns (100)
         conditionalRuleGroup = ConditionalRuleGroup()
     }
 
@@ -75,7 +76,7 @@ class ConditionalRuleGroupTest {
     @Throws(Exception::class)
     fun rulesMustNotBeExecutedIfConditionalRuleEvaluatesToFalse() {
         // Given
-        `when`(conditionalRule!!.evaluate(facts)).thenReturn(false)
+        every { conditionalRule!!.evaluate(facts) } returns (false)
         conditionalRuleGroup!!.addRule(rule1)
         conditionalRuleGroup!!.addRule(rule2)
         conditionalRuleGroup!!.addRule(conditionalRule)
@@ -91,18 +92,18 @@ class ConditionalRuleGroupTest {
          */
 
         // primaryRule should not be executed
-        verify(conditionalRule, never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { conditionalRule.execute(facts) }
         //Rule 1 should not be executed
-        verify(rule1, never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { rule1.execute(facts) }
         //Rule 2 should not be executed
-        verify(rule2, never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { rule2.execute(facts) }
     }
 
     @Test
     @Throws(Exception::class)
     fun rulesMustBeExecutedForThoseThatEvaluateToTrueIfConditionalRuleEvaluatesToTrue() {
         // Given
-        `when`(conditionalRule!!.evaluate(facts)).thenReturn(true)
+        every { conditionalRule!!.evaluate(facts) } returns (true)
         conditionalRuleGroup!!.addRule(rule1)
         conditionalRuleGroup!!.addRule(rule2)
         conditionalRuleGroup!!.addRule(conditionalRule)
@@ -118,18 +119,18 @@ class ConditionalRuleGroupTest {
          */
 
         // primaryRule should be executed
-        verify(conditionalRule, times(1)).execute(facts)
+        verify(atLeast = 1, atMost = 1) { conditionalRule.execute(facts) }
         //Rule 1 should not be executed
-        verify(rule1, never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { rule1.execute(facts) }
         //Rule 2 should be executed
-        verify(rule2, times(1)).execute(facts)
+        verify(atLeast = 1, atMost = 1) { rule2.execute(facts) }
     }
 
     @Test
     @Throws(Exception::class)
     fun whenARuleIsRemoved_thenItShouldNotBeEvaluated() {
         // Given
-        `when`(conditionalRule!!.evaluate(facts)).thenReturn(true)
+        every { conditionalRule!!.evaluate(facts) } returns (true)
         conditionalRuleGroup!!.addRule(rule1)
         conditionalRuleGroup!!.addRule(rule2)
         conditionalRuleGroup!!.addRule(conditionalRule)
@@ -141,13 +142,13 @@ class ConditionalRuleGroupTest {
 
         // Then
         // primaryRule should be executed
-        verify(conditionalRule, times(1)).execute(facts)
+        verify(atLeast = 1, atMost = 1) { conditionalRule.execute(facts) }
         //Rule 1 should not be executed
-        verify(rule1, times(1)).evaluate(facts)
-        verify(rule1, never()).execute(facts)
+        verify(atLeast = 1, atMost = 1) { rule1.evaluate(facts) }
+        verify(atLeast = 0, atMost = 0) { rule1.execute(facts) }
         // Rule 2 should not be evaluated nor executed
-        verify(rule2, never()).evaluate(facts)
-        verify(rule2, never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { rule2.evaluate(facts) }
+        verify(atLeast = 0, atMost = 0) { rule2.execute(facts) }
 
     }
 
@@ -155,11 +156,11 @@ class ConditionalRuleGroupTest {
     @Throws(Exception::class)
     fun testCompositeRuleWithAnnotatedComposingRules() {
         // Given
-        `when`(conditionalRule!!.evaluate(facts)).thenReturn(true)
+        every { conditionalRule!!.evaluate(facts) } returns (true)
         val rule = MyRule()
         conditionalRuleGroup = ConditionalRuleGroup("myConditinalRule")
         conditionalRuleGroup!!.addRule(rule)
-        `when`(conditionalRule!!.compareTo(any(Rule::class.java))).thenReturn(1)
+        every { conditionalRule!!.compareTo(ofType(Rule::class)) } returns (1)
         conditionalRuleGroup!!.addRule(conditionalRule)
         rules.register(conditionalRuleGroup)
 
@@ -167,22 +168,22 @@ class ConditionalRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        verify(conditionalRule, times(1)).execute(facts)
-        assertThat(rule.isExecuted).isTrue()
+        verify(atMost = 1, atLeast = 1) { conditionalRule.execute(facts) }
+        assertTrue(rule.isExecuted)
     }
 
     @Test
     @Throws(Exception::class)
     fun whenAnnotatedRuleIsRemoved_thenItsProxyShouldBeRetrieved() {
         // Given
-        `when`(conditionalRule!!.evaluate(facts)).thenReturn(true)
+        every { conditionalRule!!.evaluate(facts) } returns (true)
         val rule = MyRule()
         val annotatedRule = MyAnnotatedRule()
         conditionalRuleGroup = ConditionalRuleGroup("myCompositeRule", "composite rule with mixed types of rules")
         conditionalRuleGroup!!.addRule(rule)
         conditionalRuleGroup!!.addRule(annotatedRule)
         conditionalRuleGroup!!.removeRule(annotatedRule)
-        `when`(conditionalRule!!.compareTo(any(Rule::class.java))).thenReturn(1)
+        every { conditionalRule!!.compareTo(ofType(Rule::class)) } returns (1)
         conditionalRuleGroup!!.addRule(conditionalRule)
         rules.register(conditionalRuleGroup)
 
@@ -190,9 +191,9 @@ class ConditionalRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        verify(conditionalRule, times(1)).execute(facts)
-        assertThat(rule.isExecuted).isTrue()
-        assertThat(annotatedRule.isExecuted).isFalse()
+        verify(atMost = 1) { conditionalRule.execute(facts) }
+        assertTrue(rule.isExecuted)
+        assertFalse(annotatedRule.isExecuted)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -212,7 +213,7 @@ class ConditionalRuleGroupTest {
         conditionalRuleGroup!!.addRule(MyRule())
         rules.register(conditionalRuleGroup)
         rulesEngine.fire(rules, facts)
-        assertThat(rule1.isExecuted).isTrue()
+        assertTrue(rule1.isExecuted)
     }
 
     @SuppressWarnings("unchecked")
@@ -220,13 +221,13 @@ class ConditionalRuleGroupTest {
     @Throws(NoSuchMethodException::class, InvocationTargetException::class, IllegalAccessException::class)
     fun aRuleWithoutPriorityHasAHighPriororty() {
         val rule1 = MyOtherRule(3)
-        conditionalRuleGroup!!.addRule(rule1)
-        conditionalRuleGroup!!.addRule(UnprioritizedRule())
-        val m = conditionalRuleGroup!!::class.members.find { it.name=="sortRules"}
+        conditionalRuleGroup.addRule(rule1)
+        conditionalRuleGroup.addRule(UnprioritizedRule())
+        val m = conditionalRuleGroup::class.members.find { it.name == "sortRules" }
         //m.setAccessible(true)
         val sorted = m!!.call(conditionalRuleGroup) as List<Rule>
-        assertThat(sorted[0].priority).isEqualTo(Integer.MAX_VALUE - 1)
-        assertThat(sorted[1].priority).isEqualTo(3)
+        assertEquals(sorted[0].priority, Integer.MAX_VALUE - 1)
+        assertEquals(sorted[1].priority, 3)
     }
 
     @org.jeasy.rules.annotation.Rule
@@ -252,7 +253,7 @@ class ConditionalRuleGroupTest {
     }
 
     @org.jeasy.rules.annotation.Rule
-    class MyAnnotatedRule {
+    inner class MyAnnotatedRule {
         var isExecuted: Boolean = false
             private set
 

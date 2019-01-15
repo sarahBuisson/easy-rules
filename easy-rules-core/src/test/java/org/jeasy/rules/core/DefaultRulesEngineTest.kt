@@ -23,40 +23,39 @@
  */
 package org.jeasy.rules.core
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.Assert.assertEquals
-import org.mockito.Mockito.inOrder
-import org.mockito.Mockito.never
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
-import org.assertj.core.api.Assertions
+import io.mockk.Called
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.verify
+import io.mockk.verifyOrder
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Priority
 import org.jeasy.rules.api.RuleListener
 import org.jeasy.rules.api.RulesEngineListener
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.InOrder
-import org.mockito.Mock
+import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class DefaultRulesEngineTest : AbstractTest() {
 
-    @Mock
+    @MockK
     private lateinit var ruleListener: RuleListener
 
-    @Mock
+    @MockK
     private lateinit var rulesEngineListener: RulesEngineListener
 
     private lateinit var annotatedRule: AnnotatedRule
 
     @Before
     @Throws(Exception::class)
-    override  fun setup() {
+    override fun setup() {
         super.setup()
-        `when`(rule1.name).thenReturn("r")
-        `when`(rule1.priority).thenReturn(1)
+        every { rule1.name } returns ("r")
+        every { rule1.priority } returns (1)
         annotatedRule = AnnotatedRule()
     }
 
@@ -64,37 +63,37 @@ class DefaultRulesEngineTest : AbstractTest() {
     @Throws(Exception::class)
     fun whenConditionIsTrue_thenActionShouldBeExecuted() {
         // Given
-        `when`(rule1.evaluate(facts)).thenReturn(true)
+        every { rule1.evaluate(facts) } returns (true)
         rules.register(rule1)
 
         // When
         rulesEngine.fire(rules, facts)
 
         // Then
-        verify(rule1).execute(facts)
+        verify { rule1.execute(facts) }
     }
 
     @Test
     @Throws(Exception::class)
     fun whenConditionIsFalse_thenActionShouldNotBeExecuted() {
         // Given
-        `when`(rule1.evaluate(facts)).thenReturn(false)
+        every { rule1.evaluate(facts) } returns (false)
         rules.register(rule1)
 
         // When
         rulesEngine.fire(rules, facts)
 
         // Then
-        verify(rule1, never()).execute(facts)
+        verify(atMost = 0, atLeast = 0){ rule1.execute(facts) }
     }
 
     @Test
     @Throws(Exception::class)
     fun rulesMustBeTriggeredInTheirNaturalOrder() {
         // Given
-        `when`(rule1.evaluate(facts)).thenReturn(true)
-        `when`(rule2.evaluate(facts)).thenReturn(true)
-        `when`(rule2.compareTo(rule1)).thenReturn(1)
+        every { rule1.evaluate(facts) } returns (true)
+        every { rule2.evaluate(facts) } returns (true)
+        every { rule2.compareTo(rule1) } returns (1)
         rules.register(rule1)
         rules.register(rule2)
 
@@ -102,18 +101,19 @@ class DefaultRulesEngineTest : AbstractTest() {
         rulesEngine.fire(rules, facts)
 
         // Then
-        val inOrder = inOrder(rule1, rule2)
-        inOrder.verify(rule1).execute(facts)
-        inOrder.verify(rule2).execute(facts)
+        verifyOrder {
+            rule1.execute(facts)
+            rule2.execute(facts)
+        }
     }
 
     @Test
     @Throws(Exception::class)
     fun rulesMustBeCheckedInTheirNaturalOrder() {
         // Given
-        `when`(rule1.evaluate(facts)).thenReturn(true)
-        `when`(rule2.evaluate(facts)).thenReturn(true)
-        `when`(rule2.compareTo(rule1)).thenReturn(1)
+        every { rule1.evaluate(facts) } returns (true)
+        every { rule2.evaluate(facts) } returns (true)
+        every { rule2.compareTo(rule1) } returns (1)
         rules.register(rule1)
         rules.register(rule2)
 
@@ -121,9 +121,10 @@ class DefaultRulesEngineTest : AbstractTest() {
         rulesEngine.check(rules, facts)
 
         // Then
-        val inOrder = inOrder(rule1, rule2)
-        inOrder.verify(rule1).evaluate(facts)
-        inOrder.verify(rule2).evaluate(facts)
+        verifyOrder {
+            rule1.evaluate(facts)
+            rule2.evaluate(facts)
+        }
     }
 
     @Test
@@ -142,7 +143,7 @@ class DefaultRulesEngineTest : AbstractTest() {
     @Throws(Exception::class)
     fun annotatedRulesAndNonAnnotatedRulesShouldBeUsableTogether() {
         // Given
-        `when`(rule1.evaluate(facts)).thenReturn(true)
+        every { rule1.evaluate(facts) } returns (true)
         rules.register(rule1)
         rules.register(annotatedRule)
 
@@ -150,29 +151,29 @@ class DefaultRulesEngineTest : AbstractTest() {
         rulesEngine.fire(rules, facts)
 
         // Then
-        verify(rule1).execute(facts)
-        assertThat(annotatedRule!!.isExecuted).isTrue()
+        verify { rule1.execute(facts) }
+        assertTrue(annotatedRule!!.isExecuted)
     }
 
     @Test
     @Throws(Exception::class)
     fun whenRuleNameIsNotSpecified_thenItShouldBeEqualToClassNameByDefault() {
         val rule = RuleProxy.asRule(DummyRule())
-        assertThat(rule.name).isEqualTo("DummyRule")
+        assertEquals(rule.name, "DummyRule")
     }
 
     @Test
     @Throws(Exception::class)
     fun whenRuleDescriptionIsNotSpecified_thenItShouldBeEqualToConditionNameFollowedByActionsNames() {
         val rule = RuleProxy.asRule(DummyRule())
-        assertThat(rule.description).isEqualTo("when condition then action1,action2")
+        assertEquals(rule.description, "when condition then action1,action2")
     }
 
     @Test
     @Throws(Exception::class)
     fun testCheckRules() {
         // Given
-        `when`(rule1.evaluate(facts)).thenReturn(true)
+        every { rule1.evaluate(facts) } returns (true)
         rules.register(rule1)
         rules.register(annotatedRule)
 
@@ -180,9 +181,9 @@ class DefaultRulesEngineTest : AbstractTest() {
         val result = rulesEngine.check(rules, facts)
 
         // Then
-        assertThat(result).hasSize(2)
+        assertEquals(result.size, 2)
         for (r in rules) {
-            assertThat(result.get(r)).isTrue()
+            assertTrue(result.get(r)!!)
         }
     }
 
@@ -190,8 +191,8 @@ class DefaultRulesEngineTest : AbstractTest() {
     @Throws(Exception::class)
     fun listenerShouldBeInvokedBeforeCheckingRules() {
         // Given
-        `when`(rule1.evaluate(facts)).thenReturn(true)
-        `when`(ruleListener!!.beforeEvaluate(rule1, facts)).thenReturn(true)
+        every { rule1.evaluate(facts) } returns (true)
+        every { ruleListener!!.beforeEvaluate(rule1, facts) } returns (true)
         val rulesEngine = DefaultRulesEngine()
         rulesEngine.registerRuleListener(ruleListener)
         rules.register(rule1)
@@ -200,7 +201,7 @@ class DefaultRulesEngineTest : AbstractTest() {
         rulesEngine.check(rules, facts)
 
         // Then
-        verify(ruleListener).beforeEvaluate(rule1, facts)
+        verify { ruleListener.beforeEvaluate(rule1, facts) }
     }
 
     @Test
@@ -212,7 +213,8 @@ class DefaultRulesEngineTest : AbstractTest() {
         try {
             rulesEngine.fire(rules, facts)
         } catch (e: Exception) {
-            Assertions.fail("Unable to fire rules on known facts", e)
+            e.printStackTrace()
+            fail("Unable to fire rules on known facts" + e.message)
         }
 
         // Then
@@ -230,7 +232,7 @@ class DefaultRulesEngineTest : AbstractTest() {
         val ruleListeners = rulesEngine.ruleListeners
 
         // Then
-        assertThat(ruleListeners).contains(ruleListener)
+        assertTrue(ruleListeners.contains(ruleListener))
     }
 
     @Test
@@ -244,7 +246,7 @@ class DefaultRulesEngineTest : AbstractTest() {
         val rulesEngineListeners = rulesEngine.rulesEngineListeners
 
         // Then
-        assertThat(rulesEngineListeners).contains(rulesEngineListener)
+        assertTrue(rulesEngineListeners.contains(rulesEngineListener))
     }
 
     @After
@@ -291,6 +293,7 @@ class DefaultRulesEngineTest : AbstractTest() {
 
     }
 
+
     @org.jeasy.rules.annotation.Rule
     inner class DummyRule {
 
@@ -311,5 +314,4 @@ class DefaultRulesEngineTest : AbstractTest() {
             // no op
         }
     }
-
 }

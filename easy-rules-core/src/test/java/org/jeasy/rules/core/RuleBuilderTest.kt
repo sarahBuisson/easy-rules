@@ -23,26 +23,33 @@
  */
 package org.jeasy.rules.core
 
+import io.mockk.MockKAnnotations
+import io.mockk.impl.annotations.MockK
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
 import org.jeasy.rules.api.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 
 import java.util.Arrays.asList
-import org.assertj.core.api.Assertions.assertThat
+import kotlin.test.BeforeTest
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-@RunWith(MockitoJUnitRunner::class)
+
 class RuleBuilderTest {
 
-    @Mock
+    @MockK(relaxed = true)
     private lateinit var condition: Condition
-    @Mock
+    @MockK(relaxed = true)
     private lateinit var action1: Action
-    @Mock
+    @MockK(relaxed = true)
     private lateinit var action2: Action
+
+
+    @BeforeTest
+    fun setup(){
+        MockKAnnotations.init(this, relaxed = true)
+    }
 
     @Test
     @Throws(Exception::class)
@@ -51,10 +58,10 @@ class RuleBuilderTest {
         val rule = RuleBuilder().build()
 
         // then
-        assertThat(rule.name).isEqualTo(Rule.DEFAULT_NAME)
-        assertThat(rule.description).isEqualTo(Rule.DEFAULT_DESCRIPTION)
-        assertThat(rule.priority).isEqualTo(Rule.DEFAULT_PRIORITY)
-        assertThat(rule).isInstanceOf(DefaultRule::class.java)
+        assertEquals(rule.name, Rule.DEFAULT_NAME)
+        assertEquals(rule.description, Rule.DEFAULT_DESCRIPTION)
+        assertEquals(rule.priority, Rule.DEFAULT_PRIORITY)
+        assertTrue(rule is DefaultRule)
     }
 
     @Test
@@ -71,11 +78,12 @@ class RuleBuilderTest {
                 .build()
 
         // then
-        assertThat(rule.name).isEqualTo("myRule")
-        assertThat(rule.description).isEqualTo("myRuleDescription")
-        assertThat(rule.priority).isEqualTo(3)
-        assertThat(rule).isInstanceOf(DefaultRule::class.java)
-        assertThat(rule).extracting("condition").containsExactly(condition)
-        assertThat(rule).extracting("actions").containsExactly(asList(action1, action2))
+        assertEquals(rule.name, "myRule")
+        assertEquals(rule.description, "myRuleDescription")
+        assertEquals(rule.priority, 3)
+        assertTrue(rule is DefaultRule)
+        assertTrue((rule as DefaultRule).condition == (condition))
+        assertTrue(rule.actions.containsAll(asList(action1, action2)))
+        assertEquals(rule.actions.size, 2)
     }
 }

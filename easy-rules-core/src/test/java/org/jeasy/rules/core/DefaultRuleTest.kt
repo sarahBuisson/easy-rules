@@ -23,36 +23,27 @@
  */
 package org.jeasy.rules.core
 
-import com.nhaarman.mockitokotlin2.*
+import io.mockk.*
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
 import org.junit.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
+
 
 class DefaultRuleTest : AbstractTest() {
 
 
-    private  var condition: Condition = mock<Condition> {
+    private  var condition: Condition = mockk<Condition> (relaxed = true)
 
-    }
+    private  var action1: Action = mockk<Action> (relaxed = true)
 
-    private  var action1: Action = mock<Action> {
-
-    }
-
-    private  var action2: Action = mock<Action> {
-
-    }
+    private  var action2: Action = mockk<Action> (relaxed = true)
 
     @Test
     @Throws(Exception::class)
     fun WhenConditionIsTrue_ThenActionsShouldBeExecutedInOrder() {
-        // given
-        condition = mock<Condition> {
-            on { evaluate(facts) } doReturn true
-        }
-
+        //        // given
+        condition = mockk<Condition>()
+        every { condition.evaluate(facts) } returns true
         val rule = RuleBuilder()
                 .`when`(condition)
                 .then(action1)
@@ -64,16 +55,20 @@ class DefaultRuleTest : AbstractTest() {
         rulesEngine.fire(rules, facts)
 
         // then
-        val inOrder = Mockito.inOrder(action1, action2)
-        inOrder.verify(action1).execute(facts)
-        inOrder.verify(action2).execute(facts)
+        verifyOrder {
+            action1.execute(facts)
+            action2.execute(facts)
+        }
+        confirmVerified(action1)
+        confirmVerified(rule2)
+
     }
 
     @Test
     @Throws(Exception::class)
     fun WhenConditionIsFalse_ThenActionsShouldNotBeExecuted() {
         // given
-        `when`(condition!!.evaluate(facts)).thenReturn(false)
+        every {condition.evaluate(any())} returns (false)
         val rule = RuleBuilder()
                 .`when`(condition)
                 .then(action1)
@@ -85,7 +80,7 @@ class DefaultRuleTest : AbstractTest() {
         rulesEngine.fire(rules, facts)
 
         // then
-        verify(action1, never()).execute(facts)
-        verify(action2, never()).execute(facts)
+        verify(atMost = 0, atLeast = 0) { action1.execute(facts) }
+        verify(atMost = 0, atLeast = 0) { action2.execute(facts) }
     }
 }

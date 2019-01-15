@@ -120,7 +120,7 @@ class ConditionalRuleGroup : CompositeRule {
         }
     }
 
-    private fun sortRules(): List<Rule> {
+    fun sortRules(): List<Rule> {
         val copy = ArrayList(rules)
         Collections.sort(copy, object : Comparator<Rule> {
             @Override

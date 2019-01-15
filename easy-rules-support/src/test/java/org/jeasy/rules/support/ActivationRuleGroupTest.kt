@@ -29,12 +29,9 @@ import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.DefaultRulesEngine
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
-import org.assertj.core.api.Assertions.assertThat
-
-@RunWith(MockitoJUnitRunner::class)
 class ActivationRuleGroupTest {
 
     private val facts = Facts()
@@ -56,8 +53,8 @@ class ActivationRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // then
-        assertThat(rule1.isExecuted).isTrue()
-        assertThat(rule2.isExecuted).isFalse()
+        assertTrue(rule1.isExecuted)
+        assertFalse(rule2.isExecuted)
     }
 
     @Test
@@ -76,9 +73,9 @@ class ActivationRuleGroupTest {
         // then
         // we don't know upfront which rule will be selected, but only one of them should be executed
         if (rule2.isExecuted) {
-            assertThat(rule3.isExecuted).isFalse()
+            assertFalse(rule3.isExecuted)
         } else {
-            assertThat(rule3.isExecuted).isTrue()
+            assertTrue(rule3.isExecuted)
         }
     }
 

@@ -31,12 +31,10 @@ import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.api.RulesEngine
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 
-import org.assertj.core.api.Assertions.assertThat
 
-@RunWith(MockitoJUnitRunner::class)
+import kotlin.test.assertFalse
+
 class FactInjectionTest {
 /* //TODO
     @Test
@@ -112,7 +110,7 @@ class FactInjectionTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        assertThat(ageRule.isExecuted).isFalse()
+        assertFalse(ageRule.isExecuted)
     }
 
     @Test
@@ -128,7 +126,7 @@ class FactInjectionTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        assertThat(rule.isExecuted).isFalse()
+        assertFalse(rule.isExecuted)
     }
 
     @Rule

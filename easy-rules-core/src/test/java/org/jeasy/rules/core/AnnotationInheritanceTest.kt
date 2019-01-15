@@ -31,8 +31,7 @@ import org.jeasy.rules.api.RulesEngine
 import org.jeasy.rules.annotation.Rule
 import org.junit.Test
 
-import org.assertj.core.api.Assertions.assertThat
-import org.jeasy.rules.annotation.Fact
+import kotlin.test.assertTrue
 
 class AnnotationInheritanceTest : AbstractTest() {
 
@@ -47,7 +46,7 @@ class AnnotationInheritanceTest : AbstractTest() {
         rulesEngine.fire(rules, facts)
 
         // Then
-        assertThat(myChildRule.isExecuted).isTrue()
+        assertTrue(myChildRule.isExecuted)
     }
 
     @Rule

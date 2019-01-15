@@ -29,7 +29,7 @@ import org.jeasy.rules.api.Facts
 class AnnotatedRuleWithActionMethodHavingMoreThanOneArgumentOfTypeFacts {
 
     @Condition
-    fun `when`(): Boolean {
+    fun `when`() : Boolean {
         return true
     }
 

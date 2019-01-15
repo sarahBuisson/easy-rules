@@ -27,7 +27,9 @@ import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
 import org.junit.Test
 
-import org.assertj.core.api.Assertions.assertThat
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class BasicRuleTest : AbstractTest() {
 
@@ -35,7 +37,7 @@ class BasicRuleTest : AbstractTest() {
     @Throws(Exception::class)
     fun basicRuleEvaluateShouldReturnFalse() {
         val basicRule = BasicRule()
-        assertThat(basicRule.evaluate(facts)).isFalse()
+        assertFalse(basicRule.evaluate(facts))
     }
 
     @Test
@@ -43,8 +45,8 @@ class BasicRuleTest : AbstractTest() {
         val rule1 = FirstRule()
         val rule2 = FirstRule()
 
-        assertThat(rule1.compareTo(rule2)).isEqualTo(0)
-        assertThat(rule2.compareTo(rule1)).isEqualTo(0)
+        assertEquals(rule1.compareTo(rule2),0)
+        assertEquals(rule2.compareTo(rule1),0)
     }
 
     @Test
@@ -56,7 +58,9 @@ class BasicRuleTest : AbstractTest() {
         rules = Rules(rule1, rule2, rule3)
 
         rulesEngine.check(rules, facts)
-        assertThat(rules).containsSequence(rule1, rule3, rule2)
+        assertEquals(rules[0], rule1)
+        assertEquals(rules[1], rule3)
+        assertEquals(rules[2], rule2)
     }
 
     internal inner class FirstRule : BasicRule() {

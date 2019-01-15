@@ -29,7 +29,7 @@ import org.jeasy.rules.api.Rules
 import org.jeasy.rules.api.RulesEngine
 import org.junit.Test
 
-import org.assertj.core.api.Assertions.assertThat
+
 
 class InferenceRulesEngineTest {
     /*
@@ -82,7 +82,7 @@ class InferenceRulesEngineTest {
             private set
 
         @Condition
-        fun `when`(@Fact("foo") foo: Boolean): Boolean {
+        fun `when` (@Fact("foo") foo: Boolean): Boolean {
             return foo
         }
 
@@ -108,7 +108,7 @@ class InferenceRulesEngineTest {
             private set
 
         @Condition
-        fun `when`(@Fact("bar") bar: Boolean): Boolean {
+        fun `when` (@Fact("bar") bar: Boolean): Boolean {
             return bar
         }
 

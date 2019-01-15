@@ -23,38 +23,37 @@
  */
 package org.jeasy.rules.core
 
+import io.mockk.*
+import io.mockk.impl.annotations.MockK
 import org.jeasy.rules.api.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InOrder
-import org.mockito.Mock
-import org.mockito.Mockito.*
-import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class)
 class CustomRuleOrderingTest : AbstractTest() {
 
-    @Mock
+    @MockK
     override lateinit var rule1: Rule
-    @Mock
+    @MockK
     override lateinit var rule2: Rule
 
     @Test
     @Throws(Exception::class)
     fun whenCompareToIsOverridden_thenShouldExecuteRulesInTheCustomOrder() {
-        rule1= mock(MyRule::class.java)
-        rule2= mock(MyRule::class.java)
+        rule1 = spyk<MyRule>(MyRule())
+        rule2 = spyk<MyRule>(MyRule())
         // Given
-        `when`(rule1!!.name).thenReturn("a")
-        `when`(rule1!!.priority).thenReturn(1)
-        `when`(rule1!!.evaluate(facts)).thenReturn(true)
+        every { rule1!!.name } returns ("a")
+        every { rule1!!.priority } returns (1)
+        every { rule1!!.evaluate(facts) } returns (true)
 
-        `when`(rule2!!.name).thenReturn("b")
-        `when`(rule2!!.priority).thenReturn(0)
-        `when`(rule2!!.evaluate(facts)).thenReturn(true)
+        every { rule2!!.name } returns ("b")
+        every { rule2!!.priority } returns (0)
+        every { rule2!!.evaluate(facts) } returns (true)
 
-        `when`(rule2!!.compareTo(rule1)).thenCallRealMethod()
-
+        //TODO
+        /* every {
+             rule2!!.compareTo(rule1)}
+          .thenCallRealMethod()
+ */
         rules.register(rule1)
         rules.register(rule2)
 
@@ -66,18 +65,19 @@ class CustomRuleOrderingTest : AbstractTest() {
          * By default, if compareTo is not overridden, then rule2 should be executed first (priority 0 < 1).
          * But in this case, the compareTo method order rules by their name, so rule1 should be executed first ("a" < "b")
          */
-        val inOrder = inOrder(rule1, rule2)
-        inOrder.verify(rule1).execute(facts)
-        inOrder.verify(rule2).execute(facts)
 
+        verifyOrder {
+            rule1.execute(facts)
+            rule2.execute(facts)
+        }
     }
 
-   public open inner class MyRule : BasicRule() {
+    class MyRule : BasicRule() {
 
         @Override
         override operator fun compareTo(rule: Rule): Int {
             return name.compareTo(rule.name)
         }
-
     }
 }
+

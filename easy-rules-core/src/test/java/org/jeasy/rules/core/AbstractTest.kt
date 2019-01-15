@@ -23,25 +23,23 @@
  */
 package org.jeasy.rules.core
 
+import io.mockk.MockKAnnotations
+import io.mockk.impl.annotations.MockK
 import org.jeasy.rules.annotation.Fact
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
-import org.junit.Before
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import kotlin.test.*
 
-@RunWith(MockitoJUnitRunner::class)
 open abstract class AbstractTest {
 
-    @Mock
+    @MockK(relaxed = true)
     open lateinit var rule1: Rule
-    @Mock
+    @MockK(relaxed = true)
     open lateinit var rule2: Rule
-    @Mock
+    @MockK(relaxed = true)
     open lateinit var fact1: Fact
-    @Mock
+    @MockK(relaxed = true)
     lateinit var fact2: Fact
 
     lateinit var facts: Facts
@@ -49,9 +47,10 @@ open abstract class AbstractTest {
 
     lateinit var rulesEngine: DefaultRulesEngine
 
-    @Before
+    @BeforeTest
     @Throws(Exception::class)
     open fun setup() {
+        MockKAnnotations.init(this, relaxed = true)
         facts = Facts()
         facts.put("fact1", fact1)
         facts.put("fact2", fact2)

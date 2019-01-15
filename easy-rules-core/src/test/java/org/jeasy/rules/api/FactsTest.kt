@@ -23,11 +23,12 @@
  */
 package org.jeasy.rules.api
 
-import org.junit.Test
 
-import java.util.HashMap
-
-import org.assertj.core.api.Assertions.assertThat
+import java.util.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class FactsTest {
 
@@ -39,8 +40,8 @@ class FactsTest {
         facts.put("foo", 1)
         facts.put("foo", 2)
 
-        assertThat(facts).hasSize(1)
-        assertThat(facts.get("foo") as Int).isEqualTo(2)
+        assertEquals(facts.size, 1)
+        assertEquals(facts.get("foo") as Int, 2)
     }
 
     @Test
@@ -48,8 +49,8 @@ class FactsTest {
         val o1 = facts.put("foo", 1)
         val o2 = facts.put("foo", 2)
 
-        assertThat(o1).isEqualTo(null)
-        assertThat(o2).isEqualTo(1)
+        assertNull(o1)
+        assertEquals(o2, 1)
     }
 
     @Test
@@ -58,7 +59,7 @@ class FactsTest {
         facts.put("foo", 1)
         facts.remove("foo")
 
-        assertThat(facts).isEmpty()
+        assertTrue(facts.isEmpty)
     }
 
     @Test
@@ -67,21 +68,21 @@ class FactsTest {
         val o1 = facts.remove("foo")
         val o2 = facts.remove("bar")
 
-        assertThat(o1).isEqualTo(1)
-        assertThat(o2).isEqualTo(null)
+        assertEquals(o1, 1)
+        assertNull(o2)
     }
 
     @Test
     @Throws(Exception::class)
     fun get() {
         facts.put("foo", 1)
-        assertThat(facts.get("foo") as Int).isEqualTo(1)
+        assertEquals(facts.get("foo") as Int,1)
     }
 
     @Test
     fun asMap() {
         val o = facts.asMap()
-        assertThat(o is HashMap).isTrue()
+        assertTrue(o is HashMap)
     }
 /* TODO: useless
     @Test(expected = NullPointerException::class)

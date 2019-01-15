@@ -23,10 +23,8 @@
  */
 package org.jeasy.rules.api
 
-import org.jeasy.rules.annotation.Fact
-import java.util.*
-
 import java.lang.String.format
+import java.util.*
 
 /**
  * Represents a set of named facts. Facts have unique name within a `Facts` object.
@@ -35,7 +33,11 @@ import java.lang.String.format
  */
 open class Facts : Iterable<Map.Entry<String, Any?>> {
 
-    private val facts = HashMap<String,Any?>()
+    private val facts = HashMap<String, Any?>()
+    val size: Int
+        get() = facts.size
+    val isEmpty: Boolean
+        get() = facts.isEmpty()
 
     /**
      * Put a fact in the working memory.

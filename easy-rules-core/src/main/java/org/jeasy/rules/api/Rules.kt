@@ -34,7 +34,7 @@ import org.jeasy.rules.core.RuleProxy
  */
 class Rules : Iterable<Rule> {
 
-    private var rules=mutableSetOf<Rule>();
+    private var rules = sortedSetOf<Rule>();
 
     /**
      * Check if the rule set is empty.
@@ -43,6 +43,8 @@ class Rules : Iterable<Rule> {
      */
     val isEmpty: Boolean
         get() = rules.isEmpty()
+    val size: Int
+        get() = rules.size
 
     /**
      * Create a new [Rules] object.
@@ -50,7 +52,7 @@ class Rules : Iterable<Rule> {
      * @param rules to register
      */
     constructor(rules: Set<Rule>) {
-        this.rules = mutableSetOf<Rule>().plus(rules).toMutableSet()
+        this.rules.addAll(rules)
     }
 
     /**
@@ -61,10 +63,10 @@ class Rules : Iterable<Rule> {
     constructor(vararg rules: Any) {
 
         for (rule in rules) {
-            if(rule is Rule)
+            if (rule is Rule)
                 this.rules.add(rule)
             else
-            this.register(RuleProxy.asRule(rule))
+                this.register(RuleProxy.asRule(rule))
         }
     }
 
@@ -116,5 +118,9 @@ class Rules : Iterable<Rule> {
                 return rule
         }
         return null
+    }
+
+    operator fun get(i: Int): Rule {
+        return rules.toList()[i];
     }
 }

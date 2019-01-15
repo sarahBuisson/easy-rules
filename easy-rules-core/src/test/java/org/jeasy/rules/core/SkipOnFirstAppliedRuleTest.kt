@@ -23,10 +23,13 @@
  */
 package org.jeasy.rules.core
 
+import io.mockk.Called
+import io.mockk.every
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 
-import org.mockito.Mockito.*
+
 
 class SkipOnFirstAppliedRuleTest : AbstractTest() {
 
@@ -42,8 +45,8 @@ class SkipOnFirstAppliedRuleTest : AbstractTest() {
     @Throws(Exception::class)
     fun testSkipOnFirstAppliedRule() {
         // Given
-        `when`(rule2.compareTo(rule1)).thenReturn(1)
-        `when`(rule1.evaluate(facts)).thenReturn(true)
+        every {rule2.compareTo(rule1)} returns (1)
+        every {rule1.evaluate(facts)} returns (true)
         rules.register(rule1)
         rules.register(rule2)
 
@@ -52,21 +55,21 @@ class SkipOnFirstAppliedRuleTest : AbstractTest() {
 
         // Then
         //Rule 1 should be executed
-        verify(rule1).execute(facts)
+        verify {rule1.execute(facts)}
 
         //Rule 2 should be skipped since Rule 1 has been executed
-        verify(rule2, never()).execute(facts)
+        verify(atMost = 0, atLeast = 0){rule2.execute(facts) }
     }
 
     @Test
     @Throws(Exception::class)
     fun testSkipOnFirstAppliedRuleWithException() {
         // Given
-        `when`(rule1.evaluate(facts)).thenReturn(true)
-        `when`(rule2.evaluate(facts)).thenReturn(true)
-        `when`(rule2.compareTo(rule1)).thenReturn(1)
+        every {rule1.evaluate(facts)} returns (true)
+        every {rule2.evaluate(facts)} returns (true)
+        every {rule2.compareTo(rule1)} returns (1)
         val exception = Exception("fatal error!")
-        doThrow(exception).`when`(rule1).execute(facts)
+      every {rule1.execute(facts)}.throws(exception)
 
         rules.register(rule1)
         rules.register(rule2)
@@ -75,7 +78,7 @@ class SkipOnFirstAppliedRuleTest : AbstractTest() {
         rulesEngine.fire(rules, facts)
 
         //If an exception occurs when executing Rule 1, Rule 2 should still be applied
-        verify(rule2).execute(facts)
+        verify {rule2.execute(facts)}
     }
 
 }

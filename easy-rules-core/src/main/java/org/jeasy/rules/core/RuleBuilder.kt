@@ -27,7 +27,7 @@ import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
 import org.jeasy.rules.api.Rule
 
-import java.util.ArrayList
+import kotlin.collections.ArrayList
 
 /**
  * Builder to create [Rule] instances.
@@ -41,7 +41,7 @@ class RuleBuilder {
     private var priority = Rule.DEFAULT_PRIORITY
 
     private var condition = Condition.FALSE
-    private val actions = mutableListOf<Action>()
+    private val actions = ArrayList<Action>()
 
     /**
      * Set rule name.
@@ -82,7 +82,7 @@ class RuleBuilder {
      * @param condition of the rule
      * @return the builder instance
      */
-    fun `when`(condition: Condition): RuleBuilder {
+    fun `when` (condition: Condition): RuleBuilder {
         this.condition = condition
         return this
     }

@@ -28,8 +28,8 @@ import org.jeasy.rules.annotation.AnnotatedRuleWithMetaRuleAnnotation
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Priority
 import org.jeasy.rules.api.Rule
-import org.junit.Assert.*
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.*
 
 class RuleProxyTest {
 
@@ -88,8 +88,8 @@ class RuleProxyTest {
         /**
          * @see Object.equals
          */
-        assertNotEquals(rule, proxy1)
-        assertNotEquals(proxy1, rule)
+        assertNotEquals<Any>(rule, proxy1)
+        assertNotEquals<Any>(proxy1, rule)
         assertEquals(proxy1, proxy2)
         assertEquals(proxy2, proxy1)
         /**
@@ -101,10 +101,10 @@ class RuleProxyTest {
         /**
          * @see Object.equals
          */
-        assertNotEquals(rule, null)
-        assertNotEquals(proxy1, null)
-        assertNotEquals(proxy2, null)
-        assertNotEquals(proxy3, null)
+        assertNotEquals<Any?>(rule, null)
+        assertNotEquals<Any?>(proxy1, null)
+        assertNotEquals<Any?>(proxy2, null)
+        assertNotEquals<Any?>(proxy3, null)
     }
 
 
@@ -126,7 +126,7 @@ class RuleProxyTest {
         /**
          * @see Object.hashCode rule3
          */
-        assertNotEquals(rule, proxy1)
+        assertNotEquals<Any>(rule, proxy1)
         assertNotEquals(rule.hashCode(), proxy1.hashCode())
     }
 
@@ -150,7 +150,7 @@ class RuleProxyTest {
         @org.jeasy.rules.annotation.Rule(priority = 1)
         class MyRule {
             @Condition
-            fun `when`(): Boolean {
+            fun `when` (): Boolean {
                 return true
             }
 

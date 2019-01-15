@@ -23,10 +23,12 @@
  */
 package org.jeasy.rules.core
 
+import io.mockk.Called
+import io.mockk.every
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 
-import org.mockito.Mockito.*
 
 class SkipOnFirstNonTriggeredRuleTest : AbstractTest() {
 
@@ -42,8 +44,8 @@ class SkipOnFirstNonTriggeredRuleTest : AbstractTest() {
     @Throws(Exception::class)
     fun testSkipOnFirstNonTriggeredRule() {
         // Given
-        `when`(rule1.evaluate(facts)).thenReturn(false)
-        `when`(rule2.compareTo(rule1)).thenReturn(1)
+        every {rule1.evaluate(facts)} returns (false)
+        every {rule2.compareTo(rule1)} returns (1)
 
         rules.register(rule1)
         rules.register(rule2)
@@ -53,9 +55,9 @@ class SkipOnFirstNonTriggeredRuleTest : AbstractTest() {
 
         // Then
         //Rule1 is not triggered
-        verify(rule1, never()).execute(facts)
+        verify(atMost = 0, atLeast = 0) {rule1.execute(facts) }
         //Rule 2 should be skipped since Rule 1 has not been executed
-        verify(rule2, never()).execute(facts)
+        verify(atMost = 0, atLeast = 0) {rule2.execute(facts)  }
     }
 
 }

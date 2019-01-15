@@ -58,6 +58,7 @@ interface Rule : Comparable<Rule> {
      */
     fun evaluate(facts: Facts): Boolean
 
+
     /**
      * Rule actions abstraction : this method encapsulates the rule's actions.
      * @throws Exception thrown if an exception occurs during actions performing
