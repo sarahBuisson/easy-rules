@@ -34,24 +34,22 @@ import org.jeasy.rules.api.Rule
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-open class BasicRule
-/**
- * Create a new [BasicRule].
- *
- * @param name rule name
- * @param description rule description
- * @param priority rule priority
- */
-@JvmOverloads  constructor(override var name: String = Rule.DEFAULT_NAME,
-                          /**
-                           * Rule description.
-                           */
-                          override var description: String = Rule.DEFAULT_DESCRIPTION,
-                          /**
-                           * Rule priority.
-                           */
-                          override var priority: Int = Rule.DEFAULT_PRIORITY) : Rule {
-
+open class BasicRule(override var name: String = Rule.DEFAULT_NAME,
+                     /**
+                      * Rule description.
+                      */
+                     override var description: String = Rule.DEFAULT_DESCRIPTION,
+                     /**
+                      * Rule priority.
+                      */
+                     override var priority: Int = Rule.DEFAULT_PRIORITY) : Rule {
+    /**
+     * Create a new [BasicRule].
+     *
+     * @param name rule name
+     * @param description rule description
+     * @param priority rule priority
+     */
 
 
     /**

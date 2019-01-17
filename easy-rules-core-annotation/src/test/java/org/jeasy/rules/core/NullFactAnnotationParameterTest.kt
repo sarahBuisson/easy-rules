@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jeasy.rules.core
+package org.jeasy.rules
 
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
@@ -29,6 +29,8 @@ import org.jeasy.rules.annotation.Fact
 import org.jeasy.rules.annotation.Rule
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
+import org.jeasy.rules.core.AbstractTest
+import org.jeasy.rules.core.Rules2
 import kotlin.test.*
 
 /**
@@ -38,7 +40,7 @@ class NullFactAnnotationParameterTest : AbstractTest() {
 
     @Test
     fun testNullFact() {
-        val rules = Rules()
+        val rules = Rules2()
         rules.register(AnnotatedParametersRule())
 
         val facts = Facts()
@@ -55,7 +57,7 @@ class NullFactAnnotationParameterTest : AbstractTest() {
     @Ignore// TODO : I don't agree with the purpose of this.
     @Test
     fun testMissingFact() {
-        val rules = Rules()
+        val rules = Rules2()
         rules.register(AnnotatedParametersRule())
 
         val facts = Facts()

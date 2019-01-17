@@ -25,8 +25,8 @@ package org.jeasy.rules.tutorials.fizzbuzz
 
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
-import org.jeasy.rules.api.RulesEngine
 import org.jeasy.rules.core.DefaultRulesEngine
+import org.jeasy.rules.core.Rules2
 import org.jeasy.rules.core.RulesEngineParameters
 
 object FizzBuzzWithEasyRules {
@@ -38,7 +38,7 @@ fun main(args: Array<String>) {
     val fizzBuzzEngine = DefaultRulesEngine(parameters)
 
     // create rules
-    val rules = Rules()
+    val rules = Rules2()
     rules.register(FizzRule())
     rules.register(BuzzRule())
     rules.register(FizzBuzzRule(FizzRule(), BuzzRule()))

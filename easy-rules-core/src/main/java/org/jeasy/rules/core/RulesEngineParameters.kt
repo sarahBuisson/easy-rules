@@ -59,7 +59,7 @@ class RulesEngineParameters {
      * Create a new [RulesEngineParameters] with default values.
      */
     constructor() {
-        this.priorityThreshold = RulesEngineParameters.DEFAULT_RULE_PRIORITY_THRESHOLD
+        this.priorityThreshold = DEFAULT_RULE_PRIORITY_THRESHOLD
     }
 
     /**

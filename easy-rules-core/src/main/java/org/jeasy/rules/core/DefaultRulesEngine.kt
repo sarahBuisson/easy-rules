@@ -24,12 +24,7 @@
 package org.jeasy.rules.core
 
 import mu.KotlinLogging
-import org.jeasy.rules.api.Facts
-import org.jeasy.rules.api.Rule
-import org.jeasy.rules.api.RuleListener
-import org.jeasy.rules.api.RulesEngineListener
-import org.jeasy.rules.api.Rules
-import org.jeasy.rules.api.RulesEngine
+import org.jeasy.rules.api.*
 
 /**
  * Default [RulesEngine] implementation.
@@ -40,21 +35,33 @@ import org.jeasy.rules.api.RulesEngine
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class DefaultRulesEngine
-/**
- * Create a new [DefaultRulesEngine].
- *
- * @param parameters of the engine
- */
-@JvmOverloads constructor(@get:Override
-                          override val parameters: RulesEngineParameters = RulesEngineParameters()) : RulesEngine {
+class DefaultRulesEngine : RulesEngine {
+    /**
+     * Create a new [DefaultRulesEngine].
+     *
+     * @param parameters of the engine
+     */
+
+    @get:Override
+    override val parameters: RulesEngineParameters
+
     @get:Override
     override val ruleListeners: MutableList<RuleListener>
     @get:Override
     override val rulesEngineListeners: MutableList<RulesEngineListener>
 
-    init {
-        this.ruleListeners = ArrayList()
+
+    constructor() {
+        this.parameters = RulesEngineParameters()
+        this.ruleListeners = mutableListOf()
+        this.ruleListeners.add(DefaultRuleListener())
+        this.rulesEngineListeners = ArrayList()
+        this.rulesEngineListeners.add(DefaultRulesEngineListener(parameters))
+    }
+
+    constructor(parameters: RulesEngineParameters) {
+        this.parameters = parameters
+        this.ruleListeners = mutableListOf()
         this.ruleListeners.add(DefaultRuleListener())
         this.rulesEngineListeners = ArrayList()
         this.rulesEngineListeners.add(DefaultRulesEngineListener(parameters))

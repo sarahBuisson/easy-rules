@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jeasy.rules.core
+package org.jeasy.rules
 
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -32,6 +32,9 @@ import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Priority
 import org.jeasy.rules.api.RuleListener
 import org.jeasy.rules.api.RulesEngineListener
+import org.jeasy.rules.core.AbstractTest
+import org.jeasy.rules.core.DefaultRulesEngine
+import org.jeasy.rules.core.RuleProxy
 import kotlin.test.*
 
 class DefaultRulesEngineTest : AbstractTest() {

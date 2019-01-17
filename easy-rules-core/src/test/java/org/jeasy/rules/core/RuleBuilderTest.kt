@@ -28,6 +28,8 @@ import io.mockk.impl.annotations.MockK
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
 import org.jeasy.rules.api.Rule
+import org.jeasy.rules.core.DefaultRule
+import org.jeasy.rules.core.RuleBuilder
 import kotlin.test.Test
 
 import kotlin.test.BeforeTest

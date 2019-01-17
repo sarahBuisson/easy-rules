@@ -7,8 +7,8 @@ class HighTemperatureCondition : Condition {
 
 
     override fun evaluate(facts: Facts): Boolean {
-        val temperature = facts.get("temperature") as Int
-        return temperature > 25
+        val temperature = facts.get("temperature") as Int?
+        return temperature!! > 25
     }
 
     companion object {

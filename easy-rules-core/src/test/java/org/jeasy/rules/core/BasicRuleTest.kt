@@ -29,7 +29,6 @@ import kotlin.test.Test
 
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class BasicRuleTest : AbstractTest() {
 
@@ -55,7 +54,7 @@ class BasicRuleTest : AbstractTest() {
         val rule2 = SecondRule()
         val rule3 = ThirdRule()
 
-        rules = Rules(rule1, rule2, rule3)
+        rules = Rules(setOf(rule1, rule2, rule3))
 
         rulesEngine.check(rules, facts)
         assertEquals(rules[0], rule1)

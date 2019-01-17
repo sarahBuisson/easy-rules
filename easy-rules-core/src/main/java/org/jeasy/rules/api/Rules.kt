@@ -23,8 +23,6 @@
  */
 package org.jeasy.rules.api
 
-import org.jeasy.rules.core.RuleProxy
-
 
 /**
  * This class encapsulates a set of rules and represents a rules namespace.
@@ -32,9 +30,9 @@ import org.jeasy.rules.core.RuleProxy
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class Rules : Iterable<Rule> {
+open class Rules : Iterable<Rule> {
 
-    private var rules = sortedSetOf<Rule>();
+    protected var rules = sortedSetOf<Rule>();
 
     /**
      * Check if the rule set is empty.
@@ -55,50 +53,9 @@ class Rules : Iterable<Rule> {
         this.rules.addAll(rules)
     }
 
-    /**
-     * Create a new [Rules] object.
-     *
-     * @param rules to register
-     */
-    constructor(vararg rules: Any) {
-
-        for (rule in rules) {
-            if (rule is Rule)
-                this.rules.add(rule)
-            else
-                this.register(RuleProxy.asRule(rule))
-        }
+    constructor() {
     }
 
-    /**
-     * Register a new rule.
-     *
-     * @param rule to register
-     */
-    fun register(rule: Any) {
-        rules.add(RuleProxy.asRule(rule))
-    }
-
-    /**
-     * Unregister a rule.
-     *
-     * @param rule to unregister
-     */
-    fun unregister(rule: Any) {
-        rules.remove(RuleProxy.asRule(rule))
-    }
-
-    /**
-     * Unregister a rule by name.
-     *
-     * @param ruleName the name of the rule to unregister
-     */
-    fun unregister(ruleName: String) {
-        val rule = findRuleByName(ruleName)
-        if (rule != null) {
-            unregister(rule)
-        }
-    }
 
     /**
      * Clear rules.
@@ -112,15 +69,34 @@ class Rules : Iterable<Rule> {
         return rules.iterator()
     }
 
-    private fun findRuleByName(ruleName: String): Rule? {
+    /**
+     * Register a new rule.
+     *
+     * @param rule to register
+     */
+    fun register(rule: Rule) {
+        this.rules.add(rule)
+    }
+
+    /**
+     * Unregister a rule.
+     *
+     * @param rule to unregister
+     */
+    fun unregister(rule: Rule) {
+        this.rules.remove(rule)
+    }
+
+
+    operator fun get(i: Int): Rule {
+        return rules.toList()[i];
+    }
+
+    protected fun findRuleByName(ruleName: String): Rule? {
         for (rule in rules) {
             if (rule.name.toUpperCase().equals(ruleName.toUpperCase()))
                 return rule
         }
         return null
-    }
-
-    operator fun get(i: Int): Rule {
-        return rules.toList()[i];
     }
 }

@@ -26,16 +26,20 @@ package org.jeasy.rules.api
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.core.BasicRule
-import kotlin.test.*
+import org.jeasy.rules.core.Rules2
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class RulesTest {
 
-    private var rules = Rules()
+    private lateinit var rules: Rules2
 
 
     @BeforeTest
-    fun setup(){
-        rules = Rules()
+    fun setup() {
+        rules = Rules2()
     }
 
     @Test
@@ -43,7 +47,7 @@ class RulesTest {
     fun register() {
         rules.register(DummyRule())
 
-        assertEquals(rules.size,1)
+        assertEquals(rules.size, 1)
     }
 
     @Test
@@ -55,9 +59,9 @@ class RulesTest {
         ruleSet.add(r1)
         ruleSet.add(r2)
 
-        rules = Rules(ruleSet)
+        rules = Rules2(ruleSet)
 
-        assertEquals(rules.size,1)
+        assertEquals(rules.size, 1)
     }
 
     @Test
@@ -79,9 +83,9 @@ class RulesTest {
         ruleSet.add(r1)
         ruleSet.add(r2)
 
-        rules = Rules(ruleSet)
+        rules = Rules2(ruleSet)
         rules.unregister("rule2")
-        assertEquals(rules.size,1)
+        assertEquals(rules.size, 1)
         assertTrue(rules.contains(r1))
     }
 
@@ -92,18 +96,18 @@ class RulesTest {
         val ruleSet = HashSet<Rule>()
         ruleSet.add(r1)
 
-        rules = Rules(ruleSet)
+        rules = Rules2(ruleSet)
         rules.unregister("rule2")
 
 
-        assertEquals(rules.size,1)
+        assertEquals(rules.size, 1)
         assertTrue(rules.contains(r1))
     }
 
     @Test
     @Throws(Exception::class)
     fun isEmpty() {
-        assertTrue (rules.isEmpty)
+        assertTrue(rules.isEmpty)
     }
 
     @Test
@@ -112,7 +116,7 @@ class RulesTest {
         rules.register(DummyRule())
         rules.clear()
 
-        assertTrue (rules.isEmpty)
+        assertTrue(rules.isEmpty)
     }
 
     @Test
@@ -126,10 +130,11 @@ class RulesTest {
         rules.register(r1)
         rules.register(r2)
 
-        assertEquals(rules[0],r1)
+        assertEquals(rules[0], r1)
         assertEquals<Any>(rules[1].name, "DummyRule")//r3
-        assertEquals(rules[2],r2)
+        assertEquals(rules[2], r2)
     }
+
     /* //TODO: useless
         @Test(expected = NullPointerException::class)
         @Throws(Exception::class)

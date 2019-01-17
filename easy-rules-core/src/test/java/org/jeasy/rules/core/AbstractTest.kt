@@ -25,7 +25,6 @@ package org.jeasy.rules.core
 
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
-import org.jeasy.rules.annotation.Fact
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
@@ -40,10 +39,10 @@ open abstract class AbstractTest {
     protected open lateinit var rule2: Rule
 
     @MockK(relaxed = true)
-    protected open lateinit var fact1: Fact
+    protected open lateinit var fact1: Any
 
     @MockK(relaxed = true)
-    protected lateinit var fact2: Fact
+    protected lateinit var fact2: Any
 
     protected lateinit var facts: Facts
     protected lateinit var rules: Rules

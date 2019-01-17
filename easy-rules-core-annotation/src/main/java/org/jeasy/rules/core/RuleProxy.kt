@@ -24,6 +24,9 @@
 package org.jeasy.rules.core
 
 import mu.KotlinLogging
+import org.jeasy.rules.NoSuchFactException
+import org.jeasy.rules.RuleDefinitionValidator
+import org.jeasy.rules.Utils
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Fact
@@ -199,8 +202,9 @@ open class RuleProxy private constructor(private val target: Any) {
                 val fact = facts.get<Fact>(factName)
                 if (fact == null && !facts.asMap().containsKey(factName)) {
                     throw NoSuchFactException("No fact named '$factName' found in known facts: ${facts}", factName)
+                } else {
+                    actualParameters.add(fact!!)
                 }
-                actualParameters.add(fact)
             } else {
                 actualParameters.add(facts) //validated upfront, there may be only one parameter not annotated and which is of type Facts.class
             }
@@ -389,3 +393,5 @@ open class RuleProxy private constructor(private val target: Any) {
     }
 
 }
+
+

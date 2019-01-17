@@ -21,43 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jeasy.rules.core
+package org.jeasy.rules
 
-import io.mockk.every
-import io.mockk.verify
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-
-class SkipOnFirstFailedRuleTest : AbstractTest() {
-
-    @BeforeTest
-    @Throws(Exception::class)
-    override fun setup() {
-        super.setup()
-        val parameters = RulesEngineParameters().skipOnFirstFailedRule(true)
-        rulesEngine = DefaultRulesEngine(parameters)
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun testSkipOnFirstFailedRule() {
-        // Given
-        every { rule1.evaluate(any()) } returns (true)
-        every { rule2.compareTo(rule1) } returns (1)
-        val exception = Exception("fatal error!")
-        every { rule1.execute(facts) }.throws(exception)
-        rules.register(rule1)
-        rules.register(rule2)
-
-        // When
-        rulesEngine.fire(rules, facts)
-
-        // Then
-        //Rule 1 should be executed
-        verify { rule1.execute(facts) }
-        //Rule 2 should be skipped since Rule 1 has failed
-        verify(atMost = 0, atLeast = 0) { rule2.execute(facts)  }
-    }
-}
-
-
+internal class NoSuchFactException(message: String, val missingFact: String) : RuntimeException(message)

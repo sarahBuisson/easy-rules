@@ -23,6 +23,7 @@
  */
 package org.jeasy.rules.core
 
+import org.jeasy.rules.Utils
 import kotlin.test.Test
 
 

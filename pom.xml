@@ -17,6 +17,7 @@
         <module>easy-rules-core</module>
         <module>easy-rules-tutorials</module>
         <module>easy-rules-support</module>
+        <module>easy-rules-core-annotation</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -160,6 +161,7 @@
                             <arg>-verbose</arg>
                             <arg>-Xlint:unchecked</arg>
                         </compilerArgs>
+
                     </configuration>
                 </plugin>
                 <plugin>
@@ -230,7 +232,34 @@
                         <groupId>org.jetbrains.kotlin</groupId>
                         <artifactId>kotlin-maven-plugin</artifactId>
                         <version>${kotlin.version}</version>
-
+                        <executions>
+                            <execution>
+                                <id>compile</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>js</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                                        <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>test-compile</id>
+                                <phase>test-compile</phase>
+                                <goals>
+                                    <goal>test-js</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                                        <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -258,6 +287,12 @@
                                 <goals>
                                     <goal>compile</goal>
                                 </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                                        <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
                             </execution>
                             <execution>
                                 <id>test-compile</id>
@@ -265,8 +300,20 @@
                                 <goals>
                                     <goal>test-compile</goal>
                                 </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                                        <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
                             </execution>
                         </executions>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                                <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

@@ -1,9 +1,7 @@
 package org.jeasy.rules.tutorials.airco
 
 import org.jeasy.rules.api.Facts
-import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
-import org.jeasy.rules.api.RulesEngine
 import org.jeasy.rules.core.InferenceRulesEngine
 import org.jeasy.rules.core.RuleBuilder
 import org.jeasy.rules.tutorials.airco.DecreaseTemperatureAction.Companion.decreaseTemperature

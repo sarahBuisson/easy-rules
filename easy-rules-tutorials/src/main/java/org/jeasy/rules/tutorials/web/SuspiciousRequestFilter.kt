@@ -33,21 +33,21 @@ import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.annotation.WebFilter
 import org.jeasy.rules.api.Facts
-import org.jeasy.rules.api.Rules
 import org.jeasy.rules.api.RulesEngine
 import org.jeasy.rules.core.DefaultRulesEngine
+import org.jeasy.rules.core.Rules2
 
 @WebFilter("/*")
 class SuspiciousRequestFilter : Filter {
 
-    private lateinit var rules: Rules
+    private lateinit var rules: Rules2
     private lateinit var  rulesEngine: RulesEngine
 
 
     @Throws(ServletException::class)
     override fun init(filterConfig: FilterConfig) {
         rulesEngine = DefaultRulesEngine()
-        rules = Rules()
+        rules = Rules2()
         rules.register(SuspiciousRequestRule())
     }
 

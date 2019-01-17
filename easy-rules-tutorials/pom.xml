@@ -65,6 +65,11 @@
         </dependency>
         <dependency>
             <groupId>org.jeasy</groupId>
+            <artifactId>easy-rules-core-annotation</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jeasy</groupId>
             <artifactId>easy-rules-mvel</artifactId>
             <version>${project.version}</version>
         </dependency>

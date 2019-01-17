@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.core
 
-import io.mockk.Called
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify

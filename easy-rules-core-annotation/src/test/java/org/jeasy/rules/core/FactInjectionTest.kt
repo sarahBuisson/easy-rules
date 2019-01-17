@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jeasy.rules.core
+package org.jeasy.rules
 
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
@@ -29,7 +29,8 @@ import org.jeasy.rules.annotation.Fact
 import org.jeasy.rules.annotation.Rule
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
-import org.jeasy.rules.api.RulesEngine
+import org.jeasy.rules.core.DefaultRulesEngine
+import org.jeasy.rules.core.Rules2
 import kotlin.test.Test
 
 
@@ -103,7 +104,7 @@ class FactInjectionTest {
         // Given
         val facts = Facts()
         val ageRule = AgeRule()
-        val rules = Rules(ageRule)
+        val rules = Rules2(ageRule)
         val rulesEngine = DefaultRulesEngine()
 
         // When
@@ -119,7 +120,7 @@ class FactInjectionTest {
         // Given
         val facts = Facts()
         val rule = AnotherDummyRule()
-        val rules = Rules(rule)
+        val rules = Rules2(rule)
         val rulesEngine = DefaultRulesEngine()
 
         // When

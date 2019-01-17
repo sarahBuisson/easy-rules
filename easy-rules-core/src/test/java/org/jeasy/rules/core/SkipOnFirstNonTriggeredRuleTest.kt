@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.core
 
-import io.mockk.Called
 import io.mockk.every
 import io.mockk.verify
 import kotlin.test.BeforeTest

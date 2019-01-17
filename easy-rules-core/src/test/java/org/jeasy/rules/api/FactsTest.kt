@@ -39,7 +39,7 @@ class FactsTest {
         facts.put("foo", 2)
 
         assertEquals(facts.size, 1)
-        assertEquals(facts.get("foo") as Int, 2)
+        assertEquals(facts.get("foo") as Int?, 2)
     }
 
     @Test
@@ -74,13 +74,13 @@ class FactsTest {
     @Throws(Exception::class)
     fun get() {
         facts.put("foo", 1)
-        assertEquals(facts.get("foo") as Int,1)
+        assertEquals(facts.get("foo") as Int?,1)
     }
 
     @Test
     fun asMap() {
         val o = facts.asMap()
-        assertTrue(o is HashMap)
+        assertTrue(o is HashMap<*,*>)
     }
 /* TODO: useless
     @Test(expected = NullPointerException::class)

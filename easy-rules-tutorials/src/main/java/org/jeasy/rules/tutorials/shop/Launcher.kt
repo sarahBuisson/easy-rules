@@ -25,8 +25,8 @@ package org.jeasy.rules.tutorials.shop
 
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
-import org.jeasy.rules.api.RulesEngine
 import org.jeasy.rules.core.DefaultRulesEngine
+import org.jeasy.rules.core.Rules2
 import org.jeasy.rules.mvel.MVELRule
 import org.jeasy.rules.mvel.MVELRuleFactory
 
@@ -56,7 +56,7 @@ fun main(args: Array<String>) {
     val alcoholRule = MVELRuleFactory.createRuleFrom(FileReader("src/main/java/org/jeasy/rules/tutorials/shop/alcohol-rule.yml"))
 
     // create a rule set
-    val rules = Rules()
+    val rules = Rules2()
     rules.register(ageRule)
     rules.register(alcoholRule)
 
