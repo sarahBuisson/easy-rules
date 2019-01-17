@@ -48,7 +48,7 @@ class SuspiciousRequestFilter : Filter {
     override fun init(filterConfig: FilterConfig) {
         rulesEngine = DefaultRulesEngine()
         rules = Rules()
-        rules!!.register(SuspiciousRequestRule())
+        rules.register(SuspiciousRequestRule())
     }
 
 
@@ -56,7 +56,7 @@ class SuspiciousRequestFilter : Filter {
     override fun doFilter(request: ServletRequest, response: ServletResponse, filterChain: FilterChain) {
         val facts = Facts()
         facts.put("request", request)
-        rulesEngine!!.fire(rules, facts)
+        rulesEngine.fire(rules, facts)
         filterChain.doFilter(request, response)
     }
 

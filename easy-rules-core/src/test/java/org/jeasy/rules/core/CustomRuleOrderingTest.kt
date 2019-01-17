@@ -23,8 +23,10 @@
  */
 package org.jeasy.rules.core
 
-import io.mockk.*
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.spyk
+import io.mockk.verifyOrder
 import org.jeasy.rules.api.Rule
 import kotlin.test.Test
 

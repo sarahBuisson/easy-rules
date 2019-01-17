@@ -29,23 +29,26 @@ import org.jeasy.rules.annotation.Fact
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
-import kotlin.test.*
+import kotlin.test.BeforeTest
 
 open abstract class AbstractTest {
 
     @MockK(relaxed = true)
-    open lateinit var rule1: Rule
-    @MockK(relaxed = true)
-    open lateinit var rule2: Rule
-    @MockK(relaxed = true)
-    open lateinit var fact1: Fact
-    @MockK(relaxed = true)
-    lateinit var fact2: Fact
+    protected open lateinit var rule1: Rule
 
-    lateinit var facts: Facts
-    lateinit var rules: Rules
+    @MockK(relaxed = true)
+    protected open lateinit var rule2: Rule
 
-    lateinit var rulesEngine: DefaultRulesEngine
+    @MockK(relaxed = true)
+    protected open lateinit var fact1: Fact
+
+    @MockK(relaxed = true)
+    protected lateinit var fact2: Fact
+
+    protected lateinit var facts: Facts
+    protected lateinit var rules: Rules
+
+    protected lateinit var rulesEngine: DefaultRulesEngine
 
     @BeforeTest
     @Throws(Exception::class)

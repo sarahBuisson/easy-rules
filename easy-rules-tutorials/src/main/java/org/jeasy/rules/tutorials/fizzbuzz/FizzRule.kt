@@ -26,14 +26,14 @@ package org.jeasy.rules.tutorials.fizzbuzz
 import org.jeasy.rules.annotation.*
 
 @Rule
-class FizzRule {
+public class FizzRule {
 
     val priority: Int
         @Priority
         get() = 1
 
     @Condition
-    fun isFizz(@Fact("number") number: Integer): Boolean {
+    fun isFizz(@Fact("number") number: Int): Boolean {
         return number.toInt() % 5 == 0
     }
 

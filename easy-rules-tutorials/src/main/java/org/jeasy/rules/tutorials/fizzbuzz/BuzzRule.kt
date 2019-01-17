@@ -33,7 +33,7 @@ class BuzzRule {
         get() = 2
 
     @Condition
-    fun isBuzz(@Fact("number") number: Integer): Boolean {
+    fun isBuzz(@Fact("number") number: Int): Boolean {
         return number.toInt() % 7 == 0
     }
 

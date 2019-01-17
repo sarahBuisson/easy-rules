@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.core
 
-import io.mockk.Called
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
@@ -46,7 +45,6 @@ class DefaultRulesEngineTest : AbstractTest() {
     private lateinit var annotatedRule: AnnotatedRule
 
     @BeforeTest
-    @Throws(Exception::class)
     override fun setup() {
         super.setup()
         every { rule1.name } returns ("r")
@@ -55,7 +53,6 @@ class DefaultRulesEngineTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
     fun whenConditionIsTrue_thenActionShouldBeExecuted() {
         // Given
         every { rule1.evaluate(facts) } returns (true)
@@ -69,7 +66,6 @@ class DefaultRulesEngineTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
     fun whenConditionIsFalse_thenActionShouldNotBeExecuted() {
         // Given
         every { rule1.evaluate(facts) } returns (false)
@@ -79,11 +75,10 @@ class DefaultRulesEngineTest : AbstractTest() {
         rulesEngine.fire(rules, facts)
 
         // Then
-        verify(atMost = 0, atLeast = 0){ rule1.execute(facts) }
+        verify(atMost = 0, atLeast = 0) { rule1.execute(facts) }
     }
 
     @Test
-    @Throws(Exception::class)
     fun rulesMustBeTriggeredInTheirNaturalOrder() {
         // Given
         every { rule1.evaluate(facts) } returns (true)
