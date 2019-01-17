@@ -36,6 +36,5 @@ interface Action {
      * @param facts known at the time of execution of the action
      * @throws Exception when unable to execute the action
      */
-    @Throws(Exception::class)
     fun execute(facts: Facts)
 }

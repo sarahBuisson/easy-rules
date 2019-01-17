@@ -25,9 +25,6 @@ package org.jeasy.rules.core
 
 import mu.KotlinLogging
 import org.jeasy.rules.api.*
-import org.slf4j.LoggerFactory
-
-import java.util.*
 
 /**
  * Inference [RulesEngine] implementation.
@@ -58,7 +55,7 @@ class InferenceRulesEngine
         rulesEngineListeners = ArrayList()
     }
 
-    @Override
+
     override fun fire(rules: Rules, facts: Facts) {
         var selectedRules: Set<Rule>
         do {
@@ -73,7 +70,7 @@ class InferenceRulesEngine
     }
 
     private fun selectCandidates(rules: Rules, facts: Facts): Set<Rule> {
-        val candidates = TreeSet<Rule>()
+        val candidates = sortedSetOf<Rule>()
         for (rule in rules) {
             if (rule.evaluate(facts)) {
                 candidates.add(rule)
@@ -82,7 +79,7 @@ class InferenceRulesEngine
         return candidates
     }
 
-    @Override
+
     override fun check(rules: Rules, facts: Facts): Map<Rule, Boolean> {
         return delegate.check(rules, facts)
     }

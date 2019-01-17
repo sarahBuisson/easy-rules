@@ -26,14 +26,13 @@ package org.jeasy.rules.core
 import io.mockk.Called
 import io.mockk.every
 import io.mockk.verify
-import org.junit.Before
-import org.junit.Test
-
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 
 class SkipOnFirstAppliedRuleTest : AbstractTest() {
 
-    @Before
+    @BeforeTest
     @Throws(Exception::class)
     override fun setup() {
         super.setup()

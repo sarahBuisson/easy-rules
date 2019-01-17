@@ -30,7 +30,7 @@ import org.jeasy.rules.api.RulesEngineListener
 
 internal class DefaultRulesEngineListener(private val parameters: RulesEngineParameters) : RulesEngineListener {
 
-    @Override
+
     override fun beforeEvaluate(rules: Rules, facts: Facts) {
         if (!rules.isEmpty) {
             logEngineParameters()
@@ -42,7 +42,7 @@ internal class DefaultRulesEngineListener(private val parameters: RulesEnginePar
         }
     }
 
-    @Override
+
     override fun afterExecute(rules: Rules, facts: Facts) {
 
     }

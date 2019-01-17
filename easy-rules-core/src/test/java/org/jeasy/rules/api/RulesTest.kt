@@ -26,8 +26,6 @@ package org.jeasy.rules.api
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.core.BasicRule
-import org.jeasy.rules.core.RuleProxy
-import java.util.HashSet
 import kotlin.test.*
 
 class RulesTest {

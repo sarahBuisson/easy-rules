@@ -43,7 +43,7 @@ class SuspiciousRequestFilter : Filter {
     private lateinit var rules: Rules
     private lateinit var  rulesEngine: RulesEngine
 
-    @Override
+
     @Throws(ServletException::class)
     override fun init(filterConfig: FilterConfig) {
         rulesEngine = DefaultRulesEngine()
@@ -51,7 +51,7 @@ class SuspiciousRequestFilter : Filter {
         rules!!.register(SuspiciousRequestRule())
     }
 
-    @Override
+
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(request: ServletRequest, response: ServletResponse, filterChain: FilterChain) {
         val facts = Facts()
@@ -60,7 +60,7 @@ class SuspiciousRequestFilter : Filter {
         filterChain.doFilter(request, response)
     }
 
-    @Override
+
     override fun destroy() {
 
     }

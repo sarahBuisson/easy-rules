@@ -24,8 +24,6 @@
 package org.jeasy.rules.core
 
 import mu.KotlinLogging
-import java.util.ArrayList
-import java.util.HashMap
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.RuleListener
@@ -62,7 +60,7 @@ class DefaultRulesEngine
         this.rulesEngineListeners.add(DefaultRulesEngineListener(parameters))
     }
 
-    @Override
+
     override fun fire(rules: Rules, facts: Facts) {
         triggerListenersBeforeRules(rules, facts)
         doFire(rules, facts)
@@ -111,7 +109,7 @@ class DefaultRulesEngine
         }
     }
 
-    @Override
+
     override fun check(rules: Rules, facts: Facts): Map<Rule, Boolean> {
         triggerListenersBeforeRules(rules, facts)
         val result = doCheck(rules, facts)

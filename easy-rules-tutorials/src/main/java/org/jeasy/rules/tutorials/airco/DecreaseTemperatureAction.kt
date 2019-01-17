@@ -5,7 +5,7 @@ import org.jeasy.rules.api.Facts
 
 class DecreaseTemperatureAction : Action {
 
-    @Override
+
     @Throws(Exception::class)
     override fun execute(facts: Facts) {
         System.out.println("It is hot! cooling air..")

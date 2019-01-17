@@ -23,17 +23,13 @@
  */
 package org.jeasy.rules.annotation
 
-import org.jeasy.rules.api.Rule.Companion.DEFAULT_NAME
-import org.jeasy.rules.api.Rule.Companion.DEFAULT_PRIORITY
-import java.lang.annotation.*
-
 /**
  * Annotation to mark a class as a rule.
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 
-@Inherited
+//TODO@Inherited
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
 annotation class Rule(
@@ -51,4 +47,4 @@ annotation class Rule(
          * The rule priority.
          * @return The rule priority
          */
-        val priority: Int = Integer.MAX_VALUE - 1) //TODO
+        val priority: Int = Int.MAX_VALUE - 1) //TODO

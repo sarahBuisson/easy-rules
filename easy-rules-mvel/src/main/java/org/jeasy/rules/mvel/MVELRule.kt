@@ -97,12 +97,12 @@ class MVELRule : BasicRule(Rule.DEFAULT_NAME, Rule.DEFAULT_DESCRIPTION, Rule.DEF
         return this
     }
 
-    @Override
+
     override fun evaluate(facts: Facts): Boolean {
         return condition.evaluate(facts)
     }
 
-    @Override
+
     @Throws(Exception::class)
     override fun execute(facts: Facts) {
         for (action in actions) {

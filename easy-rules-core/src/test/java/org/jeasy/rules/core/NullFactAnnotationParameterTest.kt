@@ -29,9 +29,7 @@ import org.jeasy.rules.annotation.Fact
 import org.jeasy.rules.annotation.Rule
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
-import org.junit.Assert
-import org.junit.Ignore
-import org.junit.Test
+import kotlin.test.*
 
 /**
  * Null value in facts must be accepted, this is not same thing that fact missing
@@ -50,7 +48,7 @@ class NullFactAnnotationParameterTest : AbstractTest() {
         val results = rulesEngine.check(rules, facts)
 
         for (b in results.values) {
-            Assert.assertTrue(b)
+            assertTrue(b)
         }
     }
 
@@ -66,7 +64,7 @@ class NullFactAnnotationParameterTest : AbstractTest() {
         val results = rulesEngine.check(rules, facts)
 
         for (b in results.values) {
-            Assert.assertFalse(b)
+            assertFalse(b)
         }
     }
 

@@ -23,25 +23,24 @@
  */
 package org.jeasy.rules.core
 
-import org.junit.Test
+import kotlin.test.Test
 
-import java.lang.annotation.*
 
-import org.junit.Assert.*
 import kotlin.reflect.KClass
+import kotlin.test.*
 
 class UtilsTest {
 
     @Test
     fun findAnnotationWithClassWhereAnnotationIsPresent() {
-        val foo:Annotation = Utils.findAnnotation(Foo::class, AnnotationIsPresent::class) as Annotation
+        val foo: Annotation = Utils.findAnnotation(Foo::class, AnnotationIsPresent::class) as Annotation
 
         assertCorrectAnnotationIsFound(Foo::class, foo)
     }
 
     @Test
     fun findAnnotationWithClassWhereAnnotationIsPresentViaMetaAnnotation() {
-        val foo:Annotation = Utils.findAnnotation(Foo::class, AnnotationIsPresentViaMetaAnnotation::class) as Annotation
+        val foo: Annotation = Utils.findAnnotation(Foo::class, AnnotationIsPresentViaMetaAnnotation::class) as Annotation
 
         assertCorrectAnnotationIsFound(Foo::class, foo)
     }

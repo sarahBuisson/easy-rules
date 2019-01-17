@@ -23,7 +23,7 @@
  */
 package org.jeasy.rules.annotation
 
-import java.lang.annotation.*
+
 
 /**
  * Annotation to mark a method as a rule condition.
@@ -32,7 +32,7 @@ import java.lang.annotation.*
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 
-@Inherited
+//@Inherited//TODO
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class Condition

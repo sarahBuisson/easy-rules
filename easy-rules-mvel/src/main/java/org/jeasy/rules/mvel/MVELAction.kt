@@ -49,7 +49,7 @@ class MVELAction
         compiledExpression = MVEL.compileExpression(expression)
     }
 
-    @Override
+
     override fun execute(facts: Facts) {
         try {
             MVEL.executeExpression(compiledExpression, facts.asMap())

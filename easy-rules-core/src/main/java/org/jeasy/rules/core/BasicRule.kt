@@ -73,7 +73,7 @@ open class BasicRule
      * Rules are unique according to their names within a rules engine registry.
      */
 
-    @Override
+
     override fun equals(o: Any?): Boolean {
         if (this === o)
             return true
@@ -88,7 +88,7 @@ open class BasicRule
 
     }
 
-    @Override
+
     override fun hashCode(): Int {
         var result = name.hashCode()
         result = 31 * result + if (description != null) description!!.hashCode() else 0
@@ -96,12 +96,12 @@ open class BasicRule
         return result
     }
 
-    @Override
+
     override fun toString(): String {
         return name
     }
 
-    @Override
+
     override operator fun compareTo(rule: Rule): Int {
         return if (priority < rule.priority) {
             -1

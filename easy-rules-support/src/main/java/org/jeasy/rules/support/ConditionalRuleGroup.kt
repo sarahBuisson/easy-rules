@@ -26,11 +26,6 @@ package org.jeasy.rules.support
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Comparator
-import java.util.HashSet
-
 /**
  * A conditional rule group is a composite rule where the rule with the highest priority acts as a condition:
  * if the rule with the highest priority evaluates to true, then we try to evaluate the rest of the rules
@@ -88,7 +83,7 @@ class ConditionalRuleGroup : CompositeRule {
      * @param facts The facts.
      * @return true if the path rules condition is true.
      */
-    @Override
+
     override fun evaluate(facts: Facts): Boolean {
         successfulEvaluations = HashSet()
         conditionalRule = ruleWithHighestPriority
@@ -111,7 +106,7 @@ class ConditionalRuleGroup : CompositeRule {
      *
      * @throws Exception thrown if an exception occurs during actions performing
      */
-    @Override
+
     @Throws(Exception::class)
     override fun execute(facts: Facts) {
         conditionalRule!!.execute(facts)
@@ -122,8 +117,8 @@ class ConditionalRuleGroup : CompositeRule {
 
     fun sortRules(): List<Rule> {
         val copy = ArrayList(rules)
-        Collections.sort(copy, object : Comparator<Rule> {
-            @Override
+        copy.sortWith( object : Comparator<Rule> {
+
             override fun compare(o1: Rule, o2: Rule): Int {
                 val i2 = o2.priority
                 return i2.compareTo(o1.priority)

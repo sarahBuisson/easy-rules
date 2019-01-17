@@ -26,7 +26,7 @@ package org.jeasy.rules.tutorials.shop
 class Person(val name: String, val age: Int) {
     var isAdult: Boolean = false
 
-    @Override
+
     override fun toString(): String {
         return "Person{" +
                 "name='" + name + '\''.toString() +

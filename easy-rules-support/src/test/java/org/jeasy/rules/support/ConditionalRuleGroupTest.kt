@@ -34,9 +34,8 @@ import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.DefaultRulesEngine
-import org.junit.Before
-import org.junit.Test
-import java.lang.reflect.InvocationTargetException
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -57,7 +56,7 @@ class ConditionalRuleGroupTest {
 
     private lateinit var conditionalRuleGroup: ConditionalRuleGroup
 
-    @Before
+    @BeforeTest
     fun setUp() {
         MockKAnnotations.init(this, relaxed = true)
         every { rule1!!.evaluate(facts) } returns (false)
@@ -218,7 +217,7 @@ class ConditionalRuleGroupTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    @Throws(NoSuchMethodException::class, InvocationTargetException::class, IllegalAccessException::class)
+    @Throws(NoSuchMethodException::class, IllegalAccessException::class)
     fun aRuleWithoutPriorityHasAHighPriororty() {
         val rule1 = MyOtherRule(3)
         conditionalRuleGroup.addRule(rule1)

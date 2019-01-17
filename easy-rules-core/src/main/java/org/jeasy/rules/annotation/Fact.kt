@@ -23,9 +23,6 @@
  */
 package org.jeasy.rules.annotation
 
-import java.lang.annotation.ElementType
-import java.lang.annotation.Inherited
-import java.lang.annotation.RetentionPolicy
 
 
 /**
@@ -34,7 +31,7 @@ import java.lang.annotation.RetentionPolicy
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 
-@Inherited
+//TODO@Inherited
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.VALUE_PARAMETER)//TODO : type Parameter?
 annotation class Fact(val value: String)

@@ -30,25 +30,19 @@ import org.jeasy.rules.annotation.Fact
 import org.jeasy.rules.annotation.Priority
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
-import java.lang.String.format
-import java.lang.reflect.InvocationHandler
-import java.lang.reflect.InvocationTargetException
-import java.lang.reflect.Method
-import java.util.*
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.functions
-import kotlin.reflect.full.memberProperties
 
 /**
  * Main class to create rule proxies from annotated objects.
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-open class RuleProxy private constructor(private val target: Any) : InvocationHandler {
+open class RuleProxy private constructor(private val target: Any) {
 
     protected val rulePriority: Int
         @Throws(Exception::class)
@@ -62,7 +56,7 @@ open class RuleProxy private constructor(private val target: Any) : InvocationHa
 
             val methods = methods
             for (method in methods) {
-                if (method.findAnnotation<Priority>()!=null) {
+                if (method.findAnnotation<Priority>() != null) {
                     priority = method.call(target) as Int
                     break
                 }
@@ -72,9 +66,7 @@ open class RuleProxy private constructor(private val target: Any) : InvocationHa
 
 
     private val priority: Int
-        @Throws(Exception::class)
         get() {
-
             return rulePriority
         }
 
@@ -92,11 +84,11 @@ open class RuleProxy private constructor(private val target: Any) : InvocationHa
     private val actionMethodBeans: Set<ActionMethodOrderBean>
         get() {
             val methods = methods
-            val actionMethodBeans = TreeSet<ActionMethodOrderBean>()
+            val actionMethodBeans = sortedSetOf<ActionMethodOrderBean>()
             for (method in methods) {
                 val actionAnnotation = method.annotations.filter { it.annotationClass == Action::class }.firstOrNull()
                 if (actionAnnotation != null) {
-                    val order =  method.annotations.indexOf(actionAnnotation) //TODO
+                    val order = method.annotations.indexOf(actionAnnotation) //TODO
                     actionMethodBeans.add(ActionMethodOrderBean(method, order))
                 }
             }
@@ -140,9 +132,9 @@ open class RuleProxy private constructor(private val target: Any) : InvocationHa
     protected val targetClass: KClass<*>
         get() = target::class
 
-    @Override
+
     @Throws(Throwable::class)
-    override operator fun invoke(proxy: Any, method: Method, args: Array<Any>): Any? {
+    operator fun invoke(proxy: Any, method: KFunction<Any?>, args: Array<Any>): Any? {
         val methodName = method.name
         when (methodName) {
             "getName" -> return ruleName
@@ -158,7 +150,7 @@ open class RuleProxy private constructor(private val target: Any) : InvocationHa
         }
     }
 
-    @Throws(IllegalAccessException::class, InvocationTargetException::class)
+    @Throws(IllegalAccessException::class)
     private fun evaluateMethod(args: Array<Any>): Any? {
         val facts = args[0] as Facts
         val conditionMethod = conditionMethod
@@ -170,13 +162,13 @@ open class RuleProxy private constructor(private val target: Any) : InvocationHa
                     targetClass.simpleName, e.missingFact, facts)
             return false
         } catch (e: IllegalArgumentException) {
-            val error = "Types of injected facts in method '%s' in rule '%s' do not match parameters types"
-            throw RuntimeException(format(error, conditionMethod!!.name, targetClass.simpleName), e)
+            val error = "Types of injected facts in method '${conditionMethod!!.name}' in rule '${targetClass.simpleName}' do not match parameters types"
+            throw RuntimeException(error, e)
         }
 
     }
 
-    @Throws(IllegalAccessException::class, InvocationTargetException::class)
+    @Throws(IllegalAccessException::class)
     private fun executeMethod(args: Array<Any>): Any? {
         val facts = args[0] as Facts
         for (actionMethodBean in actionMethodBeans) {
@@ -206,7 +198,7 @@ open class RuleProxy private constructor(private val target: Any) : InvocationHa
                 val factName = (annotations[0] as Fact).value //validated upfront.
                 val fact = facts.get<Fact>(factName)
                 if (fact == null && !facts.asMap().containsKey(factName)) {
-                    throw NoSuchFactException(format("No fact named '%s' found in known facts: %n%s", factName, facts), factName)
+                    throw NoSuchFactException("No fact named '$factName' found in known facts: ${facts}", factName)
                 }
                 actualParameters.add(fact)
             } else {
@@ -323,7 +315,7 @@ open class RuleProxy private constructor(private val target: Any) : InvocationHa
 
                 ruleDefinitionValidator.validateRuleDefinition(rule)
 
-                result = object :RuleProxy(rule), Rule, Comparable<Rule>  {
+                result = object : RuleProxy(rule), Rule, Comparable<Rule> {
 
                     override val name: String
                         get() = this.ruleName//To change initializer of created properties use File | Settings | File Templates.
@@ -339,17 +331,17 @@ open class RuleProxy private constructor(private val target: Any) : InvocationHa
                             return rule::class.functions.filter { it.findAnnotation<Condition>() != null }
                                     .map { it.callBy(toArg(it, facts, rule)) as Boolean }
                                     .reduce { acc: Boolean, it: Boolean -> return acc && it }//To change body of created functions use File | Settings | File Templates.
-                        }catch (e:java.lang.Exception){
-                            e.printStackTrace()
+                        } catch (e: Exception) {
+                            println(e)
                             return false
                         }
                     }
 
                     override fun execute(facts: Facts) {
                         try {
-                        rule::class.functions.filter { it.findAnnotation<Action>() != null }
-                                .map { it.callBy(toArg(it, facts, rule)) }//To change body of created functions use File | Settings | File Templates.
-                        }catch (e:java.lang.Exception){
+                            rule::class.functions.filter { it.findAnnotation<Action>() != null }
+                                    .map { it.callBy(toArg(it, facts, rule)) }//To change body of created functions use File | Settings | File Templates.
+                        } catch (e: Exception) {
                             e.printStackTrace()
                         }
                     }
@@ -364,7 +356,8 @@ open class RuleProxy private constructor(private val target: Any) : InvocationHa
                             return name.compareTo(otherName)
                         }
                     }
-                    override fun toString():String{
+
+                    override fun toString(): String {
                         return rule.toString()
                     }
 

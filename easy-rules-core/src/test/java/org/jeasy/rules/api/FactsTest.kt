@@ -23,8 +23,6 @@
  */
 package org.jeasy.rules.api
 
-
-import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

@@ -28,9 +28,6 @@ import org.jeasy.rules.api.Rule
 import org.jeasy.rules.core.BasicRule
 import org.jeasy.rules.core.RuleProxy
 
-import java.util.HashMap
-import java.util.TreeSet
-
 /**
  * Base class representing a composite rule composed of a set of rules.
  *
@@ -54,14 +51,14 @@ abstract class CompositeRule
     private val proxyRules: MutableMap<Any, Rule>
 
     init {
-        rules = TreeSet()
+        rules = sortedSetOf()
         proxyRules = HashMap()
     }
 
-    @Override
+
     override abstract fun evaluate(facts: Facts): Boolean
 
-    @Override
+
     @Throws(Exception::class)
     override abstract fun execute(facts: Facts)
 

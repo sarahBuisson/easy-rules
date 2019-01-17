@@ -23,8 +23,6 @@
  */
 package org.jeasy.rules.api
 
-import java.lang.String.format
-import java.util.*
 
 /**
  * Represents a set of named facts. Facts have unique name within a `Facts` object.
@@ -33,7 +31,7 @@ import java.util.*
  */
 open class Facts : Iterable<Map.Entry<String, Any?>> {
 
-    private val facts = HashMap<String, Any?>()
+    private val facts = mutableMapOf<String, Any?>()
     val size: Int
         get() = facts.size
     val isEmpty: Boolean
@@ -51,7 +49,6 @@ open class Facts : Iterable<Map.Entry<String, Any?>> {
      * previously associated <tt>null</tt> with <tt>name</tt>.)
      */
     fun put(name: String, fact: Any?): Any? {
-        Objects.requireNonNull(name)
         return facts.put(name, fact)
     }
 
@@ -65,7 +62,6 @@ open class Facts : Iterable<Map.Entry<String, Any?>> {
      * previously associated <tt>null</tt> with <tt>name</tt>.)
      */
     fun remove(name: String): Any? {
-        Objects.requireNonNull(name)
         return facts.remove(name)
     }
 
@@ -76,9 +72,7 @@ open class Facts : Iterable<Map.Entry<String, Any?>> {
      * @param <T> type of the fact
      * @return the fact having the given name, or null if there is no fact with the given name
     </T> */
-    @SuppressWarnings("unchecked")
     operator fun <T> get(name: String): T {
-        Objects.requireNonNull(name)
         return facts.get(name) as T
     }
 
@@ -91,23 +85,23 @@ open class Facts : Iterable<Map.Entry<String, Any?>> {
         return facts
     }
 
-    @Override
+
     override fun iterator(): Iterator<Map.Entry<String, Any?>> {
         return facts.entries.iterator()
     }
 
-    @Override
+
     override fun toString(): String {
-        val stringBuilder = StringBuilder("[")
+        var stringBuilder = ("[")
         val entries = ArrayList(facts.entries)
         for (i in 0 until entries.size) {
             val entry = entries.get(i)
-            stringBuilder.append(format(" { %s : %s } ", entry.key, entry.value))
+            stringBuilder += (" { ${entry.key} : ${entry.value}  } ")
             if (i < entries.size - 1) {
-                stringBuilder.append(",")
+                stringBuilder += (",")
             }
         }
-        stringBuilder.append("]")
+        stringBuilder += ("]")
         return stringBuilder.toString()
     }
 }

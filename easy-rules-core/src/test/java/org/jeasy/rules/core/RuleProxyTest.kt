@@ -244,7 +244,7 @@ class RuleProxyTest {
         fun then() {
         }
 
-        @Override
+
         override fun toString(): String {
             return "I am a Dummy rule"
         }

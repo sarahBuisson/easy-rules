@@ -32,12 +32,12 @@ import org.jeasy.rules.api.RuleListener
 
 internal class DefaultRuleListener : RuleListener {
 
-    @Override
+
     override fun beforeEvaluate(rule: Rule, facts: Facts): Boolean {
         return true
     }
 
-    @Override
+
     override fun afterEvaluate(rule: Rule, facts: Facts, evaluationResult: Boolean) {
         val ruleName = rule.name
         if (evaluationResult) {
@@ -47,17 +47,17 @@ internal class DefaultRuleListener : RuleListener {
         }
     }
 
-    @Override
+
     override fun beforeExecute(rule: Rule, facts: Facts) {
 
     }
 
-    @Override
+
     override fun onSuccess(rule: Rule, facts: Facts) {
         LOGGER.info("Rule '{}' performed successfully", rule.name)
     }
 
-    @Override
+
     override fun onFailure(rule: Rule, facts: Facts, exception: Exception) {
         LOGGER.info("Rule '" + rule.name + "' performed with error", exception)
     }

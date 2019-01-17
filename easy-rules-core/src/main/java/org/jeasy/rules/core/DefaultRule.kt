@@ -33,12 +33,12 @@ internal class DefaultRule(name: String, description: String, priority: Int, pub
 
 
 
-    @Override
+
     override fun evaluate(facts: Facts): Boolean {
         return condition.evaluate(facts)
     }
 
-    @Override
+
     @Throws(Exception::class)
     override fun execute(facts: Facts) {
         for (action in actions) {

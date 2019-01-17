@@ -27,10 +27,8 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verifyOrder
 import org.jeasy.rules.api.RulesEngineListener
-import org.junit.Before
-import org.junit.Test
-import java.util.Arrays.asList
-
+import kotlin.test.Test
+import kotlin.test.BeforeTest
 
 class RulesEngineListenerTest : AbstractTest() {
 
@@ -39,11 +37,11 @@ class RulesEngineListenerTest : AbstractTest() {
     @MockK
     private lateinit var rulesEngineListener2: RulesEngineListener
 
-    @Before
+    @BeforeTest
     @Throws(Exception::class)
     override fun setup() {
         super.setup()
-        rulesEngine.registerRulesEngineListeners(asList(rulesEngineListener1, rulesEngineListener2))
+        rulesEngine.registerRulesEngineListeners(listOf(rulesEngineListener1, rulesEngineListener2))
     }
 
     @Test

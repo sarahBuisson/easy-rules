@@ -97,7 +97,7 @@ class RulesEngineParameters {
         return this
     }
 
-    @Override
+
     override fun toString(): String {
         return "Engine parameters { " +
                 "skipOnFirstAppliedRule = " + isSkipOnFirstAppliedRule +
@@ -112,6 +112,6 @@ class RulesEngineParameters {
         /**
          * Default rule priority threshold.
          */
-        val DEFAULT_RULE_PRIORITY_THRESHOLD = Integer.MAX_VALUE
+        val DEFAULT_RULE_PRIORITY_THRESHOLD = Int.MAX_VALUE
     }
 }

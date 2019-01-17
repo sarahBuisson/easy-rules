@@ -29,8 +29,8 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.verify
 import io.mockk.verifyOrder
 import org.jeasy.rules.api.RuleListener
-import org.junit.Before
-import org.junit.Test
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 
 class RuleListenerTest : AbstractTest() {
@@ -40,7 +40,7 @@ class RuleListenerTest : AbstractTest() {
     @MockK
     private lateinit var ruleListener2: RuleListener
 
-    @Before
+    @BeforeTest
     @Throws(Exception::class)
     override fun setup() {
         super.setup()

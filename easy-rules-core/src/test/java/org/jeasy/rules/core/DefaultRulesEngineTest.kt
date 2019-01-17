@@ -33,12 +33,7 @@ import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Priority
 import org.jeasy.rules.api.RuleListener
 import org.jeasy.rules.api.RulesEngineListener
-import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
-import kotlin.test.assertTrue
-import kotlin.test.fail
+import kotlin.test.*
 
 class DefaultRulesEngineTest : AbstractTest() {
 
@@ -50,7 +45,7 @@ class DefaultRulesEngineTest : AbstractTest() {
 
     private lateinit var annotatedRule: AnnotatedRule
 
-    @Before
+    @BeforeTest
     @Throws(Exception::class)
     override fun setup() {
         super.setup()
@@ -249,7 +244,7 @@ class DefaultRulesEngineTest : AbstractTest() {
         assertTrue(rulesEngineListeners.contains(rulesEngineListener))
     }
 
-    @After
+    @AfterTest
     fun clearRules() {
         rules.clear()
     }

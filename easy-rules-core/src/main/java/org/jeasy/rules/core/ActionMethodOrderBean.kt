@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.core
 
-import java.lang.reflect.Method
 import kotlin.reflect.KCallable
 
 /**
@@ -33,7 +32,7 @@ import kotlin.reflect.KCallable
  */
 internal class ActionMethodOrderBean(val method: KCallable<*>, val order: Int) : Comparable<ActionMethodOrderBean> {
 
-    @Override
+
     override fun compareTo(actionMethodOrderBean: ActionMethodOrderBean): Int {
         return if (order < actionMethodOrderBean.order) {
             -1
@@ -43,7 +42,7 @@ internal class ActionMethodOrderBean(val method: KCallable<*>, val order: Int) :
             if (method.equals(actionMethodOrderBean.method)) 0 else 1
         }
     }
-    @Override
+
     override fun equals(o: Any?): Boolean {
         if (this === o) return true
         if (o !is ActionMethodOrderBean) return false
@@ -53,7 +52,7 @@ internal class ActionMethodOrderBean(val method: KCallable<*>, val order: Int) :
         if (order != that.order) return false
         return if (!method.equals(that.method)) false else true
     }
-    @Override
+
     override fun hashCode(): Int {
         var result = method.hashCode()
         result = 31 * result + order

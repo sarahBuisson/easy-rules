@@ -26,7 +26,7 @@ package org.jeasy.rules.core
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import org.jeasy.rules.api.Rule
-import org.junit.Test
+import kotlin.test.Test
 
 class CustomRuleOrderingTest : AbstractTest() {
 
@@ -74,7 +74,7 @@ class CustomRuleOrderingTest : AbstractTest() {
 
     class MyRule : BasicRule() {
 
-        @Override
+
         override operator fun compareTo(rule: Rule): Int {
             return name.compareTo(rule.name)
         }

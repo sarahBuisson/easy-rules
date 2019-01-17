@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.annotation
 
-import java.lang.annotation.*
 
 /**
  * Annotation to mark the method to execute to get rule priority.
@@ -32,7 +31,7 @@ import java.lang.annotation.*
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 
-@Inherited
+//TODO @Inherited
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY_GETTER,AnnotationTarget.FUNCTION)
 annotation class Priority

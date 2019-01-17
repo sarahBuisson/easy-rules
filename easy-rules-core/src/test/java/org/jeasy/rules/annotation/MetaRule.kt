@@ -23,10 +23,8 @@
  */
 package org.jeasy.rules.annotation
 
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
 @Rule
 annotation class MetaRule

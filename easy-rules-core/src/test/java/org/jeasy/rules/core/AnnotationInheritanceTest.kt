@@ -29,7 +29,7 @@ import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.api.RulesEngine
 import org.jeasy.rules.annotation.Rule
-import org.junit.Test
+import kotlin.test.Test
 
 import kotlin.test.assertTrue
 

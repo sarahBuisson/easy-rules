@@ -23,20 +23,17 @@
  */
 package org.jeasy.rules.core
 
-import io.mockk.Called
-import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.verify
-import org.junit.Before
-import org.junit.Test
-
+import kotlin.test.Test
+import kotlin.test.BeforeTest
 
 
 
 
 class RulePriorityThresholdTest : AbstractTest() {
 
-    @Before
+    @BeforeTest
     @Throws(Exception::class)
     override fun setup() {
         super.setup()

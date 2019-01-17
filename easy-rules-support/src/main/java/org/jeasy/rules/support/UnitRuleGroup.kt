@@ -59,7 +59,7 @@ open class UnitRuleGroup : CompositeRule {
      */
     constructor(name: String, description: String, priority: Int) : super(name, description, priority) {}
 
-    @Override
+
     override fun evaluate(facts: Facts): Boolean {
         if (!rules.isEmpty()) {
             for (rule in rules) {
@@ -72,7 +72,7 @@ open class UnitRuleGroup : CompositeRule {
         return false
     }
 
-    @Override
+
     @Throws(Exception::class)
     override fun execute(facts: Facts) {
         for (rule in rules) {

@@ -26,15 +26,15 @@ package org.jeasy.rules.core
 
 
 import org.jeasy.rules.annotation.*
-import org.junit.Before
-import org.junit.Test
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.fail
 
 class RuleDefinitionValidatorTest {
 
     private var ruleDefinitionValidator: RuleDefinitionValidator? = null
 
-    @Before
+    @BeforeTest
     fun setup() {
         ruleDefinitionValidator = RuleDefinitionValidator()
     }

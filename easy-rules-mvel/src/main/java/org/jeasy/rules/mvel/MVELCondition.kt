@@ -49,7 +49,7 @@ class MVELCondition
         compiledExpression = MVEL.compileExpression(expression)
     }
 
-    @Override
+
     override fun evaluate(facts: Facts): Boolean {
         try {
             return MVEL.executeExpression(compiledExpression, facts.asMap()) as Boolean

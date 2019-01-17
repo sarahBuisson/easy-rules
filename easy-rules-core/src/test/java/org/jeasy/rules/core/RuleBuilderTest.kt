@@ -28,9 +28,8 @@ import io.mockk.impl.annotations.MockK
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
 import org.jeasy.rules.api.Rule
-import org.junit.Test
+import kotlin.test.Test
 
-import java.util.Arrays.asList
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -83,7 +82,7 @@ class RuleBuilderTest {
         assertEquals(rule.priority, 3)
         assertTrue(rule is DefaultRule)
         assertTrue((rule as DefaultRule).condition == (condition))
-        assertTrue(rule.actions.containsAll(asList(action1, action2)))
+        assertTrue(rule.actions.containsAll(listOf(action1, action2)))
         assertEquals(rule.actions.size, 2)
     }
 }

@@ -25,7 +25,7 @@ package org.jeasy.rules.core
 
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
-import org.junit.Test
+import kotlin.test.Test
 
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -68,7 +68,7 @@ class BasicRuleTest : AbstractTest() {
 
         override var name: String = "rule1"
 
-        @Override
+
         override fun evaluate(facts: Facts): Boolean {
             return true
         }
@@ -79,7 +79,7 @@ class BasicRuleTest : AbstractTest() {
 
         override var name: String = "rule2"
 
-        @Override
+
         override fun evaluate(facts: Facts): Boolean {
             return true
         }
@@ -90,7 +90,7 @@ class BasicRuleTest : AbstractTest() {
 
         override var name: String = "rule3"
 
-        @Override
+
         override fun evaluate(facts: Facts): Boolean {
             return true
         }

@@ -45,7 +45,7 @@ interface Condition {
          * A NoOp [Condition] that always returns false.
          */
         val FALSE: Condition = object : Condition {
-            @Override
+
             override fun evaluate(facts: Facts): Boolean {
                 return false
             }
@@ -55,7 +55,7 @@ interface Condition {
          * A NoOp [Condition] that always returns true.
          */
         val TRUE: Condition = object : Condition {
-            @Override
+
             override fun evaluate(facts: Facts): Boolean {
                 return true
             }
