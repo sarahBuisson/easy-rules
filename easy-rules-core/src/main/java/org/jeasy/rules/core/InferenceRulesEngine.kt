@@ -41,11 +41,11 @@ class InferenceRulesEngine
  *
  * @param parameters of the engine
  */
-@JvmOverloads constructor(@get:Override
+ constructor(
                           override val parameters: RulesEngineParameters = RulesEngineParameters()) : RulesEngine {
-    @get:Override
+
     override val ruleListeners: MutableList<RuleListener>
-    @get:Override
+
     override val rulesEngineListeners: MutableList<RulesEngineListener>
     private val delegate: DefaultRulesEngine
 
@@ -59,24 +59,24 @@ class InferenceRulesEngine
     override fun fire(rules: Rules, facts: Facts) {
         var selectedRules: Set<Rule>
         do {
-            LOGGER.info("Selecting candidate rules based on the following facts: {}", facts)
+            LOGGER.info{"Selecting candidate rules based on the following facts: $facts"}
             selectedRules = selectCandidates(rules, facts)
             if (!selectedRules.isEmpty()) {
                 delegate.doFire(Rules(selectedRules), facts)
             } else {
-                LOGGER.info("No candidate rules found for facts: {}", facts)
+                LOGGER.info{"No candidate rules found for facts: $facts" }
             }
         } while (!selectedRules.isEmpty())
     }
 
     private fun selectCandidates(rules: Rules, facts: Facts): Set<Rule> {
-        val candidates = sortedSetOf<Rule>()
+        val candidates = mutableSetOf<Rule>()
         for (rule in rules) {
             if (rule.evaluate(facts)) {
                 candidates.add(rule)
             }
         }
-        return candidates
+        return candidates.sorted().toSet()
     }
 
 

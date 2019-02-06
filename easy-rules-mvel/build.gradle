@@ -1,0 +1,64 @@
+buildscript {
+    ext {
+        kotlin_version = "1.3.20"
+        coroutines_version = "0.30.1"
+    }
+
+
+    dependencies {
+         project(":easy-rules-core")
+        classpath 'io.github.microutils:kotlin-logging:1.6.22'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+plugins {
+    // id 'java'
+    // id 'org.jetbrains.kotlin.jvm'
+    // id 'kotlin2js'
+    id 'org.jetbrains.kotlin.multiplatform'
+    id("maven-publish")
+}
+
+kotlin {
+    // JS target named 'js'
+    sourceSets {
+        commonMain {
+            kotlin.srcDir('src/main/java')
+            resources.srcDir('src/main/resource')
+            dependencies {
+                implementation 'io.github.microutils:kotlin-logging:1.6.22'
+                implementation kotlin('stdlib-common')
+                project(":easy-rules-core")
+            }
+        }
+        commonTest {
+            kotlin.srcDir('src/test/java')
+            dependencies {
+                implementation kotlin('test-common')
+                implementation kotlin('test-annotations-common')
+            }
+        }
+        jvm {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+            }
+        }
+
+    }
+
+    jvm{
+        compilations.main.kotlinOptions {
+            // Setup the Kotlin compiler options for the 'main' compilation:
+            jvmTarget = "1.8"
+        }
+
+    }
+    js()
+
+}
+task listrepos {
+    doLast {
+        println "Repositories:"
+        project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
+    }
+}

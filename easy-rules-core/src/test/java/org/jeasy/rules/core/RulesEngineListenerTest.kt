@@ -38,14 +38,14 @@ class RulesEngineListenerTest : AbstractTest() {
     private lateinit var rulesEngineListener2: RulesEngineListener
 
     @BeforeTest
-    @Throws(Exception::class)
+  //  @Throws(Exception::class)
     override fun setup() {
         super.setup()
         rulesEngine.registerRulesEngineListeners(listOf(rulesEngineListener1, rulesEngineListener2))
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun rulesEngineListenersShouldBeCalledInOrderWhenFiringRules() {
         // Given
         every {rule1.evaluate(facts)} returns (true)
@@ -76,7 +76,7 @@ class RulesEngineListenerTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun rulesEngineListenersShouldBeCalledInOrderWhenCheckingRules() {
         // Given
         every { rule1.evaluate(facts) } returns (true)

@@ -48,6 +48,8 @@ class Rules2 : Rules {
      * @param rule to unregister
      */
     fun unregister(rule: Any) {
+        println(RuleProxy.asRule(rule).equals(rules.first()))
+                println(rules.first().equals(RuleProxy.asRule(rule)))
         this.rules.remove(RuleProxy.asRule(rule))
     }
 

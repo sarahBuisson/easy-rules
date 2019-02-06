@@ -33,7 +33,7 @@ class FactsTest {
     private val facts = Facts()
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun factsMustHaveUniqueName() {
         facts.put("foo", 1)
         facts.put("foo", 2)
@@ -52,7 +52,7 @@ class FactsTest {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun remove() {
         facts.put("foo", 1)
         facts.remove("foo")
@@ -71,7 +71,7 @@ class FactsTest {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun get() {
         facts.put("foo", 1)
         assertEquals(facts.get("foo") as Int?,1)

@@ -40,7 +40,7 @@ class RuleListenerTest : AbstractTest() {
     private lateinit var ruleListener2: RuleListener
 
     @BeforeTest
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     override fun setup() {
         super.setup()
         every {ruleListener1!!.beforeEvaluate(rule1, facts)} returns (true)
@@ -50,7 +50,7 @@ class RuleListenerTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun whenTheRuleExecutesSuccessfully_thenOnSuccessShouldBeExecuted() {
         // Given
         every {rule1.evaluate(facts)} returns (true)
@@ -80,7 +80,7 @@ class RuleListenerTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun whenTheRuleFails_thenOnFailureShouldBeExecuted() {
         // Given
         every {rule1.evaluate(facts)} returns (true)
@@ -113,7 +113,7 @@ class RuleListenerTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun whenListenerBeforeEvaluateReturnsFalse_thenTheRuleShouldBeSkippedBeforeBeingEvaluated() {
         // Given
         every {ruleListener1!!.beforeEvaluate(rule1, facts)} returns (false)
@@ -127,7 +127,7 @@ class RuleListenerTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun whenListenerBeforeEvaluateReturnsTrue_thenTheRuleShouldBeEvaluated() {
         // Given
         every {ruleListener1!!.beforeEvaluate(rule1, facts)} returns (true)
@@ -141,7 +141,7 @@ class RuleListenerTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun whenTheRuleEvaluatesToTrue_thenTheListenerShouldBeInvoked() {
         // Given
         every {rule1.evaluate(facts)} returns (true)
@@ -155,7 +155,7 @@ class RuleListenerTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun whenTheRuleEvaluatesToFalse_thenTheListenerShouldBeInvoked() {
         // Given
         every {rule1.evaluate(facts)} returns (false)

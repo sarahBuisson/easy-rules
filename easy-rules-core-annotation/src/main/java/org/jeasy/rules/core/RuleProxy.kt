@@ -48,7 +48,7 @@ import kotlin.reflect.full.functions
 open class RuleProxy private constructor(private val target: Any) {
 
     protected val rulePriority: Int
-        @Throws(Exception::class)
+        ////@Throws(Exception::class)
         get() {
             var priority = Rule.DEFAULT_PRIORITY
 
@@ -136,7 +136,7 @@ open class RuleProxy private constructor(private val target: Any) {
         get() = target::class
 
 
-    @Throws(Throwable::class)
+    ////@Throws(Throwable::class)
     operator fun invoke(proxy: Any, method: KFunction<Any?>, args: Array<Any>): Any? {
         val methodName = method.name
         when (methodName) {
@@ -153,7 +153,7 @@ open class RuleProxy private constructor(private val target: Any) {
         }
     }
 
-    @Throws(IllegalAccessException::class)
+    ////@Throws(IllegalAccessException::class)
     private fun evaluateMethod(args: Array<Any>): Any? {
         val facts = args[0] as Facts
         val conditionMethod = conditionMethod
@@ -171,7 +171,7 @@ open class RuleProxy private constructor(private val target: Any) {
 
     }
 
-    @Throws(IllegalAccessException::class)
+    //@Throws(IllegalAccessException::class)
     private fun executeMethod(args: Array<Any>): Any? {
         val facts = args[0] as Facts
         for (actionMethodBean in actionMethodBeans) {
@@ -182,7 +182,7 @@ open class RuleProxy private constructor(private val target: Any) {
         return null
     }
 
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     private fun compareToMethod(args: Array<Any>): Any? {
         val compareToMethod = compareToMethod
         if (compareToMethod != null) {
@@ -212,8 +212,8 @@ open class RuleProxy private constructor(private val target: Any) {
         return actualParameters
     }
 
-    @Throws(Exception::class)
-    private fun equalsMethod(args: Array<Any>): Boolean {
+    //@Throws(Exception::class)
+    protected fun equalsMethod(args: Array<Any>): Boolean {
         if (args[0] !is Rule) {
             return false
         }
@@ -233,8 +233,8 @@ open class RuleProxy private constructor(private val target: Any) {
         return !if (description != null) !description.equals(otherDescription) else otherDescription != null
     }
 
-    @Throws(Exception::class)
-    private fun hashCodeMethod(): Int {
+    //@Throws(Exception::class)
+    protected fun hashCodeMethod(): Int {
         var result = ruleName.hashCode()
         val priority = rulePriority
         val description = ruleDescription
@@ -243,7 +243,7 @@ open class RuleProxy private constructor(private val target: Any) {
         return result
     }
 
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     private fun toStringMethod(): String {
         val methods = methods
         for (method in methods) {
@@ -254,7 +254,7 @@ open class RuleProxy private constructor(private val target: Any) {
         return ruleName
     }
 
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     private operator fun compareTo(otherRule: Any): Int {
         if (otherRule is RuleProxy) {
             val otherPriority = otherRule.rulePriority
@@ -365,6 +365,14 @@ open class RuleProxy private constructor(private val target: Any) {
                         return rule.toString()
                     }
 
+                    override fun equals(other: Any?): Boolean {
+
+                        return other!=null && equalsMethod(arrayOf<Any>(other!!))
+                    }
+
+                    override fun hashCode(): Int {
+                        return hashCodeMethod()
+                    }
                 }
 
 

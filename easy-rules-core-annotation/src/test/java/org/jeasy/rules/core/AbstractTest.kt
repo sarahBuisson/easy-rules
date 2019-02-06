@@ -31,7 +31,7 @@ import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
 import kotlin.test.BeforeTest
 
-open abstract class AbstractTest {
+open abstract class AbstractTest2 {
 
     @MockK(relaxed = true)
     protected open lateinit var rule1: Rule

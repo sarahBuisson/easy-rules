@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.core
 
-import mu.KotlinLogging
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.RuleListener
@@ -41,9 +40,9 @@ internal class DefaultRuleListener : RuleListener {
     override fun afterEvaluate(rule: Rule, facts: Facts, evaluationResult: Boolean) {
         val ruleName = rule.name
         if (evaluationResult) {
-            LOGGER.info("Rule '{}' triggered", ruleName)
+            LOGGER.info{"Rule '$ruleName' triggered"}
         } else {
-            LOGGER.info("Rule '{}' has been evaluated to false, it has not been executed", ruleName)
+            LOGGER.info{"Rule '$ruleName' has been evaluated to false, it has not been executed"}
         }
     }
 
@@ -54,16 +53,17 @@ internal class DefaultRuleListener : RuleListener {
 
 
     override fun onSuccess(rule: Rule, facts: Facts) {
-        LOGGER.info("Rule '{}' performed successfully", rule.name)
+        LOGGER.info { "Rule '${rule.name}' performed successfully" }
     }
 
 
     override fun onFailure(rule: Rule, facts: Facts, exception: Exception) {
-        LOGGER.info("Rule '" + rule.name + "' performed with error", exception)
+        LOGGER.info { "Rule '" + rule.name + "' performed with error" }
+        LOGGER.info { exception }
     }
 
     companion object {
 
-        private val LOGGER =  KotlinLogging.logger {}
+        private val LOGGER =  mu.KotlinLogging.logger {}
     }
 }

@@ -38,7 +38,7 @@ class CustomRuleOrderingTest : AbstractTest() {
     override lateinit var rule2: Rule
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun whenCompareToIsOverridden_thenShouldExecuteRulesInTheCustomOrder() {
         rule1 = spyk<MyRule>(MyRule())
         rule2 = spyk<MyRule>(MyRule())

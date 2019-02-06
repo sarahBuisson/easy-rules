@@ -62,7 +62,6 @@ open class BasicRule(override var name: String = Rule.DEFAULT_NAME,
     /**
      * {@inheritDoc}
      */
-    @Throws(Exception::class)
     override fun execute(facts: Facts) {
         // no op
     }

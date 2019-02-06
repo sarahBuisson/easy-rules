@@ -31,7 +31,7 @@ import kotlin.test.Test
 class SkipOnFirstNonTriggeredRuleTest : AbstractTest() {
 
     @BeforeTest
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     override fun setup() {
         super.setup()
         val parameters = RulesEngineParameters().skipOnFirstNonTriggeredRule(true)
@@ -39,7 +39,7 @@ class SkipOnFirstNonTriggeredRuleTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun testSkipOnFirstNonTriggeredRule() {
         // Given
         every {rule1.evaluate(facts)} returns (false)

@@ -30,13 +30,14 @@ import org.jeasy.rules.annotation.Rule
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.AbstractTest
+import org.jeasy.rules.core.AbstractTest2
 import org.jeasy.rules.core.Rules2
 import kotlin.test.*
 
 /**
  * Null value in facts must be accepted, this is not same thing that fact missing
  */
-class NullFactAnnotationParameterTest : AbstractTest() {
+class NullFactAnnotationParameterTest : AbstractTest2() {
 
     @Test
     fun testNullFact() {

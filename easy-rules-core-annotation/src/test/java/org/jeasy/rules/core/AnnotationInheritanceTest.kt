@@ -30,7 +30,7 @@ import kotlin.test.Test
 
 import kotlin.test.assertTrue
 
-class AnnotationInheritanceTest : AbstractTest() {
+class AnnotationInheritanceTest : AbstractTest2() {
 
     @Test
     @Throws(Exception::class)

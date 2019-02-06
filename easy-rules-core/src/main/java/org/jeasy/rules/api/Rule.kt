@@ -63,7 +63,6 @@ interface Rule : Comparable<Rule> {
      * Rule actions abstraction : this method encapsulates the rule's actions.
      * @throws Exception thrown if an exception occurs during actions performing
      */
-    @Throws(Exception::class)
     fun execute(facts: Facts)
 
     companion object {
@@ -81,7 +80,7 @@ interface Rule : Comparable<Rule> {
         /**
          * Default rule priority.
          */
-        val DEFAULT_PRIORITY = Integer.MAX_VALUE - 1
+        val DEFAULT_PRIORITY = Int.MAX_VALUE - 1
     }
 
 }

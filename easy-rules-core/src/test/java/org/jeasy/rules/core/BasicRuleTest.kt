@@ -33,7 +33,7 @@ import kotlin.test.assertFalse
 class BasicRuleTest : AbstractTest() {
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun basicRuleEvaluateShouldReturnFalse() {
         val basicRule = BasicRule()
         assertFalse(basicRule.evaluate(facts))

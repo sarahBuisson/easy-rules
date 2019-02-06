@@ -32,7 +32,7 @@ package org.jeasy.rules.api
  */
 open class Rules : Iterable<Rule> {
 
-    protected var rules = sortedSetOf<Rule>();
+    protected var rules = mutableSetOf<Rule>();
 
     /**
      * Check if the rule set is empty.
@@ -66,7 +66,7 @@ open class Rules : Iterable<Rule> {
 
 
     override fun iterator(): Iterator<Rule> {
-        return rules.iterator()
+        return rules.sorted().iterator()
     }
 
     /**
@@ -89,7 +89,7 @@ open class Rules : Iterable<Rule> {
 
 
     operator fun get(i: Int): Rule {
-        return rules.toList()[i];
+        return rules.sorted().toList()[i];
     }
 
     protected fun findRuleByName(ruleName: String): Rule? {

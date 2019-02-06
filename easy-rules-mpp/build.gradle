@@ -1,0 +1,70 @@
+buildscript {
+    dependencies {
+        classpath 'io.github.microutils:kotlin-logging:1.6.22'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+plugins {
+    // id 'java'
+    // id 'org.jetbrains.kotlin.jvm'
+    // id 'kotlin2js'
+    id 'org.jetbrains.kotlin.multiplatform'
+    id("maven-publish")
+}
+
+kotlin {
+    // JS target named 'js'
+    sourceSets {
+        commonMain {
+            kotlin.srcDir('src/main/java')
+            resources.srcDir('src/main/resource')
+            dependencies {
+                implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-common"
+
+                implementation(project(":easy-rules-core"))
+            }
+        }
+        jvmTest {//TODO : commonTest instead of jvmtest, wwhen mockk.js will be better at it
+            kotlin.srcDir('src/test/java')
+            dependencies {
+                implementation  "org.jetbrains.kotlin:kotlin-test-common"
+                implementation  "org.jetbrains.kotlin:kotlin-test-annotations-common"
+                implementation 'io.mockk:mockk-common:1.9'
+            }
+        }
+        jvm {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+                implementation "org.jetbrains.kotlin:kotlin-test-junit"
+                implementation 'io.mockk:mockk:1.9'
+            }
+        }
+        js {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+                implementation "io.github.microutils:kotlin-logging-js:$kotlin_logging_version"
+
+                implementation  "org.jetbrains.kotlin:kotlin-test-js"
+                implementation 'io.mockk:mockk-js:1.7.17'
+            }
+        }
+    }
+
+    jvm {
+        compilations.main.kotlinOptions {
+            // Setup the Kotlin compiler options for the 'main' compilation:
+            jvmTarget = "1.8"
+        }
+
+    }
+    js()
+
+}
+task listrepos {
+    doLast {
+        println "Repositories:"
+        project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
+    }
+}

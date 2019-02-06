@@ -42,12 +42,12 @@ class DefaultRulesEngine : RulesEngine {
      * @param parameters of the engine
      */
 
-    @get:Override
+
     override val parameters: RulesEngineParameters
 
-    @get:Override
+
     override val ruleListeners: MutableList<RuleListener>
-    @get:Override
+
     override val rulesEngineListeners: MutableList<RulesEngineListener>
 
 
@@ -79,13 +79,11 @@ class DefaultRulesEngine : RulesEngine {
             val name = rule.name
             val priority = rule.priority
             if (priority > parameters.priorityThreshold) {
-                LOGGER.info("Rule priority threshold ({}) exceeded at rule '{}' with priority={}, next rules will be skipped",
-                        parameters.priorityThreshold, name, priority)
+                LOGGER.info { "Rule priority threshold (${parameters.priorityThreshold}) exceeded at rule '$name' with priority=$priority, next rules will be skipped" }
                 break
             }
             if (!shouldBeEvaluated(rule, facts)) {
-                LOGGER.info("Rule '{}' has been skipped before being evaluated",
-                        name)
+                LOGGER.info { "Rule '$name' has been skipped before being evaluated" }
                 continue
             }
             if (rule.evaluate(facts)) {
@@ -95,13 +93,13 @@ class DefaultRulesEngine : RulesEngine {
                     rule.execute(facts)
                     triggerListenersOnSuccess(rule, facts)
                     if (parameters.isSkipOnFirstAppliedRule) {
-                        LOGGER.info("Next rules will be skipped since parameter skipOnFirstAppliedRule is set")
+                        LOGGER.info { "Next rules will be skipped since parameter skipOnFirstAppliedRule is set" }
                         break
                     }
                 } catch (exception: Exception) {
                     triggerListenersOnFailure(rule, exception, facts)
                     if (parameters.isSkipOnFirstFailedRule) {
-                        LOGGER.info("Next rules will be skipped since parameter skipOnFirstFailedRule is set")
+                        LOGGER.info { "Next rules will be skipped since parameter skipOnFirstFailedRule is set" }
                         break
                     }
                 }
@@ -109,7 +107,7 @@ class DefaultRulesEngine : RulesEngine {
             } else {
                 triggerListenersAfterEvaluate(rule, facts, false)
                 if (parameters.isSkipOnFirstNonTriggeredRule) {
-                    LOGGER.info("Next rules will be skipped since parameter skipOnFirstNonTriggeredRule is set")
+                    LOGGER.info { "Next rules will be skipped since parameter skipOnFirstNonTriggeredRule is set" }
                     break
                 }
             }
@@ -125,7 +123,7 @@ class DefaultRulesEngine : RulesEngine {
     }
 
     private fun doCheck(rules: Rules, facts: Facts): Map<Rule, Boolean> {
-        LOGGER.info("Checking rules")
+        LOGGER.info { "Checking rules" }
         val result = HashMap<Rule, Boolean>()
         for (rule in rules) {
             if (shouldBeEvaluated(rule, facts)) {

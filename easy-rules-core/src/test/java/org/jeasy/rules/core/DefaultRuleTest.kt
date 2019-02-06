@@ -38,7 +38,7 @@ class DefaultRuleTest : AbstractTest() {
     private  var action2: Action = mockk<Action> (relaxed = true)
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun WhenConditionIsTrue_ThenActionsShouldBeExecutedInOrder() {
         //        // given
         condition = mockk<Condition>()
@@ -58,13 +58,13 @@ class DefaultRuleTest : AbstractTest() {
             action1.execute(facts)
             action2.execute(facts)
         }
-        confirmVerified(action1)
-        confirmVerified(rule2)
+        //confirmVerified(action1)
+        //confirmVerified(rule2)
 
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun WhenConditionIsFalse_ThenActionsShouldNotBeExecuted() {
         // given
         every {condition.evaluate(any())} returns (false)

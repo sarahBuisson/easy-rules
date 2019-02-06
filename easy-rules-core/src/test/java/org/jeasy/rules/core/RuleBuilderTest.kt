@@ -39,21 +39,21 @@ import kotlin.test.assertTrue
 
 class RuleBuilderTest {
 
-    @MockK(relaxed = true)
+    @MockK//(relaxed = true)
     private lateinit var condition: Condition
-    @MockK(relaxed = true)
+    @MockK//(relaxed = true)
     private lateinit var action1: Action
-    @MockK(relaxed = true)
+    @MockK//(relaxed = true)
     private lateinit var action2: Action
 
 
     @BeforeTest
     fun setup(){
-        MockKAnnotations.init(this, relaxed = true)
+        MockKAnnotations.init(this/*, relaxed = true*/)
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun testDefaultRuleCreationWithDefaultValues() {
         // when
         val rule = RuleBuilder().build()
@@ -66,7 +66,7 @@ class RuleBuilderTest {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun testDefaultRuleCreationWithCustomValues() {
         // when
         val rule = RuleBuilder()

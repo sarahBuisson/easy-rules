@@ -32,7 +32,7 @@ import kotlin.test.Test
 class SkipOnFirstAppliedRuleTest : AbstractTest() {
 
     @BeforeTest
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     override fun setup() {
         super.setup()
         val parameters = RulesEngineParameters().skipOnFirstAppliedRule(true)
@@ -40,7 +40,7 @@ class SkipOnFirstAppliedRuleTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun testSkipOnFirstAppliedRule() {
         // Given
         every {rule2.compareTo(rule1)} returns (1)
@@ -60,7 +60,7 @@ class SkipOnFirstAppliedRuleTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun testSkipOnFirstAppliedRuleWithException() {
         // Given
         every {rule1.evaluate(facts)} returns (true)

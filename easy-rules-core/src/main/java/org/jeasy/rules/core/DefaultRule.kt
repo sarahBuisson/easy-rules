@@ -39,7 +39,7 @@ internal class DefaultRule(name: String, description: String, priority: Int, pub
     }
 
 
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     override fun execute(facts: Facts) {
         for (action in actions) {
             action.execute(facts)

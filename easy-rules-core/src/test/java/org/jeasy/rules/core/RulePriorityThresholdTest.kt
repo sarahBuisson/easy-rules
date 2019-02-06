@@ -34,7 +34,7 @@ import kotlin.test.BeforeTest
 class RulePriorityThresholdTest : AbstractTest() {
 
     @BeforeTest
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     override fun setup() {
         super.setup()
 
@@ -46,7 +46,7 @@ class RulePriorityThresholdTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun rulesThatExceedPriorityThresholdMustNotBeExecuted() {
         // Given
         rules.register(rule1)

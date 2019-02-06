@@ -31,7 +31,7 @@ import kotlin.test.Test
 class SkipOnFirstFailedRuleTest : AbstractTest() {
 
     @BeforeTest
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     override fun setup() {
         super.setup()
         val parameters = RulesEngineParameters().skipOnFirstFailedRule(true)
@@ -39,7 +39,7 @@ class SkipOnFirstFailedRuleTest : AbstractTest() {
     }
 
     @Test
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     fun testSkipOnFirstFailedRule() {
         // Given
         every { rule1.evaluate(any()) } returns (true)

@@ -22,7 +22,8 @@
  * THE SOFTWARE.
  */
 package org.jeasy.rules.tutorials.shop
-
+//TODO : to decoment once MVEL is ok
+/*
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.DefaultRulesEngine
@@ -38,7 +39,7 @@ object Launcher {
 
 }
 
-
+/*
 @Throws(FileNotFoundException::class)
 fun main(args: Array<String>) {
     //create a person instance (fact)
@@ -65,4 +66,4 @@ fun main(args: Array<String>) {
 
     System.out.println("Tom: Hi! can I have some Vodka please?")
     rulesEngine.fire(rules, facts)
-}
+}*/

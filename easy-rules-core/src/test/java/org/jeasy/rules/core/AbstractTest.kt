@@ -50,7 +50,7 @@ open abstract class AbstractTest {
     protected lateinit var rulesEngine: DefaultRulesEngine
 
     @BeforeTest
-    @Throws(Exception::class)
+    //@Throws(Exception::class)
     open fun setup() {
         MockKAnnotations.init(this, relaxed = true)
         facts = Facts()

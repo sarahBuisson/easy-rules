@@ -36,9 +36,9 @@ internal class DefaultRulesEngineListener(private val parameters: RulesEnginePar
             logEngineParameters()
             log(rules)
             log(facts)
-            LOGGER.info("Rules evaluation started")
+            LOGGER.info { "Rules evaluation started" }
         } else {
-            LOGGER.warn("No rules registered! Nothing to apply")
+            LOGGER.warn { "No rules registered! Nothing to apply" }
         }
     }
 
@@ -48,27 +48,25 @@ internal class DefaultRulesEngineListener(private val parameters: RulesEnginePar
     }
 
     private fun logEngineParameters() {
-        LOGGER.info(parameters.toString())
+        LOGGER.info { parameters.toString() }
     }
 
     private fun log(rules: Rules) {
-        LOGGER.info("Registered rules:")
+        LOGGER.info { "Registered rules:" }
         for (rule in rules) {
-            LOGGER.info("Rule { name = '{}', description = '{}', priority = '{}'}",
-                    rule.name, rule.description, rule.priority)
+            LOGGER.info { "Rule { name = '${rule.name}', description = '${rule.description}', priority = '{$rule.priority}'}" }
         }
     }
 
     private fun log(facts: Facts) {
-        LOGGER.info("Known facts:")
+        LOGGER.info { "Known facts:" }
         for (fact in facts) {
-            LOGGER.info("Fact { {} : {} }",
-                    fact.key, fact.value)
+            LOGGER.info { "Fact { ${fact.key} : {$fact.value} }" }
         }
     }
 
     companion object {
 
-        private val LOGGER =  KotlinLogging.logger {}
+        private val LOGGER = KotlinLogging.logger {}
     }
 }

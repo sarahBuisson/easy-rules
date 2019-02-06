@@ -1,0 +1,18 @@
+buildscript {
+    dependencies {
+        classpath 'io.github.microutils:kotlin-logging:1.6.22'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+    }
+}
+plugins {
+    // id 'java'
+     id 'kotlin-platform-common'
+}
+dependencies {
+    implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    testImplementation  "org.jetbrains.kotlin:kotlin-test-common"
+    testImplementation  "org.jetbrains.kotlin:kotlin-test-annotations-common"
+    testImplementation 'io.mockk:mockk-common:1.9'
+}
