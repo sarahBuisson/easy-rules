@@ -1,3 +1,5 @@
+import java.lang.reflect.Modifier
+
 buildscript {
     dependencies {
         classpath 'io.github.microutils:kotlin-logging:1.6.22'
@@ -5,10 +7,9 @@ buildscript {
     }
 }
 plugins {
-    // id 'java'
-    // id 'org.jetbrains.kotlin.jvm'
-    // id 'kotlin2js'
+    id 'java' //need for the "from"
     id 'org.jetbrains.kotlin.multiplatform'
+    id 'java-library'
     id("maven-publish")
 }
 
@@ -29,8 +30,8 @@ kotlin {
         jvmTest {//TODO : commonTest instead of jvmtest, wwhen mockk.js will be better at it
             kotlin.srcDir('src/test/java')
             dependencies {
-                implementation  "org.jetbrains.kotlin:kotlin-test-common"
-                implementation  "org.jetbrains.kotlin:kotlin-test-annotations-common"
+                implementation "org.jetbrains.kotlin:kotlin-test-common"
+                implementation "org.jetbrains.kotlin:kotlin-test-annotations-common"
                 implementation 'io.mockk:mockk-common:1.9'
             }
         }
@@ -45,8 +46,7 @@ kotlin {
             dependencies {
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
                 implementation "io.github.microutils:kotlin-logging-js:$kotlin_logging_version"
-
-                implementation  "org.jetbrains.kotlin:kotlin-test-js"
+                implementation "org.jetbrains.kotlin:kotlin-test-js"
                 implementation 'io.mockk:mockk-js:1.7.17'
             }
         }
@@ -57,14 +57,106 @@ kotlin {
             // Setup the Kotlin compiler options for the 'main' compilation:
             jvmTarget = "1.8"
         }
+        mavenPublication {
+            artifactId project.name + "-jvm"
+        }
+        preparePublishing(it)
 
     }
-    js()
+    js() {
+        mavenPublication {
+            artifactId project.name + "-js"
+        }
+        preparePublishing(it)
+    }
+    metadata {
+        mavenPublication {
+            artifactId project.name + "-common"
+        }
+        printClass(it)
+        preparePublishing(it)
+    }
 
 }
+task sourceJar(type: Jar) {
+    classifier "sources"
+}
+
+def preparePublishing(target) {
+    println("")
+    println("preparePublishing")
+    println(project.name)
+    println(target.name)
+    println(project.configurations.implementation.allDependencies)
+    printClass(project.configurations.implementation.allDependencies)
+    publishing {
+        publications {
+            "mavenPublication${target.name}"(MavenPublication) { pub ->
+                println("MavenPublication " + target.name)
+                printClass(target)
+                printClass(target)
+               // printLn(configurations.compile.allDependencies)
+               // printLn(configurations.implementation.allDependencies)
+                from components.kotlin
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+
+                    //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                    configurations.implementation.allDependencies.each {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+                artifact "${buildDir}/libs/easy-rules-mpp-${target.name}-${project.version}.jar"
+
+
+            }
+
+        }
+    }
+}
+
+task sourceJar2(type: Jar) {
+    println("sourceJar2")
+    printClass(sourceSets.main.allSource)
+    //from sourceSets.main.allSource
+    classifier ""
+}
+
 task listrepos {
     doLast {
         println "Repositories:"
         project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
     }
+}
+
+def printClass(obj) {
+    if (obj == null) {
+        println("null")
+        return
+    }
+    println(obj.class)
+    def fields = obj.class.getDeclaredFields()
+    def methods = obj.class.getDeclaredMethods()
+    System.out.printf("%d fields:%n", fields.length);
+    for (field in fields) {
+        System.out.printf("%s %s %s%n",
+                Modifier.toString(field.getModifiers()),
+                field.getType().getSimpleName(),
+                field.getName()
+        );
+    }
+    System.out.printf("%d methods:%n", methods.length);
+    for (field in methods) {
+                System.out.printf("%s %s (",
+                field.getReturnType().getSimpleName(),
+                field.getName()
+        );
+        for (p in field.getParameterTypes())
+            System.out.printf("%s, ", p.getSimpleName())
+        System.out.printf(")%n")
+    }
+    println("--end--")
 }
