@@ -35,6 +35,5 @@ rootProject.name = 'easy-rules-kotlin'
 include(":easy-rules-core")
 include(":easy-rules-core-annotation")
 include(":easy-rules-support")
-include(":easy-rules-mpp")
 include(":easy-rules-tutorials")
 

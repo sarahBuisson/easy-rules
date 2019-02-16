@@ -2,17 +2,153 @@ buildscript {
     dependencies {
         classpath 'io.github.microutils:kotlin-logging:1.6.22'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
     }
 }
 plugins {
-    // id 'java'
-     id 'kotlin-platform-common'
+    id 'java' //need for the "from"
+    id 'org.jetbrains.kotlin.multiplatform'
+    id 'java-library'
+    id("maven-publish")
 }
-dependencies {
-    implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    testImplementation  "org.jetbrains.kotlin:kotlin-test-common"
-    testImplementation  "org.jetbrains.kotlin:kotlin-test-annotations-common"
-    testImplementation 'io.mockk:mockk-common:1.9'
+
+kotlin {
+    // JS target named 'js'
+    sourceSets {
+        commonMain {
+            kotlin.srcDir('src/main/java')
+            resources.srcDir('src/main/resource')
+            dependencies {
+                implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-common"
+
+            //    implementation(project(":easy-rules-core"))
+            }
+        }
+        jvmTest {//TODO : commonTest instead of jvmtest, wwhen mockk.js will be better at it
+            kotlin.srcDir('src/test/java')
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-test-common"
+                implementation "org.jetbrains.kotlin:kotlin-test-annotations-common"
+                implementation 'io.mockk:mockk-common:1.9'
+            }
+        }
+        jvm {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+                implementation "org.jetbrains.kotlin:kotlin-test-junit"
+                implementation 'io.mockk:mockk:1.9'
+            }
+        }
+        js {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+                implementation "io.github.microutils:kotlin-logging-js:$kotlin_logging_version"
+                implementation "org.jetbrains.kotlin:kotlin-test-js"
+                implementation 'io.mockk:mockk-js:1.7.17'
+            }
+        }
+    }
+
+    jvm {
+        compilations.main.kotlinOptions {
+            // Setup the Kotlin compiler options for the 'main' compilation:
+            jvmTarget = "1.8"
+        }
+        mavenPublication {
+            artifactId project.name + "-jvm"
+        }
+        preparePublishing(it)
+
+    }
+    js() {
+        mavenPublication {
+            artifactId project.name + "-js"
+        }
+        preparePublishing(it)
+    }
+    metadata {
+        mavenPublication {
+            artifactId project.name + "-common"
+        }
+
+        preparePublishing(it)
+    }
+
 }
+
+
+def preparePublishing(target) {
+     publishing {
+        publications {
+            "mavenPublication${target.name}"(MavenPublication) { pub ->
+
+                from components[target.name]
+                pom {}
+                pom.withXml {
+                    def dependenciesNode = asNode().get('dependencies')
+                    if (dependenciesNode == null) {
+                        dependenciesNode = asNode().appendNode('dependencies')
+                    }
+
+                    //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                    configurations.implementation.allDependencies.each {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+                def artifactName = "${buildDir}/libs/easy-rules-core-${target.name}-${project.version}.jar"
+                def artifactSourceName = "${buildDir}/libs/easy-rules-core-${target.name}-${project.version}-sources.jar"
+
+                artifact source:artifactName, classifier:"jar", extension:"jar"
+
+                if(file(artifactSourceName).exists()) {
+                    artifact source: artifactSourceName, classifier: "sources", extension: "jar"
+                }
+            }
+
+        }
+    }
+}
+
+task listrepos {
+    doLast {
+        println "Repositories:"
+        project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
+    }
+}
+
+def printClass(obj) {
+    if (obj == null) {
+        println("null")
+        return
+    }
+    println(obj.class)
+    def fields = obj.class.getDeclaredFields()
+    def methods = obj.class.getDeclaredMethods()
+    System.out.printf("%d fields:%n", fields.length);
+    for (field in fields) {
+        System.out.printf("%s %s %n",
+               // Modifier.toString(field.getModifiers()),
+                field.getType().getSimpleName(),
+                field.getName()
+        );
+    }
+    System.out.printf("%d methods:%n", methods.length);
+    for (field in methods) {
+        System.out.printf("%s %s (",
+                field.getReturnType().getSimpleName(),
+                field.getName()
+        );
+        for (p in field.getParameterTypes())
+            System.out.printf("%s, ", p.getSimpleName())
+        System.out.printf(")%n")
+    }
+    println("--end--")
+}
+subprojects {println("subprojects"); println(it.name)}
+println("roorrrr")
+println project.subprojects
+
