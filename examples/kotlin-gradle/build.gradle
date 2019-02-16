@@ -1,17 +1,41 @@
-import java.lang.reflect.Modifier
-
 buildscript {
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        mavenLocal()
+        google()
+        gradlePluginPortal()
+
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap' }
+        maven { url = 'https://dl.bintray.com/russhwolf/multiplatform-settings' }
+    }
     dependencies {
         classpath 'io.github.microutils:kotlin-logging:1.6.22'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.20"
     }
+
+
 }
 plugins {
     id 'java' //need for the "from"
-    id 'org.jetbrains.kotlin.multiplatform'
     id 'java-library'
+    id 'org.jetbrains.kotlin.multiplatform' version '1.3.20'
     id("maven-publish")
 }
+repositories {
+    mavenCentral()
+    jcenter()
+    mavenLocal()
+    google()
+    gradlePluginPortal()
+
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url 'http://dl.bintray.com/kotlin/kotlin-eap' }
+    maven { url = 'https://dl.bintray.com/russhwolf/multiplatform-settings' }
+}
+
 
 kotlin {
     // JS target named 'js'
@@ -20,11 +44,13 @@ kotlin {
             kotlin.srcDir('src/main/java')
             resources.srcDir('src/main/resource')
             dependencies {
-                implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
-                implementation "org.jetbrains.kotlin:kotlin-stdlib"
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-common"
+                implementation "io.github.microutils:kotlin-logging:1.6.22"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.20"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-common:1.3.20"
 
-                implementation(project(":easy-rules-core"))
+                implementation("org.jeasy:easy-rules-core:3.2.3")
+
+            //    implementation(project(":easy-rules-core"))
             }
         }
         jvmTest {//TODO : commonTest instead of jvmtest, wwhen mockk.js will be better at it
@@ -33,21 +59,24 @@ kotlin {
                 implementation "org.jetbrains.kotlin:kotlin-test-common"
                 implementation "org.jetbrains.kotlin:kotlin-test-annotations-common"
                 implementation 'io.mockk:mockk-common:1.9'
+
             }
         }
         jvm {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.20"
                 implementation "org.jetbrains.kotlin:kotlin-test-junit"
                 implementation 'io.mockk:mockk:1.9'
+                implementation("org.jeasy:easy-rules-core-jvm:3.2.3")
             }
         }
         js {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
-                implementation "io.github.microutils:kotlin-logging-js:$kotlin_logging_version"
-                implementation "org.jetbrains.kotlin:kotlin-test-js"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-js:1.3.20"
+                implementation "io.github.microutils:kotlin-logging-js:1.6.22"
+                implementation "org.jetbrains.kotlin:kotlin-test-js:1.3.20"
                 implementation 'io.mockk:mockk-js:1.7.17'
+                implementation("org.jeasy:easy-rules-core-js:3.2.3")
             }
         }
     }
@@ -58,6 +87,7 @@ kotlin {
             jvmTarget = "1.8"
         }
         mavenPublication {
+            groupId "org.jeasy"
             artifactId project.name + "-jvm"
         }
         preparePublishing(it)
@@ -65,41 +95,40 @@ kotlin {
     }
     js() {
         mavenPublication {
+            groupId "org.jeasy"
             artifactId project.name + "-js"
         }
         preparePublishing(it)
     }
     metadata {
         mavenPublication {
+            groupId "org.jeasy"
             artifactId project.name + "-common"
         }
         printClass(it)
-        preparePublishing(it)
+      //  preparePublishing(it)
     }
 
 }
-task sourceJar(type: Jar) {
-    classifier "sources"
-}
 
 def preparePublishing(target) {
-    println("")
-    println("preparePublishing")
-    println(project.name)
-    println(target.name)
-    println(project.configurations.implementation.allDependencies)
-    printClass(project.configurations.implementation.allDependencies)
-    publishing {
+     publishing {
         publications {
             "mavenPublication${target.name}"(MavenPublication) { pub ->
                 println("MavenPublication " + target.name)
-                printClass(target)
-                printClass(target)
-               // printLn(configurations.compile.allDependencies)
-               // printLn(configurations.implementation.allDependencies)
-                from components.kotlin
+                // printLn(configurations.compile.allDependencies)
+                // printLn(configurations.implementation.allDependencies)
+                groupId "org.jeasy"
+                version 1
+                // from components.kotlin
+                from components[target.name]
+                pom {}// needed to separate the differente poms
                 pom.withXml {
-                    def dependenciesNode = asNode().appendNode('dependencies')
+                    def root=asNode()
+                    def dependenciesNode = asNode().get('dependencies')
+                    if (dependenciesNode == null) {
+                        dependenciesNode = asNode().appendNode('dependencies')
+                    }
 
                     //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
                     configurations.implementation.allDependencies.each {
@@ -109,22 +138,23 @@ def preparePublishing(target) {
                         dependencyNode.appendNode('version', it.version)
                     }
                 }
-                artifact "${buildDir}/libs/easy-rules-mpp-${target.name}-${project.version}.jar"
+
+                def artifactName = "${buildDir}/libs/${artifactId}-${target.name}-${version}.jar"
+                def artifactSourceName = "${buildDir}/libs/${artifactId}-${target.name}-${version}-sources.jar"
+                println("publish $artifactName")
 
 
+                artifact source:artifactName, classifier:"jar", extension:"jar"
+
+                if(file(artifactSourceName).exists()) {
+                    println("exist $artifactSourceName")
+                    artifact source: artifactSourceName, classifier: "sources", extension: "jar"
+                }
             }
 
         }
     }
 }
-
-task sourceJar2(type: Jar) {
-    println("sourceJar2")
-    printClass(sourceSets.main.allSource)
-    //from sourceSets.main.allSource
-    classifier ""
-}
-
 task listrepos {
     doLast {
         println "Repositories:"
@@ -137,7 +167,7 @@ def printClass(obj) {
         println("null")
         return
     }
-    println(obj.class)
+    println(obj.class)/*
     def fields = obj.class.getDeclaredFields()
     def methods = obj.class.getDeclaredMethods()
     System.out.printf("%d fields:%n", fields.length);
@@ -150,13 +180,13 @@ def printClass(obj) {
     }
     System.out.printf("%d methods:%n", methods.length);
     for (field in methods) {
-                System.out.printf("%s %s (",
+        System.out.printf("%s %s (",
                 field.getReturnType().getSimpleName(),
                 field.getName()
         );
         for (p in field.getParameterTypes())
             System.out.printf("%s, ", p.getSimpleName())
         System.out.printf(")%n")
-    }
+    }*/
     println("--end--")
 }
