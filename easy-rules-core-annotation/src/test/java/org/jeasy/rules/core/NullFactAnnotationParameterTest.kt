@@ -28,8 +28,6 @@ import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Fact
 import org.jeasy.rules.annotation.Rule
 import org.jeasy.rules.api.Facts
-import org.jeasy.rules.api.Rules
-import org.jeasy.rules.core.AbstractTest
 import org.jeasy.rules.core.AbstractTest2
 import org.jeasy.rules.core.Rules2
 import kotlin.test.*

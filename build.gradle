@@ -1,11 +1,12 @@
+import groovy.json.JsonBuilder
+
 buildscript {
 
     ext {
-        kotlin_version = '1.3.20'
+        kotlin_version = '1.3.21'
         kotlin_logging_version = "1.6.22"
         coroutines_version ="0.23.3"
     }
-
     repositories {
         jcenter()
         mavenCentral()
@@ -19,13 +20,18 @@ buildscript {
         maven {
             url "https://dl.bintray.com/kotlin/kotlin-eap"
         }
+        maven { url 'http://dl.bintray.com/kotlin/kotlinx.html' }
+        maven { url 'http://dl.bintray.com/kotlin/kotlin-js-wrappers' }
+        maven { url 'http://dl.bintray.com/kotlin/kotlinx' }
     }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
+        classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.44"
+
     }
 }
-
 allprojects {
     group 'org.jeasy'
     version '3.2.3'
@@ -41,7 +47,16 @@ allprojects {
         maven { url 'http://dl.bintray.com/kotlin/kotlin-eap' }
         maven { url = 'https://dl.bintray.com/russhwolf/multiplatform-settings' }
     }
+
+
 }
+
+def gradleUtils=file("./gradle/util.gradle")
+subprojects {
+    apply from: gradleUtils
+
+}
+
 
 task listrepos {
     doLast {

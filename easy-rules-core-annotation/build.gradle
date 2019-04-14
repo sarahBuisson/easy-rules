@@ -22,8 +22,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
     testImplementation "io.mockk:mockk:1.9"
     testImplementation "io.mockk:mockk-common:1.9"
-
-    expectedBy(project(":easy-rules-core"))
+    implementation(project(":easy-rules-core"))
 }
 
 description = "Easy Rules core module"

@@ -32,7 +32,6 @@ import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Priority
 import org.jeasy.rules.api.RuleListener
 import org.jeasy.rules.api.RulesEngineListener
-import org.jeasy.rules.core.AbstractTest
 import org.jeasy.rules.core.AbstractTest2
 import org.jeasy.rules.core.DefaultRulesEngine
 import org.jeasy.rules.core.RuleProxy

@@ -24,7 +24,7 @@ dependencies {
     testImplementation "io.mockk:mockk:1.9"
     testImplementation "io.mockk:mockk-common:1.9"
 
-    expectedBy(project(":easy-rules-core"))
+    implementation(project(":easy-rules-core"))
     implementation(project(":easy-rules-core-annotation"))
     implementation(project(":easy-rules-support"))
 }

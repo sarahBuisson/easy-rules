@@ -1,5 +1,10 @@
 buildscript {
 
+    ext {
+        kotlin_version = '1.3.21'
+        kotlin_logging_version = "1.6.22"
+        coroutines_version ="0.23.3"
+    }
     repositories {
         mavenCentral()
         jcenter()
@@ -37,7 +42,28 @@ repositories {
 }
 
 
+def gradleUtils=file("./gradle/util.gradle")
+allprojects{
+    apply from: gradleUtils
+    group 'org.jeasy'
+    version '3.2.3'
+
+}
 kotlin {
+    targets{
+        fromPreset(presets.js, 'js') {
+            compilations.all {
+                tasks[compileKotlinTaskName].kotlinOptions {
+                    metaInfo = true
+                    outputFile = "${projectDir}/build/npm/${project.name}.js"
+                    sourceMap = true
+                    moduleKind = 'umd'
+                    main = 'call'
+                }
+            }
+        }
+    }
+
     // JS target named 'js'
     sourceSets {
         commonMain {
@@ -98,95 +124,16 @@ kotlin {
             groupId "org.jeasy"
             artifactId project.name + "-js"
         }
-        preparePublishing(it)
+
+        configurePublishingWithNPM(it, project.version, configurations, this)
     }
     metadata {
         mavenPublication {
             groupId "org.jeasy"
             artifactId project.name + "-common"
         }
-        printClass(it)
+
       //  preparePublishing(it)
     }
 
-}
-
-def preparePublishing(target) {
-     publishing {
-        publications {
-            "mavenPublication${target.name}"(MavenPublication) { pub ->
-                println("MavenPublication " + target.name)
-                // printLn(configurations.compile.allDependencies)
-                // printLn(configurations.implementation.allDependencies)
-                groupId "org.jeasy"
-                version 1
-                // from components.kotlin
-                from components[target.name]
-                pom {}// needed to separate the differente poms
-                pom.withXml {
-                    def root=asNode()
-                    def dependenciesNode = asNode().get('dependencies')
-                    if (dependenciesNode == null) {
-                        dependenciesNode = asNode().appendNode('dependencies')
-                    }
-
-                    //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
-                    configurations.implementation.allDependencies.each {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', it.group)
-                        dependencyNode.appendNode('artifactId', it.name)
-                        dependencyNode.appendNode('version', it.version)
-                    }
-                }
-
-                def artifactName = "${buildDir}/libs/${artifactId}-${target.name}-${version}.jar"
-                def artifactSourceName = "${buildDir}/libs/${artifactId}-${target.name}-${version}-sources.jar"
-                println("publish $artifactName")
-
-
-                artifact source:artifactName, classifier:"jar", extension:"jar"
-
-                if(file(artifactSourceName).exists()) {
-                    println("exist $artifactSourceName")
-                    artifact source: artifactSourceName, classifier: "sources", extension: "jar"
-                }
-            }
-
-        }
-    }
-}
-task listrepos {
-    doLast {
-        println "Repositories:"
-        project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
-    }
-}
-
-def printClass(obj) {
-    if (obj == null) {
-        println("null")
-        return
-    }
-    println(obj.class)/*
-    def fields = obj.class.getDeclaredFields()
-    def methods = obj.class.getDeclaredMethods()
-    System.out.printf("%d fields:%n", fields.length);
-    for (field in fields) {
-        System.out.printf("%s %s %s%n",
-                Modifier.toString(field.getModifiers()),
-                field.getType().getSimpleName(),
-                field.getName()
-        );
-    }
-    System.out.printf("%d methods:%n", methods.length);
-    for (field in methods) {
-        System.out.printf("%s %s (",
-                field.getReturnType().getSimpleName(),
-                field.getName()
-        );
-        for (p in field.getParameterTypes())
-            System.out.printf("%s, ", p.getSimpleName())
-        System.out.printf(")%n")
-    }*/
-    println("--end--")
 }

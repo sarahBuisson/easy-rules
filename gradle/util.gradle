@@ -1,0 +1,210 @@
+import groovy.json.JsonBuilder
+import java.io.ByteArrayOutputStream
+
+ext.configurePublishingWithNPM =  {target, baseVersion, configurations, that->
+
+    that.tasks.add(task(processPkg(type: Copy) {
+        def dir=that.file('build/npm')
+
+        dir.mkdirs()
+        def packagejson = that.file('build/npm/package.json')
+        def packagejsondata= [name:that.project.name+"-js", version:baseVersion, dependencies:new HashMap()]
+
+        /*  configurations.jsImplementation.allDependencies.each {
+              packagejsondata.dependencies.put(it.name,it.version)
+          }*/
+        packagejsondata.dependencies.put("kotlin","$kotlin_version")
+        packagejson.getParentFile().mkdirs()
+        packagejson.createNewFile()
+        packagejson.write(new JsonBuilder( packagejsondata ).toPrettyString())
+        //  packagejson.close()
+
+
+
+        System.out.println("enc of build Package.json:"+packagejson.path+packagejson.exists())
+    }))
+
+    that.tasks.add(task(execNpmBuild(type: Exec){
+        workingDir that.file('./build/npm').absolutePath
+
+        commandLine 'npm','install'
+        def packagejson = file('build/npm/package.json')
+        standardOutput = new ByteArrayOutputStream()
+        errorOutput = standardOutput
+        ignoreExitValue = true
+        def output = {
+            return standardOutput.toString()
+        }
+
+        doLast {
+            if (execResult.exitValue != 0) {
+                println(standardOutput.toString())
+                throw new GradleException("exec failed; see output above")
+            }
+            println(standardOutput.toString())
+        }
+    }))
+
+    that.tasks.add(task(execNpmInstallGlobal(type: Exec){
+        workingDir that.file('./build').absolutePath
+        commandLine 'cd','npm'
+        //executable "npm"
+        commandLine 'yarn','global', 'add'//,"file:npm/${that.project.name}-js-${that.project.version}.tgz"
+        //"/usr/local/bin/npm","init"
+        standardOutput = new ByteArrayOutputStream()
+        errorOutput = standardOutput
+        ignoreExitValue = true
+        def output = {
+            return standardOutput.toString()
+        }
+
+        doLast {
+            if (execResult.exitValue != 0) {
+                println(standardOutput.toString())
+                throw new GradleException("exec failed; see output above")
+            }
+            println(standardOutput.toString())
+        }
+    }))
+    that.tasks.add(task(execNpmLink(type: Exec){
+
+        // commandLine
+        workingDir 'build/npm'
+
+        commandLine 'npm', 'link'
+        //"/usr/local/bin/npm","init"
+        standardOutput = new ByteArrayOutputStream()
+        errorOutput = standardOutput
+        ignoreExitValue = true
+        def output = {
+            return standardOutput.toString()
+        }
+
+        doLast {
+            if (execResult.exitValue != 0) {
+                println(standardOutput.toString())
+                throw new GradleException("exec failed; see output above")
+            }
+            println(standardOutput.toString())
+            System.out.println("end exec link")
+        }
+    }))
+
+    that.tasks.add(task(execNpmPack(type: Exec){
+
+        workingDir that.file('./build/npm').absolutePath
+        commandLine 'npm', 'pack'
+        //"/usr/local/bin/npm","init"
+        standardOutput = new ByteArrayOutputStream()
+        errorOutput = standardOutput
+        ignoreExitValue = true
+        def output = {
+            return standardOutput.toString()
+        }
+
+        doLast {
+            if (execResult.exitValue != 0) {
+                println(standardOutput.toString())
+                throw new GradleException("exec failed; see output above")
+            }
+            println(standardOutput.toString())
+            System.out.println("end exec link")
+        }
+    }))
+
+
+    that.tasks.add(task(prepublish(type: Copy) {
+        from '.'
+        into 'build/npm'
+        exclude 'package.json'
+        exclude 'build/npm'
+    }
+    ))
+
+    prepublish.dependsOn processPkg
+    execNpmLink.dependsOn processPkg
+    execNpmBuild.dependsOn processPkg
+    execNpmLink.dependsOn execNpmBuild
+    execNpmPack.dependsOn execNpmBuild
+
+
+
+    that.tasks.add(task(publishNpmLocal() {
+
+    }
+    ))
+
+    publishNpmLocal.dependsOn execNpmLink
+
+
+
+
+    prepublish.dependsOn that.tasks.asMap.get("compileKotlinJs")
+
+}
+
+ext.printClass = { obj ->
+    if (obj == null) {
+        println("null")
+        return
+    }
+    println(obj.class)
+    def fields = obj.class.getDeclaredFields()
+    def methods = obj.class.getDeclaredMethods()
+    System.out.printf("%d fields:%n", fields.length);
+    for (field in fields) {
+        System.out.printf("%s %s %n",
+                // Modifier.toString(field.getModifiers()),
+                field.getType().getSimpleName(),
+                field.getName()
+        );
+    }
+    System.out.printf("%d methods:%n", methods.length);
+    for (field in methods) {
+        System.out.printf("%s %s (",
+                field.getReturnType().getSimpleName(),
+                field.getName()
+        );
+        for (p in field.getParameterTypes())
+            System.out.printf("%s, ", p.getSimpleName())
+        System.out.printf(")%n")
+    }
+    println("--end--")
+}
+
+ext.preparePublishing= {target->
+    publishing {
+        publications {
+            "mavenPublication${target.name}"(MavenPublication) { pub ->
+
+                from components[target.name]
+                pom {}
+                pom.withXml {
+                    def dependenciesNode = asNode().get('dependencies')
+                    if (dependenciesNode == null) {
+                        dependenciesNode = asNode().appendNode('dependencies')
+                    }
+
+                    //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                    configurations.implementation.allDependencies.each {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+                def artifactName = "${buildDir}/libs/easy-rules-core-${target.name}-${project.version}.jar"
+                def artifactSourceName = "${buildDir}/libs/easy-rules-core-${target.name}-${project.version}-sources.jar"
+
+                artifact source:artifactName, classifier:"jar", extension:"jar"
+
+                if(file(artifactSourceName).exists()) {
+                    artifact source: artifactSourceName, classifier: "sources", extension: "jar"
+                }
+            }
+
+        }
+    }
+}
+
+
