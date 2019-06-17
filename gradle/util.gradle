@@ -2,56 +2,155 @@ import groovy.json.JsonBuilder
 
 ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
 
-    that.tasks.add(task(buildPackageJson(type: Copy) {
-      //  dependsOn 'embeddedDependency'
-        System.out.println("start exec buildPackageJson")
-        mkdir "$buildDir/npm"
-        def dir = that.file("$buildDir/npm")
+    that.tasks.add(task(initNpm() {
+        doLast {
+            System.out.println("init npm dir")
+            def dir = that.file("$buildDir/npm")
+            System.out.println(dir)
+            dir.mkdirs()
+            System.out.println("end npm dir")
+        }
+    }))
 
-        System.out.println(dir)
-        dir.mkdirs()
-        println dir.exists()
-        def packagejson = that.file("$buildDir/npm/package.json")
-        def packagejsondata = [name: that.project.name + "-js", version: baseVersion, dependencies: new HashMap(), main: that.project.name + ".js"]
+
+    that.tasks.add(task(buildPackageJson() {
+
+
+        dependsOn 'embeddedDependency'
+        System.out.println("init buildPackageJson")
+        doLast { System.out.println("start exec buildPackageJson")}
+        doLast {
+            System.out.println("start exec buildPackageJson")
+
+            def dir = that.file("$buildDir/npm")
+            def packagejson = that.file("$buildDir/npm/package.json")
+            def packagejsondata = [name: that.project.name + "-js", version: baseVersion, dependencies: new HashMap(), main: that.project.name + ".js"]
 /*
           configurations.jsImplementation.allDependencies.each {
               packagejsondata.dependencies.put(it.name,it.version)
           }*/
-        packagejsondata.dependencies.put("kotlin", "$kotlin_version")
-        packagejson.getParentFile().mkdirs()
-        packagejson.createNewFile()
-        packagejson.write(new JsonBuilder(packagejsondata).toPrettyString())
-        //  packagejson.close()
-        println that.file("$buildDir/classes/kotlin/js/main").listFiles()
-        //  from "$buildDir"
-        // into "./npm"
+            packagejsondata.dependencies.put("kotlin", "$kotlin_version")
+            packagejson.getParentFile().mkdirs()
+            packagejson.createNewFile()
+            packagejson.write(new JsonBuilder(packagejsondata).toPrettyString())
+            //  packagejson.close()
+            println that.file("$buildDir/classes/kotlin/js/main").listFiles()
+            //  from "$buildDir"
+            // into "./npm"
 
 
-        println that.file("$buildDir/npm").listFiles()
+            println that.file("$buildDir/npm").listFiles()
 
-        System.out.println("enc of build Package.json:" + packagejson.path + packagejson.exists())
+            System.out.println("enc of build Package.json:" + packagejson.path + packagejson.exists())
+        }
     }))
 
+    that.tasks.add(task(embeddedDependency(type:Exec) {
+        dependsOn initNpm
 
 
-    that.tasks.add(task(execNpmBuild(type: Exec) {
-        dependsOn 'buildPackageJson'
-        dependsOn 'jsMainClasses'
-        dependsOn 'extractCompiledFiles'
-        println "execNpmBuild"
-        println that.file("$buildDir/npm").listFiles()
-        workingDir that.file("$buildDir/npm").absolutePath
+            workingDir "."
+            commandLine "echo", "eeee"
 
-        commandLine 'npm', 'install'
-        def packagejson = file('build/npm/package.json')
-        standardOutput = new ByteArrayOutputStream()
-        errorOutput = standardOutput
-        ignoreExitValue = true
-        def output = {
-            return standardOutput.toString()
-        }
+
 
         doLast {
+            configurations.jsImplementation.allDependencies.each {
+
+                if (it.name.contains("js")) {
+
+
+                    printClass(it)
+
+
+                    def artifactId =it.name
+                    def group =  it.group
+                    def version = it.version
+
+                    def command = "mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -Dartifact=$group:$artifactId:$version -DoutputDirectory=$buildDir/npm"
+                    println(command)
+                    println("$buildDir/npm")
+                    exec {
+                        workingDir "$buildDir/npm"
+                        commandLine command.split(" ")
+                    }
+
+                    def command2 = "mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:copy -Dartifact=$group:$artifactId:$version -DoutputDirectory=$buildDir/jsDependenciesJar"
+                    exec {
+                        workingDir "$buildDir/npm"
+                        commandLine command2.split(" ")
+                    }
+                    copy {
+                        def file = file("$buildDir/jsDependenciesJar/$artifactId-${version}.jar")
+                        println(file)
+                        from zipTree(file)
+                        into "$buildDir/npm/libs/${artifactId}"
+                    }
+
+
+                }
+            }
+
+        }
+
+/*
+        doLast {
+            println("embeddedDependency")
+            println(configurations.compile)
+            printClass(configurations)
+            println(configurations.getAsMap().keySet())
+
+            println("embeddedDependency")
+            printClass(configurations.jsImplementation)
+            println(configurations.jsImplementation.getAll())
+            println(configurations.jsImplementation.getAllDependencies())
+
+
+
+            println(configurations.jsImplementation.getDependencies())
+            println(configurations.metadataCompileClasspath)
+            printClass(configurations.metadataCompileClasspath)
+            printClass(configurations.metadataCompileClasspath.getPath())
+            println(configurations.metadataCompileClasspath)
+            println("configurations.jsRuntimeClasspath")
+            println("configurations.jsRuntimeClasspath")
+            println(configurations.jsRuntime)
+            println(configurations.jsImplementation)
+            println("IIIIII")
+            println("cSSSSSS")
+            printClass(configurations.jsImplementation)
+
+            copy {
+                from configurations.runtimeClasspath
+
+                into "$buildDir/npm"
+            }
+        }*/
+    }))
+
+    that.tasks.add(task(execNpmBuild(type: Exec) {
+
+        dependsOn 'buildPackageJson'
+        dependsOn 'assemble'
+        dependsOn 'extractCompiledFiles'
+        workingDir "$buildDir/npm"
+        commandLine 'npm', 'install'
+        doLast {
+            println "execNpmBuild"
+            exec {
+                workingDir "$buildDir/npm"
+                commandLine 'npm', 'install'
+            }
+
+
+            standardOutput = new ByteArrayOutputStream()
+            errorOutput = standardOutput
+            ignoreExitValue = true
+            def output = {
+                return standardOutput.toString()
+            }
+
+
             if (execResult.exitValue != 0) {
                 println(standardOutput.toString())
                 throw new GradleException("exec failed; see output above")
@@ -60,22 +159,24 @@ ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
         }
     }))
 
+
     that.tasks.add(task(execNpmInstallGlobal(type: Exec) {
         dependsOn 'buildPackageJson'
         dependsOn 'jsMainClasses'
         dependsOn 'extractCompiledFiles'
-        workingDir that.file('./build').absolutePath
-        commandLine 'cd', 'npm'
-        //executable "npm"
-        commandLine 'yarn', 'global', 'add'//,"file:npm/${that.project.name}-js-${that.project.version}.tgz"
-        //"/usr/local/bin/npm","init"
-        standardOutput = new ByteArrayOutputStream()
-        errorOutput = standardOutput
-        ignoreExitValue = true
-        def output = {
-            return standardOutput.toString()
+        doLast {
+            workingDir that.file('./build').absolutePath
+            commandLine 'cd', 'npm'
+            //executable "npm"
+            commandLine 'yarn', 'global', 'add'//,"file:npm/${that.project.name}-js-${that.project.version}.tgz"
+            //"/usr/local/bin/npm","init"
+            standardOutput = new ByteArrayOutputStream()
+            errorOutput = standardOutput
+            ignoreExitValue = true
+            def output = {
+                return standardOutput.toString()
+            }
         }
-
         doLast {
             if (execResult.exitValue != 0) {
                 println(standardOutput.toString())
@@ -85,18 +186,21 @@ ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
         }
     }))
     that.tasks.add(task(execNpmLink(type: Exec) {
-        dependsOn 'execNpmBuild'
-        println "execNpmLink"
-        // commandLine
-        workingDir "$buildDir/npm"
 
-        commandLine 'npm', 'link'
-        //"/usr/local/bin/npm","init"
-        standardOutput = new ByteArrayOutputStream()
-        errorOutput = standardOutput
-        ignoreExitValue = true
-        def output = {
-            return standardOutput.toString()
+        dependsOn 'execNpmBuild'
+        doLast {
+            println "execNpmLink"
+            // commandLine
+            workingDir "$buildDir/npm"
+
+            commandLine 'npm', 'link'
+            //"/usr/local/bin/npm","init"
+            standardOutput = new ByteArrayOutputStream()
+            errorOutput = standardOutput
+            ignoreExitValue = true
+            def output = {
+                return standardOutput.toString()
+            }
         }
 
         doLast {
@@ -110,20 +214,26 @@ ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
     }))
 
     that.tasks.add(task(execNpmPack(type: Exec) {
-        dependsOn 'execNpmBuild'
-        dependsOn 'extractCompiledFiles'
+
         dependsOn 'buildPackageJson'
-        workingDir that.file("$buildDir/npm").absolutePath
-        commandLine 'npm', 'pack'
-        //"/usr/local/bin/npm","init"
+
+        workingDir "."
+        commandLine 'echo', '"execNpmPack"'
+
         standardOutput = new ByteArrayOutputStream()
         errorOutput = standardOutput
         ignoreExitValue = true
         def output = {
             return standardOutput.toString()
         }
-
         doLast {
+            System.out.println("beg exec pack")
+            exec {
+                workingDir that.file("$buildDir/npm").absolutePath
+                commandLine 'npm', 'pack'
+            }
+            //"/usr/local/bin/npm","init"
+
             if (execResult.exitValue != 0) {
                 println(standardOutput.toString())
                 throw new GradleException("exec failed; see output above")
@@ -134,13 +244,15 @@ ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
     }))
 
 
-    that.tasks.add(task(extractCompiledFiles(type: Copy) {
+    that.tasks.add(task(extractCompiledFiles() {
         dependsOn 'jsMainClasses'
         dependsOn 'buildPackageJson'
-        from "$buildDir/classes/kotlin/js/main"
-        into "$buildDir/npm"
-        // exclude 'package/package.json'
-        // exclude "$buildDir/npm"
+        doLast {
+            from "$buildDir/classes/kotlin/js/main"
+            into "$buildDir/npm"
+            // exclude 'package/package.json'
+            // exclude "$buildDir/npm"
+        }
     }
     ))
 
@@ -162,19 +274,25 @@ ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
 
     }
     ))
-    publishToMavenLocal.dependsOn execNpmPack
-    publishToMavenLocal.dependsOn buildPackageJson
+    publishToMavenLocal.dependsOn 'execNpmPack'
+    publishToMavenLocal.dependsOn 'buildPackageJson'
 
-    that.publishing {
-        publications {
-            mavenLocal(MavenPublication) {
-                println "beg"
-                artifact source: "$buildDir/npm/${that.project.name}-js-${that.project.version}.tgz", extension: 'tgz'
-                artifactId that.project.name + "-js"
-                println "end"
+    that.tasks.add(task(publishNpmToMaven() {
+        dependsOn execNpmPack
+        dependsOn buildPackageJson
+        doLast {
+            that.publishing {
+                publications {
+                    mavenLocal(MavenPublication) {
+                        println "beg"
+                        artifact source: "$buildDir/npm/${that.project.name}-js-${that.project.version}.tgz", extension: 'tgz'
+                        artifactId that.project.name + "-js"
+                        println "end"
+                    }
+                }
             }
         }
-    }
+    }));
 
 };
 
