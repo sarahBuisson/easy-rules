@@ -67,6 +67,6 @@ internal class DefaultRulesEngineListener(private val parameters: RulesEnginePar
 
     companion object {
 
-        private val LOGGER = KotlinLogging.logger {}
+        private val LOGGER = KotlinLogging.logger(this::class.simpleName!!)
     }
 }

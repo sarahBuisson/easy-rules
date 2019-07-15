@@ -64,6 +64,6 @@ internal class DefaultRuleListener : RuleListener {
 
     companion object {
 
-        private val LOGGER =  mu.KotlinLogging.logger {}
+        private val LOGGER =   mu.KotlinLogging.logger(this::class.simpleName!!)
     }
 }
