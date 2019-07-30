@@ -1,6 +1,6 @@
 package org.jeasy.rules.tutorials.airco
 
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.InferenceRulesEngine
 import org.jeasy.rules.core.RuleBuilder

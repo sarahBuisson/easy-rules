@@ -2,7 +2,6 @@ package survival
 
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
-import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.InferenceRulesEngine
 import org.jeasy.rules.core.RuleBuilder
@@ -42,91 +41,65 @@ open class Location {
     val content: MutableCollection<Item> = mutableListOf()
 }
 
-class GameFacts : Facts() {
-    fun qui(): Vivant {
-        return (get(FactEnum.qui.name) as Vivant)
-    }
-
-    fun qui(qui: Vivant) {
-        this.put(FactEnum.qui.name, qui)
-    }
-
-    fun surQui(): Any {
-        return get(FactEnum.surQui.name)
-    }
-
-    fun surQui(qui: Any) {
-        this.put(FactEnum.surQui.name, qui)
-    }
-
-    fun faitQuoi(): ActionEnum {
-        return (get(FactEnum.faitQuoi.name) as ActionEnum)
-    }
-
-    fun faitQuoi(quoi: ActionEnum) {
-        put(FactEnum.faitQuoi.name, quoi)
-    }
+class GameFacts {
+    var qui: Vivant? = null
+    var surQui: Any? = null
+    lateinit var faitQuoi: ActionEnum
 }
 
-fun buildActionRules(): Rules {
+fun buildActionRules(): Rules<GameFacts> {
 
     // define rules
-    val mangeRule = RuleBuilder()
-            .name("mange")
-            .`when`(object : Condition {
-                override fun evaluate(facts: Facts): Boolean {
-                    return (facts is GameFacts)
-                            && facts.qui().inventaire.contains((facts).surQui())
-                            && facts.surQui() is Nouriture
-                            && facts.faitQuoi() == ActionEnum.utiliser
+    val mangeRule = RuleBuilder<GameFacts>()
+        .name("mange")
+        .`when`(object : Condition<GameFacts> {
+            override fun evaluate(facts: GameFacts): Boolean {
+                return facts.qui!!.inventaire.contains(facts.surQui)
+                        && facts.surQui is Nouriture
+                        && facts.faitQuoi == ActionEnum.utiliser
 
-                }
-            })
-            .then(object : Action {
-                override fun execute(facts: Facts) {
-                    println("run")
-                    (facts as GameFacts).qui().inventaire.remove((facts as GameFacts).surQui())
-                    ((facts as GameFacts).qui() as Player).calorie += 10
-                }
-            })
-            .build()
-    val rules = Rules()
+            }
+        })
+        .then(object : Action<GameFacts> {
+            override fun execute(facts: GameFacts) {
+                println("run")
+                facts.qui!!.inventaire.remove(facts.surQui)
+                (facts.qui as Player).calorie += 10
+            }
+        })
+        .build()
+    val rules = Rules<GameFacts>()
     rules.register(mangeRule)
 
-    register(rules, "bouge", object : Condition {
-        override fun evaluate(facts: Facts): Boolean {
-            return (facts is GameFacts)
-                    && facts.faitQuoi().equals(ActionEnum.bouger)
-                    && (facts.qui() as Player).energie > 0
+    register(rules, "bouge", object : Condition<GameFacts> {
+        override fun evaluate(facts: GameFacts): Boolean {
+            return facts.faitQuoi.equals(ActionEnum.bouger)
+                    && (facts.qui as Player).energie > 0
         }
-    }, object : Action {
-        override fun execute(facts: Facts) {
-            if (facts is GameFacts) {
-                (facts.qui() as Player).energie -= 10
-                (facts.qui() as Player).location = facts.surQui() as Location
-            }
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }, object : Action<GameFacts> {
+        override fun execute(facts: GameFacts) {
+            (facts.qui as Player).energie -= 10
+            (facts.qui as Player).location = facts.surQui as Location
+
+
         }
     })
 
 
-    register(rules, "rammasser", object : Condition {
-        override fun evaluate(facts: Facts): Boolean {
-            return (facts is GameFacts)
-                    && facts.faitQuoi().equals(ActionEnum.rammasser)
-                    && (facts.qui() as Player).energie > 0
-                    && (facts.qui() as Player).location.content.contains((facts.surQui() as Item))
+    register(rules, "rammasser", object : Condition<GameFacts> {
+        override fun evaluate(facts: GameFacts): Boolean {
+            return  facts.faitQuoi.equals(ActionEnum.rammasser)
+                    && (facts.qui as Player).energie > 0
+                    && (facts.qui as Player).location.content.contains((facts.surQui as Item))
         }
-    }, object : Action {
-        override fun execute(facts: Facts) {
-            if (facts is GameFacts) {
-                (facts.qui() as Player).energie -= 10
-                (facts.qui() as Player).calorie -= 10
-                (facts.qui() as Player).inventaire.add(facts.surQui() as Item)
-                (facts.qui() as Player).location.content.remove(facts.surQui() as Item)
+    }, object : Action<GameFacts> {
+        override fun execute(facts: GameFacts) {
+
+                (facts.qui as Player).energie -= 10
+                (facts.qui as Player).calorie -= 10
+                (facts.qui as Player).inventaire.add(facts.surQui as Item)
+                (facts.qui as Player).location.content.remove(facts.surQui as Item)
             }
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
     })
 
     return rules
@@ -134,21 +107,37 @@ fun buildActionRules(): Rules {
 
 }
 
-fun register(rules: Rules, name: String, condition: Condition, action: Action) {
-    rules.register(RuleBuilder().name(name).`when`(condition).then(action).build())
+fun register(rules: Rules<GameFacts>, name: String, condition: Condition<GameFacts>, action: Action<GameFacts>) {
+    rules.register(RuleBuilder<GameFacts>().name(name).`when`(condition).then(action).build())
 }
 
 
 fun main() {
 
     val facts = GameFacts()
-    facts.qui(Player())
-            //  facts.qui(Player().apply { inventaire.add(Nouriture()) })
-    facts.put(FactEnum.surQui.name, Nouriture())
+    facts.qui = (Player())
+    //  facts.qui(Player().apply { inventaire.add(Nouriture()) })
+    facts.surQui = Nouriture()
 //    facts.put(FactEnum.surQui.name, (facts.qui() as Player).inventaire.first())
-    facts.put(FactEnum.faitQuoi.name, ActionEnum.utiliser)
+    facts.faitQuoi = ActionEnum.utiliser
 
-    println((facts.qui() as Player).calorie)
-    InferenceRulesEngine().fire(buildActionRules(), facts)
-    println((facts.qui() as Player).calorie)
+    println((facts.qui as Player).calorie)
+    InferenceRulesEngine<GameFacts>().fire(buildActionRules(), facts)
+    println((facts.qui as Player).calorie)
+}
+
+
+public class RuleBookRules {
+
+    companion object {
+
+        public fun runSurvivalRules(facts: GameFacts): GameFacts {
+
+
+            InferenceRulesEngine<GameFacts>().fire(buildActionRules(), facts)
+
+            return facts
+
+        }
+    }
 }

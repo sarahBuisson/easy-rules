@@ -19,6 +19,9 @@ pluginManagement {
             if (requested.id.id == "com.android.application") {
                 useModule("com.android.tools.build:gradle:${requested.version}")
             }
+            if (requested.id.id == "kotlinx-serialization") {
+                useModule("org.jetbrains.kotlin:kotlin-serialization:${requested.version}")
+            }
         }
     }
 
@@ -32,6 +35,22 @@ pluginManagement {
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url 'http://dl.bintray.com/kotlin/kotlin-eap' }
         maven { url = 'https://dl.bintray.com/russhwolf/multiplatform-settings' }
+
+        jcenter()
+        mavenCentral()
+        google()
+        maven {
+            url 'http://oss.sonatype.org/content/repositories/snapshots'
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        maven {
+            url "https://dl.bintray.com/kotlin/kotlin-eap"
+        }
+        maven { url 'http://dl.bintray.com/kotlin/kotlinx.html' }
+        maven { url 'http://dl.bintray.com/kotlin/kotlin-js-wrappers' }
+        maven { url 'http://dl.bintray.com/kotlin/kotlinx' }
     }
 }
 

@@ -11,7 +11,7 @@
         <dependency>
             <groupId>org.jeasy</groupId>
             <artifactId>easy-rules-core-jvm</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4</version>
         </dependency>
         <dependency>
             <!-- needed to avoid kotlin.jvm.internal.markers.KMappedMarker error-->

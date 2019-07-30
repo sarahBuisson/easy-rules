@@ -1,0 +1,15 @@
+{
+  "name": "kotlin-logging",
+  "version": "1.0.0",
+  "description": "",
+  "main": "kotlin-logging.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node run.js"
+  },
+  "dependencies": {
+    "kotlin": ""
+   },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,6 +1,6 @@
 package airco;
 
-import org.jeasy.rules.api.Facts;
+import org.jeasy.rules.api.FactsMap;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.api.RulesEngine;
@@ -14,7 +14,7 @@ public class Launcher {
 
     public static void main(String[] args) {
         // define facts
-        Facts facts = new Facts();
+        FactsMap facts = new FactsMap();
         facts.put("temperature", 30);
 
         // define rules
