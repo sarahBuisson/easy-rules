@@ -7,6 +7,8 @@ buildscript {
 
 
     }
+    group 'org.jeasy'
+    version '3.2.4'
 }
 plugins {
     id 'java' //need for the "from"
@@ -137,7 +139,7 @@ kotlin {
         }
         compilations.main.kotlinOptions {
             // Setup the Kotlin compiler options for the 'main' compilation:
-            moduleKind = "amd"
+            moduleKind = "umd"
         }
         configurePublishingWithNPM(it, project.version, configurations,this)
     }

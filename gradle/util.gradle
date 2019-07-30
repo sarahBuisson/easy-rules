@@ -116,7 +116,7 @@ println("packagejsonDep")
                     def group =  it.group
                     def version = it.version
 
-                    def command = "mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -Dartifact=$group:$artifactId:$version -DoutputDirectory=$buildDir/npm"
+                    def command = "mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -Dartifact=$group:$artifactId:$version -DoutputDirectory=$buildDir/npm -DremoteRepositories=https://repo.maven.apache.org/maven2,http://repo1.maven.org/maven2/"
                     println(command)
                     println("$buildDir/npm")
                     exec {
@@ -357,7 +357,7 @@ if(artifactId.contains("-js"))
                     def sourceFile = "$buildDir/npm/${that.project.name}-js-v${that.project.version}.tgz"
                     println(sourceFile)
 
-                    artifactId that.project.name + "-js"
+                    artifactId that.project.name + "-js-tgz"
                     groupId project.group
                     version project.version
                     artifact source: sourceFile, extension: 'tgz'
@@ -373,9 +373,9 @@ if(artifactId.contains("-js"))
         }
 
     }}));
-            publishNodeJsPublicationToMavenLocal.dependsOn(publishNpmLocal)
-            publishToMavenLocal.dependsOn(publishNpmLocal)
-            publishJsPublicationToMavenLocal.dependsOn(publishNpmLocal)
+    publishNodeJsPublicationToMavenLocal.dependsOn(publishNpmLocal)
+    publishToMavenLocal.dependsOn(publishNpmLocal)
+    publishJsPublicationToMavenLocal.dependsOn(publishNpmLocal)
     publishNpmLocal.dependsOn('nodeJsMainClasses')
     publishNpmLocal.dependsOn('execNpmPack')
 
