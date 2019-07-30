@@ -29,7 +29,15 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-open class Facts : Iterable<Map.Entry<String, Any?>> {
+open class FactsMap : Iterable<Map.Entry<String, Any?>> {
+
+
+    constructor(facts: Map<String, Any?>?=null)
+    {
+        if(facts!=null) {
+            this.facts.putAll(facts)
+        }
+    }
 
     private val facts = mutableMapOf<String, Any?>()
     val size: Int

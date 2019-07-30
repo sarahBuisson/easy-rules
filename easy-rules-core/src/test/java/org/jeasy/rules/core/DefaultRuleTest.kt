@@ -26,24 +26,25 @@ package org.jeasy.rules.core
 import io.mockk.*
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
+import org.jeasy.rules.api.FactsMap
 import kotlin.test.Test
 
 class DefaultRuleTest : AbstractTest() {
 
 
-    private  var condition: Condition = mockk<Condition> (relaxed = true)
+    private  var condition: Condition<FactsMap> = mockk<Condition<FactsMap>> (relaxed = true)
 
-    private  var action1: Action = mockk<Action> (relaxed = true)
+    private  var action1: Action<FactsMap> = mockk<Action<FactsMap>> (relaxed = true)
 
-    private  var action2: Action = mockk<Action> (relaxed = true)
+    private  var action2: Action<FactsMap> = mockk<Action<FactsMap>> (relaxed = true)
 
     @Test
     //@Throws(Exception::class)
     fun WhenConditionIsTrue_ThenActionsShouldBeExecutedInOrder() {
         //        // given
-        condition = mockk<Condition>()
+        condition = mockk<Condition<FactsMap>>()
         every { condition.evaluate(facts) } returns true
-        val rule = RuleBuilder()
+        val rule = RuleBuilder<FactsMap>()
                 .`when`(condition)
                 .then(action1)
                 .then(action2)
@@ -68,7 +69,7 @@ class DefaultRuleTest : AbstractTest() {
     fun WhenConditionIsFalse_ThenActionsShouldNotBeExecuted() {
         // given
         every {condition.evaluate(any())} returns (false)
-        val rule = RuleBuilder()
+        val rule = RuleBuilder<FactsMap>()
                 .`when`(condition)
                 .then(action1)
                 .then(action2)

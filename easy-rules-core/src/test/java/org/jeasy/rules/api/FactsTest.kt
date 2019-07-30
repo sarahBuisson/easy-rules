@@ -30,7 +30,7 @@ import kotlin.test.assertTrue
 
 class FactsTest {
 
-    private val facts = Facts()
+    private val facts = FactsMap()
 
     @Test
     //@Throws(Exception::class)

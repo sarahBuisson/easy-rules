@@ -28,7 +28,7 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-interface Condition {
+interface Condition<Facts> {
 
     /**
      * Evaluate the condition according to the known facts.
@@ -44,9 +44,9 @@ interface Condition {
         /**
          * A NoOp [Condition] that always returns false.
          */
-        val FALSE: Condition = object : Condition {
+        val FALSE: Condition<Any> = object : Condition<Any> {
 
-            override fun evaluate(facts: Facts): Boolean {
+            override fun evaluate(facts: Any): Boolean {
                 return false
             }
         }
@@ -54,9 +54,9 @@ interface Condition {
         /**
          * A NoOp [Condition] that always returns true.
          */
-        val TRUE: Condition = object : Condition {
+        val TRUE: Condition<Any> = object : Condition<Any> {
 
-            override fun evaluate(facts: Facts): Boolean {
+            override fun evaluate(facts: Any): Boolean {
                 return true
             }
         }

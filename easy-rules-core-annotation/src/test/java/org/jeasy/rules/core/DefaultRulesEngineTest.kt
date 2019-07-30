@@ -30,6 +30,7 @@ import io.mockk.verifyOrder
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Priority
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.RuleListener
 import org.jeasy.rules.api.RulesEngineListener
 import org.jeasy.rules.core.AbstractTest2
@@ -40,10 +41,10 @@ import kotlin.test.*
 class DefaultRulesEngineTest : AbstractTest2() {
 
     @MockK
-    private lateinit var ruleListener: RuleListener
+    private lateinit var ruleListener: RuleListener<FactsMap>
 
     @MockK
-    private lateinit var rulesEngineListener: RulesEngineListener
+    private lateinit var rulesEngineListener: RulesEngineListener<FactsMap>
 
     private lateinit var annotatedRule: AnnotatedRule
 
@@ -186,7 +187,7 @@ class DefaultRulesEngineTest : AbstractTest2() {
         // Given
         every { rule1.evaluate(facts) } returns (true)
         every { ruleListener!!.beforeEvaluate(rule1, facts) } returns (true)
-        val rulesEngine = DefaultRulesEngine()
+        val rulesEngine = DefaultRulesEngine<FactsMap>()
         rulesEngine.registerRuleListener(ruleListener)
         rules.register(rule1)
 
@@ -218,7 +219,7 @@ class DefaultRulesEngineTest : AbstractTest2() {
     @Throws(Exception::class)
     fun testGetRuleListeners() {
         // Given
-        val rulesEngine = DefaultRulesEngine()
+        val rulesEngine = DefaultRulesEngine<FactsMap>()
         rulesEngine.registerRuleListener(ruleListener)
 
         // When
@@ -232,7 +233,7 @@ class DefaultRulesEngineTest : AbstractTest2() {
     @Throws(Exception::class)
     fun testGetRulesEngineListeners() {
         // Given
-        val rulesEngine = DefaultRulesEngine()
+        val rulesEngine = DefaultRulesEngine<FactsMap>()
         rulesEngine.registerRulesEngineListener(rulesEngineListener)
 
         // When

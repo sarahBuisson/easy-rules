@@ -23,18 +23,18 @@
  */
 package org.jeasy.rules.annotation
 
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 
 @Rule
 class AnnotatedRuleWithMultipleAnnotatedParametersAndOneParameterOfTypeFacts {
 
     @Condition
-    fun `when`(@Fact("fact1") fact1: Object, @Fact("fact2") fact2: Object, facts: Facts): Boolean {
+    fun `when`(@Fact("fact1") fact1: Object, @Fact("fact2") fact2: Object, facts: FactsMap): Boolean {
         return true
     }
 
     @Action
-    fun then(@Fact("fact1") fact1: Object, @Fact("fact2") fact2: Object, facts: Facts) {
+    fun then(@Fact("fact1") fact1: Object, @Fact("fact2") fact2: Object, facts: FactsMap) {
     }
 
 }

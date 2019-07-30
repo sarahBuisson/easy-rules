@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.support
 
-import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 
 
@@ -33,15 +32,15 @@ import org.jeasy.rules.api.Rule
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class ActivationRuleGroup : CompositeRule {
+class ActivationRuleGroup<Facts> : CompositeRule<Facts> {
 
-    private var selectedRule: Rule? = null
+    private var selectedRule: Rule<Facts>? = null
 
     /**
      * Create an activation rule group.
      */
     constructor() {
-        rules = sortedSetOf<Rule>()
+        rules = sortedSetOf<Rule<Facts>>()
     }
 
     /**
@@ -50,7 +49,7 @@ class ActivationRuleGroup : CompositeRule {
      * @param name of the activation rule group
      */
     constructor(name: String) : super(name) {
-        rules = sortedSetOf<Rule>()
+        rules = sortedSetOf<Rule<Facts>>()
     }
 
     /**
@@ -60,7 +59,7 @@ class ActivationRuleGroup : CompositeRule {
      * @param description of the activation rule group
      */
     constructor(name: String, description: String) : super(name, description) {
-        rules = sortedSetOf<Rule>()
+        rules = sortedSetOf<Rule<Facts>>()
     }
 
     /**
@@ -71,7 +70,7 @@ class ActivationRuleGroup : CompositeRule {
      * @param priority    of the activation rule group
      */
     constructor(name: String, description: String, priority: Int) : super(name, description, priority) {
-        rules = sortedSetOf<Rule>()
+        rules = sortedSetOf<Rule<Facts>>()
     }
 
 

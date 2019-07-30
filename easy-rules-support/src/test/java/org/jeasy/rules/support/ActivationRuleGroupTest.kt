@@ -25,7 +25,7 @@ package org.jeasy.rules.support
 
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.DefaultRulesEngine
 import kotlin.test.Test
@@ -34,17 +34,17 @@ import kotlin.test.assertTrue
 
 class ActivationRuleGroupTest {
 
-    private val facts = Facts()
-    private val rules = Rules()
+    private val facts = FactsMap()
+    private val rules = Rules<FactsMap>()
 
-    private val rulesEngine = DefaultRulesEngine()
+    private val rulesEngine = DefaultRulesEngine<FactsMap>()
 
     @Test
     fun onlySelectedRuleShouldBeExecuted_whenComposingRulesHaveDifferentPriorities() {
         // given
         val rule1 = Rule1()
         val rule2 = Rule2()
-        val activationRuleGroup = ActivationRuleGroup("my activation rule", "rule1 xor rule2")
+        val activationRuleGroup = ActivationRuleGroup<FactsMap>("my activation rule", "rule1 xor rule2")
         activationRuleGroup.addRule(rule1)
         activationRuleGroup.addRule(rule2)
         rules.register(activationRuleGroup)
@@ -62,7 +62,7 @@ class ActivationRuleGroupTest {
         // given
         val rule2 = Rule2()
         val rule3 = Rule3()
-        val activationRuleGroup = ActivationRuleGroup("my activation rule", "rule2 xor rule3")
+        val activationRuleGroup = ActivationRuleGroup<FactsMap>("my activation rule", "rule2 xor rule3")
         activationRuleGroup.addRule(rule2)
         activationRuleGroup.addRule(rule3)
         rules.register(activationRuleGroup)

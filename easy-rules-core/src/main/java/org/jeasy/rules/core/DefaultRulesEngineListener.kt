@@ -24,14 +24,13 @@
 package org.jeasy.rules.core
 
 import mu.KotlinLogging
-import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.api.RulesEngineListener
 
-internal class DefaultRulesEngineListener(private val parameters: RulesEngineParameters) : RulesEngineListener {
+internal class DefaultRulesEngineListener<Facts>(private val parameters: RulesEngineParameters) : RulesEngineListener<Facts> {
 
 
-    override fun beforeEvaluate(rules: Rules, facts: Facts) {
+    override fun beforeEvaluate(rules: Rules<Facts>, facts: Facts) {
         if (!rules.isEmpty) {
             logEngineParameters()
             log(rules)
@@ -43,7 +42,7 @@ internal class DefaultRulesEngineListener(private val parameters: RulesEnginePar
     }
 
 
-    override fun afterExecute(rules: Rules, facts: Facts) {
+    override fun afterExecute(rules: Rules<Facts>, facts: Facts) {
 
     }
 
@@ -51,7 +50,7 @@ internal class DefaultRulesEngineListener(private val parameters: RulesEnginePar
         LOGGER.info { parameters.toString() }
     }
 
-    private fun log(rules: Rules) {
+    private fun log(rules: Rules<Facts>) {
         LOGGER.info { "Registered rules:" }
         for (rule in rules) {
             LOGGER.info { "Rule { name = '${rule.name}', description = '${rule.description}', priority = '{$rule.priority}'}" }
@@ -60,9 +59,9 @@ internal class DefaultRulesEngineListener(private val parameters: RulesEnginePar
 
     private fun log(facts: Facts) {
         LOGGER.info { "Known facts:" }
-        for (fact in facts) {
-            LOGGER.info { "Fact { ${fact.key} : {$fact.value} }" }
-        }
+
+            LOGGER.info { facts.toString() }
+
     }
 
     companion object {

@@ -1,10 +1,11 @@
 package org.jeasy.rules.core
 
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
 
 //TODO : remerge with rules when kotlin alow reflexivity in js
-class Rules2 : Rules {
+class Rules2 : Rules<FactsMap> {
 
 
     /**
@@ -13,7 +14,7 @@ class Rules2 : Rules {
      * @param rules to register
      */
 
-    constructor(rules: Set<Rule>) : super(rules) {
+    constructor(rules: Set<Rule<FactsMap>>) : super(rules) {
 
     }
 
@@ -25,8 +26,8 @@ class Rules2 : Rules {
     constructor(vararg rules: Any) : super(setOf()) {
 
         for (rule in rules) {
-            if (rule is Rule)
-                this.rules.add(rule)
+            if (rule is Rule<*>)
+                this.rules.add(rule as Rule<FactsMap>)
             else
                 this.register(RuleProxy.asRule(rule))
         }
@@ -48,7 +49,6 @@ class Rules2 : Rules {
      * @param rule to unregister
      */
     fun unregister(rule: Any) {
-        println(RuleProxy.asRule(rule).equals(rules.first()))
                 println(rules.first().equals(RuleProxy.asRule(rule)))
         this.rules.remove(RuleProxy.asRule(rule))
     }

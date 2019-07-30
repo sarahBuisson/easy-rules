@@ -30,7 +30,7 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-interface Rule : Comparable<Rule> {
+interface Rule<Facts> : Comparable<Rule<Facts>> {
 
     /**
      * Getter for rule name.

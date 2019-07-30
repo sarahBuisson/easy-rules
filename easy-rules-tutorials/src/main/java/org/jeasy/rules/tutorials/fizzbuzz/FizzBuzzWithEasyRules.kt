@@ -23,7 +23,7 @@
  */
 package org.jeasy.rules.tutorials.fizzbuzz
 
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.DefaultRulesEngine
 import org.jeasy.rules.core.Rules2
@@ -35,7 +35,7 @@ object FizzBuzzWithEasyRules {
 fun main(args: Array<String>) {
     // create rules engine
     val parameters = RulesEngineParameters().skipOnFirstAppliedRule(true)
-    val fizzBuzzEngine = DefaultRulesEngine(parameters)
+    val fizzBuzzEngine = DefaultRulesEngine<FactsMap>(parameters)
 
     // create rules
     val rules = Rules2()
@@ -45,7 +45,7 @@ fun main(args: Array<String>) {
     rules.register(NonFizzBuzzRule())
 
     // fire rules
-    val facts = Facts()
+    val facts = FactsMap()
     for (i in 1..100) {
         facts.put("number", i)
         fizzBuzzEngine.fire(rules, facts)

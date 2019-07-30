@@ -26,6 +26,7 @@ package org.jeasy.rules.core
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Rule
+import org.jeasy.rules.api.FactsMap
 import kotlin.test.Test
 
 import kotlin.test.assertTrue
@@ -39,7 +40,7 @@ class AnnotationInheritanceTest : AbstractTest2() {
         val myChildRule = MyChildRule()
         rules.register(myChildRule)
         // When
-        val rulesEngine = DefaultRulesEngine()
+        val rulesEngine = DefaultRulesEngine<FactsMap>()
         rulesEngine.fire(rules, facts)
 
         // Then

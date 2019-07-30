@@ -30,9 +30,9 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-open class Rules : Iterable<Rule> {
+open class Rules<Facts> : Iterable<Rule<Facts>> {
 
-    protected var rules = mutableSetOf<Rule>();
+    protected var rules = mutableSetOf<Rule<Facts>>();
 
     /**
      * Check if the rule set is empty.
@@ -49,7 +49,7 @@ open class Rules : Iterable<Rule> {
      *
      * @param rules to register
      */
-    constructor(rules: Set<Rule>) {
+    constructor(rules: Set<Rule<Facts>>) {
         this.rules.addAll(rules)
     }
 
@@ -65,7 +65,7 @@ open class Rules : Iterable<Rule> {
     }
 
 
-    override fun iterator(): Iterator<Rule> {
+    override fun iterator(): Iterator<Rule<Facts>> {
         return rules.sorted().iterator()
     }
 
@@ -74,7 +74,7 @@ open class Rules : Iterable<Rule> {
      *
      * @param rule to register
      */
-    fun register(rule: Rule) {
+    fun register(rule: Rule<Facts>) {
         this.rules.add(rule)
     }
 
@@ -83,16 +83,16 @@ open class Rules : Iterable<Rule> {
      *
      * @param rule to unregister
      */
-    fun unregister(rule: Rule) {
+    fun unregister(rule: Rule<Facts>) {
         this.rules.remove(rule)
     }
 
 
-    operator fun get(i: Int): Rule {
+    operator fun get(i: Int): Rule<Facts> {
         return rules.sorted().toList()[i];
     }
 
-    protected fun findRuleByName(ruleName: String): Rule? {
+    protected fun findRuleByName(ruleName: String): Rule<Facts>? {
         for (rule in rules) {
             if (rule.name.toUpperCase().equals(ruleName.toUpperCase()))
                 return rule

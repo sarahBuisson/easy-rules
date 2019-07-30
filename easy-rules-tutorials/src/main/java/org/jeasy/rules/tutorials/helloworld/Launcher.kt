@@ -23,7 +23,7 @@
  */
 package org.jeasy.rules.tutorials.helloworld
 
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.DefaultRulesEngine
 import org.jeasy.rules.core.Rules2
@@ -35,14 +35,14 @@ object Launcher {
 fun main(args: Array<String>) {
 
     // create facts
-    val facts = Facts()
+    val facts = FactsMap()
 
     // create rules
     val rules = Rules2()
     rules.register(HelloWorldRule())
 
     // create a rules engine and fire rules on known facts
-    val rulesEngine = DefaultRulesEngine()
+    val rulesEngine = DefaultRulesEngine<FactsMap>()
     rulesEngine.fire(rules, facts)
 
 }

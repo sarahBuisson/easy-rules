@@ -29,7 +29,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.verify
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.DefaultRulesEngine
@@ -41,16 +41,16 @@ import kotlin.test.assertTrue
 class UnitRuleGroupTest {
 
     @MockK
-    private lateinit var rule1: Rule
+    private lateinit var rule1: Rule<FactsMap>
     @MockK
-    private lateinit var  rule2: Rule
+    private lateinit var  rule2: Rule<FactsMap>
 
-    private val facts = Facts()
-    private val rules = Rules()
+    private val facts = FactsMap()
+    private val rules = Rules<FactsMap>()
 
-    private val rulesEngine = DefaultRulesEngine()
+    private val rulesEngine = DefaultRulesEngine<FactsMap>()
 
-    private lateinit var unitRuleGroup: org.jeasy.rules.support.UnitRuleGroup
+    private lateinit var unitRuleGroup: org.jeasy.rules.support.UnitRuleGroup<FactsMap>
 
 
     @BeforeTest

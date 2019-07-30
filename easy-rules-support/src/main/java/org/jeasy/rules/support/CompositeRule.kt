@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.support
 
-import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.core.BasicRule
 import org.jeasy.rules.core.RuleProxy
@@ -33,7 +32,7 @@ import org.jeasy.rules.core.RuleProxy
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-abstract class CompositeRule
+abstract class CompositeRule<Facts>
 /**
  * Create a new [CompositeRule].
  *
@@ -41,14 +40,14 @@ abstract class CompositeRule
  * @param description rule description
  * @param priority rule priority
  */
-@JvmOverloads constructor(name: String = Rule.DEFAULT_NAME, description: String = Rule.DEFAULT_DESCRIPTION, priority: Int = Rule.DEFAULT_PRIORITY) : BasicRule(name, description, priority) {
+@JvmOverloads constructor(name: String = Rule.DEFAULT_NAME, description: String = Rule.DEFAULT_DESCRIPTION, priority: Int = Rule.DEFAULT_PRIORITY) : BasicRule<Facts>(name, description, priority) {
 
     /**
      * The set of composing rules.
      */
-    protected var rules: MutableSet<Rule>
+    protected var rules: MutableSet<Rule<Facts>>
 
-    private val proxyRules: MutableMap<Any, Rule>
+    private val proxyRules: MutableMap<Any, Rule<Facts>>
 
     init {
         rules = sortedSetOf()
@@ -67,9 +66,13 @@ abstract class CompositeRule
      * @param rule the rule to add
      */
     fun addRule(rule: Any) {
-        val proxy = RuleProxy.asRule(rule)
-        rules.add(proxy)
-        proxyRules.put(rule, proxy)
+        if (rule is Rule<*>) {
+            rules.add(rule as Rule<Facts>)
+        } else {
+            val proxy: Rule<Facts> = RuleProxy.asRule(rule) as Rule<Facts> //TODO : should'nt be cast.
+            rules.add(proxy)
+            proxyRules.put(rule, proxy)
+        }
     }
 
     /**
@@ -77,9 +80,13 @@ abstract class CompositeRule
      * @param rule the rule to remove
      */
     fun removeRule(rule: Any) {
-        val proxy = proxyRules[rule]
-        if (proxy != null) {
-            rules.remove(proxy)
+        if (rule is Rule<*>) {//TODO : should'nt be. check how it was before
+            rules.remove(rule as Rule<Facts>)
+        } else {
+            val proxy = proxyRules[rule]
+            if (proxy != null) {
+                rules.remove(proxy)
+            }
         }
     }
 

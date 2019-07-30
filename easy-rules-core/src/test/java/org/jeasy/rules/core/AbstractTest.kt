@@ -25,7 +25,7 @@ package org.jeasy.rules.core
 
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
 import kotlin.test.BeforeTest
@@ -33,10 +33,10 @@ import kotlin.test.BeforeTest
 open abstract class AbstractTest {
 
     @MockK(relaxed = true)
-    protected open lateinit var rule1: Rule
+    protected open lateinit var rule1: Rule<FactsMap>
 
     @MockK(relaxed = true)
-    protected open lateinit var rule2: Rule
+    protected open lateinit var rule2: Rule<FactsMap>
 
     @MockK(relaxed = true)
     protected open lateinit var fact1: Any
@@ -44,16 +44,16 @@ open abstract class AbstractTest {
     @MockK(relaxed = true)
     protected lateinit var fact2: Any
 
-    protected lateinit var facts: Facts
-    protected lateinit var rules: Rules
+    protected lateinit var facts: FactsMap
+    protected lateinit var rules: Rules<FactsMap>
 
-    protected lateinit var rulesEngine: DefaultRulesEngine
+    protected lateinit var rulesEngine: DefaultRulesEngine<FactsMap>
 
     @BeforeTest
     //@Throws(Exception::class)
     open fun setup() {
         MockKAnnotations.init(this, relaxed = true)
-        facts = Facts()
+        facts = FactsMap()
         facts.put("fact1", fact1)
         facts.put("fact2", fact2)
         rules = Rules()

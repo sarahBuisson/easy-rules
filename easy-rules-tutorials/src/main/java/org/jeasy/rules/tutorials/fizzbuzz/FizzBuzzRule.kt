@@ -23,9 +23,10 @@
  */
 package org.jeasy.rules.tutorials.fizzbuzz
 
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.support.UnitRuleGroup
 
-class FizzBuzzRule(vararg rules: Any) : UnitRuleGroup() {
+class FizzBuzzRule(vararg rules: Any) : UnitRuleGroup<FactsMap>() {
 
     override  var priority: Int = 0
 

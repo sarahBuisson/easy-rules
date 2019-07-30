@@ -35,7 +35,7 @@ import org.jeasy.rules.api.*
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class DefaultRulesEngine : RulesEngine {
+class DefaultRulesEngine<Facts> : RulesEngine<Facts> {
     /**
      * Create a new [DefaultRulesEngine].
      *
@@ -46,9 +46,9 @@ class DefaultRulesEngine : RulesEngine {
     override val parameters: RulesEngineParameters
 
 
-    override val ruleListeners: MutableList<RuleListener>
+    override val ruleListeners: MutableList<RuleListener<Facts>>
 
-    override val rulesEngineListeners: MutableList<RulesEngineListener>
+    override val rulesEngineListeners: MutableList<RulesEngineListener<Facts>>
 
 
     constructor() {
@@ -68,13 +68,13 @@ class DefaultRulesEngine : RulesEngine {
     }
 
 
-    override fun fire(rules: Rules, facts: Facts) {
+    override fun fire(rules: Rules<Facts>, facts: Facts) {
         triggerListenersBeforeRules(rules, facts)
         doFire(rules, facts)
         triggerListenersAfterRules(rules, facts)
     }
 
-    internal fun doFire(rules: Rules, facts: Facts) {
+    internal fun doFire(rules: Rules<Facts>, facts: Facts) {
         for (rule in rules) {
             val name = rule.name
             val priority = rule.priority
@@ -115,16 +115,16 @@ class DefaultRulesEngine : RulesEngine {
     }
 
 
-    override fun check(rules: Rules, facts: Facts): Map<Rule, Boolean> {
+    override fun check(rules: Rules<Facts>, facts: Facts): Map<Rule<Facts>, Boolean> {
         triggerListenersBeforeRules(rules, facts)
         val result = doCheck(rules, facts)
         triggerListenersAfterRules(rules, facts)
         return result
     }
 
-    private fun doCheck(rules: Rules, facts: Facts): Map<Rule, Boolean> {
+    private fun doCheck(rules: Rules<Facts>, facts: Facts): Map<Rule<Facts>, Boolean> {
         LOGGER.info { "Checking rules" }
-        val result = HashMap<Rule, Boolean>()
+        val result = HashMap<Rule<Facts>, Boolean>()
         for (rule in rules) {
             if (shouldBeEvaluated(rule, facts)) {
                 result.put(rule, rule.evaluate(facts))
@@ -133,25 +133,25 @@ class DefaultRulesEngine : RulesEngine {
         return result
     }
 
-    private fun triggerListenersOnFailure(rule: Rule, exception: Exception, facts: Facts) {
+    private fun triggerListenersOnFailure(rule: Rule<Facts>, exception: Exception, facts: Facts) {
         for (ruleListener in ruleListeners) {
             ruleListener.onFailure(rule, facts, exception)
         }
     }
 
-    private fun triggerListenersOnSuccess(rule: Rule, facts: Facts) {
+    private fun triggerListenersOnSuccess(rule: Rule<Facts>, facts: Facts) {
         for (ruleListener in ruleListeners) {
             ruleListener.onSuccess(rule, facts)
         }
     }
 
-    private fun triggerListenersBeforeExecute(rule: Rule, facts: Facts) {
+    private fun triggerListenersBeforeExecute(rule: Rule<Facts>, facts: Facts) {
         for (ruleListener in ruleListeners) {
             ruleListener.beforeExecute(rule, facts)
         }
     }
 
-    private fun triggerListenersBeforeEvaluate(rule: Rule, facts: Facts): Boolean {
+    private fun triggerListenersBeforeEvaluate(rule: Rule<Facts>, facts: Facts): Boolean {
         for (ruleListener in ruleListeners) {
             if (!ruleListener.beforeEvaluate(rule, facts)) {
                 return false
@@ -160,25 +160,25 @@ class DefaultRulesEngine : RulesEngine {
         return true
     }
 
-    private fun triggerListenersAfterEvaluate(rule: Rule, facts: Facts, evaluationResult: Boolean) {
+    private fun triggerListenersAfterEvaluate(rule: Rule<Facts>, facts: Facts, evaluationResult: Boolean) {
         for (ruleListener in ruleListeners) {
             ruleListener.afterEvaluate(rule, facts, evaluationResult)
         }
     }
 
-    private fun triggerListenersBeforeRules(rule: Rules, facts: Facts) {
+    private fun triggerListenersBeforeRules(rule: Rules<Facts>, facts: Facts) {
         for (rulesEngineListener in rulesEngineListeners) {
             rulesEngineListener.beforeEvaluate(rule, facts)
         }
     }
 
-    private fun triggerListenersAfterRules(rule: Rules, facts: Facts) {
+    private fun triggerListenersAfterRules(rule: Rules<Facts>, facts: Facts) {
         for (rulesEngineListener in rulesEngineListeners) {
             rulesEngineListener.afterExecute(rule, facts)
         }
     }
 
-    private fun shouldBeEvaluated(rule: Rule, facts: Facts): Boolean {
+    private fun shouldBeEvaluated(rule: Rule<Facts>, facts: Facts): Boolean {
         return triggerListenersBeforeEvaluate(rule, facts)
     }
 
@@ -186,7 +186,7 @@ class DefaultRulesEngine : RulesEngine {
      * Register a rule listener.
      * @param ruleListener to register
      */
-    fun registerRuleListener(ruleListener: RuleListener) {
+    fun registerRuleListener(ruleListener: RuleListener<Facts>) {
         ruleListeners.add(ruleListener)
     }
 
@@ -194,7 +194,7 @@ class DefaultRulesEngine : RulesEngine {
      * Register a list of rule listener.
      * @param ruleListeners to register
      */
-    fun registerRuleListeners(ruleListeners: List<RuleListener>) {
+    fun registerRuleListeners(ruleListeners: List<RuleListener<Facts>>) {
         this.ruleListeners.addAll(ruleListeners)
     }
 
@@ -202,7 +202,7 @@ class DefaultRulesEngine : RulesEngine {
      * Register a rules engine listener.
      * @param rulesEngineListener to register
      */
-    fun registerRulesEngineListener(rulesEngineListener: RulesEngineListener) {
+    fun registerRulesEngineListener(rulesEngineListener: RulesEngineListener<Facts>) {
         rulesEngineListeners.add(rulesEngineListener)
     }
 
@@ -210,7 +210,7 @@ class DefaultRulesEngine : RulesEngine {
      * Register a list of rules engine listener.
      * @param rulesEngineListeners to register
      */
-    fun registerRulesEngineListeners(rulesEngineListeners: List<RulesEngineListener>) {
+    fun registerRulesEngineListeners(rulesEngineListeners: List<RulesEngineListener<Facts>>) {
         this.rulesEngineListeners.addAll(rulesEngineListeners)
     }
 

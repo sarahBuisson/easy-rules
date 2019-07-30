@@ -24,7 +24,7 @@
 package org.jeasy.rules.core
 
 import org.jeasy.rules.annotation.*
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.api.RulesEngine
 import kotlin.test.Test
@@ -87,7 +87,7 @@ class InferenceRulesEngineTest {
         }
 
         @Action
-        fun then(facts: Facts) {
+        fun then(facts: FactsMap) {
             isExecuted = true
             timestamp = System.currentTimeMillis()
             facts.remove("foo")
@@ -113,7 +113,7 @@ class InferenceRulesEngineTest {
         }
 
         @Action
-        fun then(facts: Facts) {
+        fun then(facts: FactsMap) {
             isExecuted = true
             timestamp = System.currentTimeMillis()
             facts.remove("bar")

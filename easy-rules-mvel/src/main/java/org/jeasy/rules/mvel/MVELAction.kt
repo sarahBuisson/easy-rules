@@ -61,6 +61,6 @@ class MVELAction
 
     companion object {
 
-        private val LOGGER = LoggerFactory.getLogger(MVELAction::class.java)
+        private val LOGGER = LoggerFactory.Companion.getLogger(MVELAction::class.java)
     }
 }

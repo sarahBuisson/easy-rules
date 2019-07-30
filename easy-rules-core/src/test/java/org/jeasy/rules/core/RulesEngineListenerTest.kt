@@ -26,6 +26,7 @@ package org.jeasy.rules.core
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verifyOrder
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.RulesEngineListener
 import kotlin.test.Test
 import kotlin.test.BeforeTest
@@ -33,9 +34,9 @@ import kotlin.test.BeforeTest
 class RulesEngineListenerTest : AbstractTest() {
 
     @MockK
-    private lateinit var rulesEngineListener1: RulesEngineListener
+    private lateinit var rulesEngineListener1: RulesEngineListener<FactsMap>
     @MockK
-    private lateinit var rulesEngineListener2: RulesEngineListener
+    private lateinit var rulesEngineListener2: RulesEngineListener<FactsMap>
 
     @BeforeTest
   //  @Throws(Exception::class)

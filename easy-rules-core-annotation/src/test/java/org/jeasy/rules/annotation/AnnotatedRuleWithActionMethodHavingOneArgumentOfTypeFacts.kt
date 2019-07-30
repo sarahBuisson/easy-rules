@@ -23,7 +23,7 @@
  */
 package org.jeasy.rules.annotation
 
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 
 @Rule
 class AnnotatedRuleWithActionMethodHavingOneArgumentOfTypeFacts {
@@ -35,7 +35,7 @@ class AnnotatedRuleWithActionMethodHavingOneArgumentOfTypeFacts {
 
     @Action
     @Throws(Exception::class)
-    fun then(facts: Facts) {
+    fun then(facts: FactsMap) {
     }
 
 }

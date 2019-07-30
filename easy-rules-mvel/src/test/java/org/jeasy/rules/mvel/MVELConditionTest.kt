@@ -24,7 +24,7 @@
 package org.jeasy.rules.mvel
 
 import org.jeasy.rules.api.Condition
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.junit.Test
 
 import org.assertj.core.api.Assertions.assertThat
@@ -36,7 +36,7 @@ class MVELConditionTest {
     fun testMVELExpressionEvaluation() {
         // given
         val isAdult = MVELCondition("person.age > 18")
-        val facts = Facts()
+        val facts = FactsMap()
         facts.put("person", Person("foo", 20))
 
         // when
@@ -51,7 +51,7 @@ class MVELConditionTest {
     fun whenDeclaredFactIsNotPresent_thenShouldReturnFalse() {
         // given
         val isHot = MVELCondition("temperature > 30")
-        val facts = Facts()
+        val facts = FactsMap()
 
         // when
         val evaluationResult = isHot.evaluate(facts)

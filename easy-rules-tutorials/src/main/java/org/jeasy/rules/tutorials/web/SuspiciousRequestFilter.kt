@@ -24,6 +24,7 @@
 package org.jeasy.rules.tutorials.web
 
 
+import org.jeasy.rules.api.FactsMap
 import java.io.IOException
 import javax.servlet.Filter
 import javax.servlet.FilterChain
@@ -32,7 +33,6 @@ import javax.servlet.ServletException
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.annotation.WebFilter
-import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.RulesEngine
 import org.jeasy.rules.core.DefaultRulesEngine
 import org.jeasy.rules.core.Rules2
@@ -41,7 +41,7 @@ import org.jeasy.rules.core.Rules2
 class SuspiciousRequestFilter : Filter {
 
     private lateinit var rules: Rules2
-    private lateinit var  rulesEngine: RulesEngine
+    private lateinit var  rulesEngine: RulesEngine<FactsMap>
 
 
     @Throws(ServletException::class)
@@ -54,7 +54,7 @@ class SuspiciousRequestFilter : Filter {
 
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(request: ServletRequest, response: ServletResponse, filterChain: FilterChain) {
-        val facts = Facts()
+        val facts = FactsMap()
         facts.put("request", request)
         rulesEngine.fire(rules, facts)
         filterChain.doFilter(request, response)

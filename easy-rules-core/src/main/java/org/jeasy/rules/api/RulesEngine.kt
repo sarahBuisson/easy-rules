@@ -30,7 +30,7 @@ import org.jeasy.rules.core.RulesEngineParameters
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-interface RulesEngine {
+interface RulesEngine<Facts> {
 
     /**
      * Return the rules engine parameters.
@@ -44,23 +44,23 @@ interface RulesEngine {
      *
      * @return the list of registered rule listeners
      */
-    val ruleListeners: List<RuleListener>
+    val ruleListeners: List<RuleListener<Facts>>
 
     /**
      * Return the list of registered rules engine listeners.
      *
      * @return the list of registered rules engine listeners
      */
-    val rulesEngineListeners: List<RulesEngineListener>
+    val rulesEngineListeners: List<RulesEngineListener<Facts>>
 
     /**
      * Fire all registered rules on given facts.
      */
-    fun fire(rules: Rules, facts: Facts)
+    fun fire(rules: Rules<Facts>, facts: Facts)
 
     /**
      * Check rules without firing them.
      * @return a map with the result of evaluation of each rule
      */
-    fun check(rules: Rules, facts: Facts): Map<Rule, Boolean>
+    fun check(rules: Rules<Facts>, facts: Facts): Map<Rule<Facts>, Boolean>
 }

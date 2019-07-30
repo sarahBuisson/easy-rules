@@ -35,19 +35,19 @@ import org.jeasy.rules.api.*
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class InferenceRulesEngine
+class InferenceRulesEngine<Facts>
 /**
  * Create a new inference rules engine.
  *
  * @param parameters of the engine
  */
  constructor(
-                          override val parameters: RulesEngineParameters = RulesEngineParameters()) : RulesEngine {
+                          override val parameters: RulesEngineParameters = RulesEngineParameters()) : RulesEngine<Facts> {
 
-    override val ruleListeners: MutableList<RuleListener>
+    override val ruleListeners: MutableList<RuleListener<Facts>>
 
-    override val rulesEngineListeners: MutableList<RulesEngineListener>
-    private val delegate: DefaultRulesEngine
+    override val rulesEngineListeners: MutableList<RulesEngineListener<Facts>>
+    private val delegate: DefaultRulesEngine<Facts>
 
     init {
         delegate = DefaultRulesEngine(parameters)
@@ -56,21 +56,21 @@ class InferenceRulesEngine
     }
 
 
-    override fun fire(rules: Rules, facts: Facts) {
-        var selectedRules: Set<Rule>
+    override fun fire(rules: Rules<Facts>, facts: Facts) {
+        var selectedRules: Set<Rule<Facts>>
         do {
             LOGGER.info{"Selecting candidate rules based on the following facts: $facts"}
             selectedRules = selectCandidates(rules, facts)
             if (!selectedRules.isEmpty()) {
-                delegate.doFire(Rules(selectedRules), facts)
+                delegate.doFire(Rules<Facts>(selectedRules), facts)
             } else {
                 LOGGER.info{"No candidate rules found for facts: $facts" }
             }
         } while (!selectedRules.isEmpty())
     }
 
-    private fun selectCandidates(rules: Rules, facts: Facts): Set<Rule> {
-        val candidates = mutableSetOf<Rule>()
+    private fun selectCandidates(rules: Rules<Facts>, facts: Facts): Set<Rule<Facts>> {
+        val candidates = mutableSetOf<Rule<Facts>>()
         for (rule in rules) {
             if (rule.evaluate(facts)) {
                 candidates.add(rule)
@@ -80,7 +80,7 @@ class InferenceRulesEngine
     }
 
 
-    override fun check(rules: Rules, facts: Facts): Map<Rule, Boolean> {
+    override fun check(rules: Rules<Facts>, facts: Facts): Map<Rule<Facts>, Boolean> {
         return delegate.check(rules, facts)
     }
 
@@ -88,7 +88,7 @@ class InferenceRulesEngine
      * Register a rule listener.
      * @param ruleListener to register
      */
-    fun registerRuleListener(ruleListener: RuleListener) {
+    fun registerRuleListener(ruleListener: RuleListener<Facts>) {
         ruleListeners.add(ruleListener)
         delegate.registerRuleListener(ruleListener)
     }
@@ -97,7 +97,7 @@ class InferenceRulesEngine
      * Register a list of rule listener.
      * @param ruleListeners to register
      */
-    fun registerRuleListeners(ruleListeners: List<RuleListener>) {
+    fun registerRuleListeners(ruleListeners: List<RuleListener<Facts>>) {
         this.ruleListeners.addAll(ruleListeners)
         delegate.registerRuleListeners(ruleListeners)
     }
@@ -106,7 +106,7 @@ class InferenceRulesEngine
      * Register a rules engine listener.
      * @param rulesEngineListener to register
      */
-    fun registerRulesEngineListener(rulesEngineListener: RulesEngineListener) {
+    fun registerRulesEngineListener(rulesEngineListener: RulesEngineListener<Facts>) {
         rulesEngineListeners.add(rulesEngineListener)
         delegate.registerRulesEngineListener(rulesEngineListener)
     }
@@ -115,7 +115,7 @@ class InferenceRulesEngine
      * Register a list of rules engine listener.
      * @param rulesEngineListeners to register
      */
-    fun registerRulesEngineListeners(rulesEngineListeners: List<RulesEngineListener>) {
+    fun registerRulesEngineListeners(rulesEngineListeners: List<RulesEngineListener<Facts>>) {
         this.rulesEngineListeners.addAll(rulesEngineListeners)
         delegate.registerRulesEngineListeners(rulesEngineListeners)
     }

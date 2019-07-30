@@ -30,7 +30,7 @@ import io.mockk.verify
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Priority
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.DefaultRulesEngine
@@ -43,18 +43,18 @@ import kotlin.test.assertTrue
 class ConditionalRuleGroupTest {
 
     @MockK
-    lateinit var rule1: Rule
+    lateinit var rule1: Rule<FactsMap>
     @MockK
-    lateinit var rule2: Rule
+    lateinit var rule2: Rule<FactsMap>
     @MockK
-    lateinit var conditionalRule: Rule
+    lateinit var conditionalRule: Rule<FactsMap>
 
-    private val facts = Facts()
-    private val rules = Rules()
+    private val facts = FactsMap()
+    private val rules = Rules<FactsMap>()
 
-    private val rulesEngine = DefaultRulesEngine()
+    private val rulesEngine = DefaultRulesEngine<FactsMap>()
 
-    private lateinit var conditionalRuleGroup: ConditionalRuleGroup
+    private lateinit var conditionalRuleGroup: ConditionalRuleGroup<FactsMap>
 
     @BeforeTest
     fun setUp() {
@@ -159,7 +159,7 @@ class ConditionalRuleGroupTest {
         val rule = MyRule()
         conditionalRuleGroup = ConditionalRuleGroup("myConditinalRule")
         conditionalRuleGroup!!.addRule(rule)
-        every { conditionalRule!!.compareTo(ofType(Rule::class)) } returns (1)
+        every { conditionalRule!!.compareTo(ofType(Rule::class) as Rule<FactsMap>) } returns (1)
         conditionalRuleGroup!!.addRule(conditionalRule)
         rules.register(conditionalRuleGroup)
 
@@ -182,7 +182,7 @@ class ConditionalRuleGroupTest {
         conditionalRuleGroup!!.addRule(rule)
         conditionalRuleGroup!!.addRule(annotatedRule)
         conditionalRuleGroup!!.removeRule(annotatedRule)
-        every { conditionalRule!!.compareTo(ofType(Rule::class)) } returns (1)
+        every { conditionalRule!!.compareTo(ofType(Rule::class) as Rule<FactsMap>) } returns (1)
         conditionalRuleGroup!!.addRule(conditionalRule)
         rules.register(conditionalRuleGroup)
 
@@ -224,7 +224,7 @@ class ConditionalRuleGroupTest {
         conditionalRuleGroup.addRule(UnprioritizedRule())
         val m = conditionalRuleGroup::class.members.find { it.name == "sortRules" }
         //m.setAccessible(true)
-        val sorted = m!!.call(conditionalRuleGroup) as List<Rule>
+        val sorted = m!!.call(conditionalRuleGroup) as List<Rule<FactsMap>>
         assertEquals(sorted[0].priority, Integer.MAX_VALUE - 1)
         assertEquals(sorted[1].priority, 3)
     }

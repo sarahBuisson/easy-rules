@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.support
 
-import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 
 /**
@@ -31,7 +30,7 @@ import org.jeasy.rules.api.Rule
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-open class UnitRuleGroup : CompositeRule {
+open class UnitRuleGroup<Facts> : CompositeRule<Facts> {
 
     /**
      * Create a unit rule group.

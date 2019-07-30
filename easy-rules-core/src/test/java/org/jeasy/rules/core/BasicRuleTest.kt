@@ -23,7 +23,7 @@
  */
 package org.jeasy.rules.core
 
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rules
 import kotlin.test.Test
 
@@ -35,7 +35,7 @@ class BasicRuleTest : AbstractTest() {
     @Test
     //@Throws(Exception::class)
     fun basicRuleEvaluateShouldReturnFalse() {
-        val basicRule = BasicRule()
+        val basicRule = BasicRule<FactsMap>()
         assertFalse(basicRule.evaluate(facts))
     }
 
@@ -62,35 +62,35 @@ class BasicRuleTest : AbstractTest() {
         assertEquals(rules[2], rule2)
     }
 
-    internal inner class FirstRule : BasicRule() {
+    internal inner class FirstRule : BasicRule<FactsMap>() {
         override  var priority: Int=1
 
         override var name: String = "rule1"
 
 
-        override fun evaluate(facts: Facts): Boolean {
+        override fun evaluate(facts: FactsMap): Boolean {
             return true
         }
     }
 
-    internal inner class SecondRule : BasicRule() {
+    internal inner class SecondRule : BasicRule<FactsMap>() {
         override var priority: Int = 3
 
         override var name: String = "rule2"
 
 
-        override fun evaluate(facts: Facts): Boolean {
+        override fun evaluate(facts: FactsMap): Boolean {
             return true
         }
     }
 
-    internal inner class ThirdRule : BasicRule() {
+    internal inner class ThirdRule : BasicRule<FactsMap>() {
         override var priority: Int  = 2
 
         override var name: String = "rule3"
 
 
-        override fun evaluate(facts: Facts): Boolean {
+        override fun evaluate(facts: FactsMap): Boolean {
             return true
         }
     }

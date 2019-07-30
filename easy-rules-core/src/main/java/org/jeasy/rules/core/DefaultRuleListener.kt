@@ -23,21 +23,20 @@
  */
 package org.jeasy.rules.core
 
-import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.RuleListener
 
 
 
-internal class DefaultRuleListener : RuleListener {
+internal class DefaultRuleListener<Facts> : RuleListener<Facts> {
 
 
-    override fun beforeEvaluate(rule: Rule, facts: Facts): Boolean {
+    override fun beforeEvaluate(rule: Rule<Facts>, facts: Facts): Boolean {
         return true
     }
 
 
-    override fun afterEvaluate(rule: Rule, facts: Facts, evaluationResult: Boolean) {
+    override fun afterEvaluate(rule: Rule<Facts>, facts: Facts, evaluationResult: Boolean) {
         val ruleName = rule.name
         if (evaluationResult) {
             LOGGER.info{"Rule '$ruleName' triggered"}
@@ -47,17 +46,17 @@ internal class DefaultRuleListener : RuleListener {
     }
 
 
-    override fun beforeExecute(rule: Rule, facts: Facts) {
+    override fun beforeExecute(rule: Rule<Facts>, facts: Facts) {
 
     }
 
 
-    override fun onSuccess(rule: Rule, facts: Facts) {
+    override fun onSuccess(rule: Rule<Facts>, facts: Facts) {
         LOGGER.info { "Rule '${rule.name}' performed successfully" }
     }
 
 
-    override fun onFailure(rule: Rule, facts: Facts, exception: Exception) {
+    override fun onFailure(rule: Rule<Facts>, facts: Facts, exception: Exception) {
         LOGGER.info { "Rule '" + rule.name + "' performed with error" }
         LOGGER.info { exception }
     }

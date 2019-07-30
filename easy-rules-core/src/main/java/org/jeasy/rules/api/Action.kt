@@ -28,7 +28,7 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-interface Action {
+interface Action<Facts> {
 
     /**
      * Execute the action when the rule evaluates to true.

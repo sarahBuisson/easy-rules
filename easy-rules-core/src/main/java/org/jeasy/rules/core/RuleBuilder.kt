@@ -34,14 +34,14 @@ import kotlin.collections.ArrayList
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class RuleBuilder {
+class RuleBuilder<Facts> {
 
     private var name = Rule.DEFAULT_NAME
     private var description = Rule.DEFAULT_DESCRIPTION
     private var priority = Rule.DEFAULT_PRIORITY
 
-    private var condition = Condition.FALSE
-    private val actions = ArrayList<Action>()
+    private var condition = Condition.FALSE as Condition<Facts>
+    private val actions = ArrayList<Action<Facts>>()
 
     /**
      * Set rule name.
@@ -49,7 +49,7 @@ class RuleBuilder {
      * @param name of the rule
      * @return the builder instance
      */
-    fun name(name: String): RuleBuilder {
+    fun name(name: String): RuleBuilder<Facts> {
         this.name = name
         return this
     }
@@ -60,7 +60,7 @@ class RuleBuilder {
      * @param description of the rule
      * @return the builder instance
      */
-    fun description(description: String): RuleBuilder {
+    fun description(description: String): RuleBuilder<Facts> {
         this.description = description
         return this
     }
@@ -71,7 +71,7 @@ class RuleBuilder {
      * @param priority of the rule
      * @return the builder instance
      */
-    fun priority(priority: Int): RuleBuilder {
+    fun priority(priority: Int): RuleBuilder<Facts> {
         this.priority = priority
         return this
     }
@@ -82,7 +82,7 @@ class RuleBuilder {
      * @param condition of the rule
      * @return the builder instance
      */
-    fun `when` (condition: Condition): RuleBuilder {
+    fun `when` (condition: Condition<Facts>): RuleBuilder<Facts> {
         this.condition = condition
         return this
     }
@@ -93,7 +93,7 @@ class RuleBuilder {
      * @param action to add
      * @return the builder instance
      */
-    fun then(action: Action): RuleBuilder {
+    fun then(action: Action<Facts>): RuleBuilder<Facts> {
         this.actions.add(action)
         return this
     }
@@ -103,7 +103,7 @@ class RuleBuilder {
      *
      * @return a new rule instance
      */
-    fun build(): Rule {
+    fun build(): Rule<Facts> {
         return DefaultRule(name, description, priority, condition, actions)
     }
 }

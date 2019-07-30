@@ -27,6 +27,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.core.DefaultRule
 import org.jeasy.rules.core.RuleBuilder
@@ -40,11 +41,11 @@ import kotlin.test.assertTrue
 class RuleBuilderTest {
 
     @MockK//(relaxed = true)
-    private lateinit var condition: Condition
+    private lateinit var condition: Condition<FactsMap>
     @MockK//(relaxed = true)
-    private lateinit var action1: Action
+    private lateinit var action1: Action<FactsMap>
     @MockK//(relaxed = true)
-    private lateinit var action2: Action
+    private lateinit var action2: Action<FactsMap>
 
 
     @BeforeTest
@@ -56,20 +57,20 @@ class RuleBuilderTest {
     //@Throws(Exception::class)
     fun testDefaultRuleCreationWithDefaultValues() {
         // when
-        val rule = RuleBuilder().build()
+        val rule = RuleBuilder<FactsMap>().build()
 
         // then
         assertEquals(rule.name, Rule.DEFAULT_NAME)
         assertEquals(rule.description, Rule.DEFAULT_DESCRIPTION)
         assertEquals(rule.priority, Rule.DEFAULT_PRIORITY)
-        assertTrue(rule is DefaultRule)
+        assertTrue(rule is DefaultRule<FactsMap>)
     }
 
     @Test
     //@Throws(Exception::class)
     fun testDefaultRuleCreationWithCustomValues() {
         // when
-        val rule = RuleBuilder()
+        val rule = RuleBuilder<FactsMap>()
                 .name("myRule")
                 .description("myRuleDescription")
                 .priority(3)

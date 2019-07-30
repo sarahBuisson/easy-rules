@@ -31,7 +31,7 @@ import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Fact
 import org.jeasy.rules.annotation.Priority
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rule
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
@@ -155,7 +155,7 @@ open class RuleProxy private constructor(private val target: Any) {
 
     ////@Throws(IllegalAccessException::class)
     private fun evaluateMethod(args: Array<Any>): Any? {
-        val facts = args[0] as Facts
+        val facts = args[0] as FactsMap
         val conditionMethod = conditionMethod
         try {
             val actualParameters = getActualParameters(conditionMethod!!, facts)
@@ -173,7 +173,7 @@ open class RuleProxy private constructor(private val target: Any) {
 
     //@Throws(IllegalAccessException::class)
     private fun executeMethod(args: Array<Any>): Any? {
-        val facts = args[0] as Facts
+        val facts = args[0] as FactsMap
         for (actionMethodBean in actionMethodBeans) {
             val actionMethod = actionMethodBean.method
             val actualParameters = getActualParameters(actionMethod, facts)
@@ -193,7 +193,7 @@ open class RuleProxy private constructor(private val target: Any) {
         }
     }
 
-    private fun getActualParameters(method: KCallable<*>, facts: Facts): List<Any> {
+    private fun getActualParameters(method: KCallable<*>, facts: FactsMap): List<Any> {
         val actualParameters = ArrayList<Any>()
         val parameterAnnotations = method.parameters.map { it.annotations }
         for (annotations in parameterAnnotations) {
@@ -206,7 +206,7 @@ open class RuleProxy private constructor(private val target: Any) {
                     actualParameters.add(fact!!)
                 }
             } else {
-                actualParameters.add(facts) //validated upfront, there may be only one parameter not annotated and which is of type Facts.class
+                actualParameters.add(facts) //validated upfront, there may be only one parameter not annotated and which is of type FactsMap.class
             }
         }
         return actualParameters
@@ -214,10 +214,10 @@ open class RuleProxy private constructor(private val target: Any) {
 
     //@Throws(Exception::class)
     protected fun equalsMethod(args: Array<Any>): Boolean {
-        if (args[0] !is Rule) {
+        if (args[0] !is Rule<*>) {
             return false
         }
-        val otherRule = args[0] as Rule
+        val otherRule = args[0] as Rule<FactsMap>
         val otherPriority = otherRule.priority
         val priority = rulePriority
         if (priority != otherPriority) {
@@ -268,7 +268,7 @@ open class RuleProxy private constructor(private val target: Any) {
                 val name = ruleName
                 return name.compareTo(otherName)
             }
-        } else if (otherRule is Rule) {
+        } else if (otherRule is Rule<*>) {
             val otherPriority = otherRule.priority
             val priority = rulePriority
             if (priority < otherPriority) {
@@ -310,16 +310,16 @@ open class RuleProxy private constructor(private val target: Any) {
          * @param rule the annotated rule object.
          * @return a proxy that implements the [Rule] interface.
          */
-        fun asRule(rule: Any): Rule {
-            val result: Rule
-            if (rule is Rule) {
-                result = rule as Rule
+        fun asRule(rule: Any): Rule<FactsMap> {
+            val result: Rule<FactsMap>
+            if (rule is Rule<*>) {
+                result = rule as Rule<FactsMap>
             } else {
                 val annotation = Utils.findAnnotation<org.jeasy.rules.annotation.Rule>(org.jeasy.rules.annotation.Rule::class, rule::class as KClass<org.jeasy.rules.annotation.Rule>)
 
                 ruleDefinitionValidator.validateRuleDefinition(rule)
 
-                result = object : RuleProxy(rule), Rule, Comparable<Rule> {
+                result = object : RuleProxy(rule), Rule<FactsMap>, Comparable<Rule<FactsMap>> {
 
                     override val name: String
                         get() = this.ruleName//To change initializer of created properties use File | Settings | File Templates.
@@ -330,7 +330,7 @@ open class RuleProxy private constructor(private val target: Any) {
                     override val priority: Int
                         get() = this.rulePriority //To change initializer of created properties use File | Settings | File Templates.
 
-                    override fun evaluate(facts: Facts): Boolean {
+                    override fun evaluate(facts: FactsMap): Boolean {
                         try {
                             return rule::class.functions.filter { it.findAnnotation<Condition>() != null }
                                     .map { it.callBy(toArg(it, facts, rule)) as Boolean }
@@ -341,7 +341,7 @@ open class RuleProxy private constructor(private val target: Any) {
                         }
                     }
 
-                    override fun execute(facts: Facts) {
+                    override fun execute(facts: FactsMap) {
                         try {
                             rule::class.functions.filter { it.findAnnotation<Action>() != null }
                                     .map { it.callBy(toArg(it, facts, rule)) }//To change body of created functions use File | Settings | File Templates.
@@ -350,7 +350,7 @@ open class RuleProxy private constructor(private val target: Any) {
                         }
                     }
 
-                    override fun compareTo(other: Rule): Int {
+                    override fun compareTo(other: Rule<FactsMap>): Int {
                         if (priority < other.priority) {
                             return -1
                         } else if (priority > other.priority) {
@@ -380,7 +380,7 @@ open class RuleProxy private constructor(private val target: Any) {
             return result
         }
 
-        private fun toArg(function: KFunction<*>, facts: Facts, rule: Any): Map<KParameter, Any?> {
+        private fun toArg(function: KFunction<*>, facts: FactsMap, rule: Any): Map<KParameter, Any?> {
 
 
             val argsMap = mutableMapOf<KParameter, Any?>()

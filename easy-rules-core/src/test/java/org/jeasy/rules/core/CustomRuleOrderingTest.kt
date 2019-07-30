@@ -27,15 +27,16 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.spyk
 import io.mockk.verifyOrder
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rule
 import kotlin.test.Test
 
 class CustomRuleOrderingTest : AbstractTest() {
 
     @MockK
-    override lateinit var rule1: Rule
+    override lateinit var rule1: Rule<FactsMap>
     @MockK
-    override lateinit var rule2: Rule
+    override lateinit var rule2: Rule<FactsMap>
 
     @Test
     //@Throws(Exception::class)
@@ -74,10 +75,10 @@ class CustomRuleOrderingTest : AbstractTest() {
         }
     }
 
-    class MyRule : BasicRule() {
+    class MyRule : BasicRule<FactsMap>() {
 
 
-        override operator fun compareTo(rule: Rule): Int {
+        override operator fun compareTo(rule: Rule<FactsMap>): Int {
             return name.compareTo(rule.name)
         }
     }

@@ -27,7 +27,7 @@ import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Fact
 import org.jeasy.rules.annotation.Rule
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.DefaultRulesEngine
 import org.jeasy.rules.core.Rules2
@@ -102,10 +102,10 @@ class FactInjectionTest {
     @Throws(Exception::class)
     fun whenADeclaredFactIsMissingInEvaluateMethod_thenTheRuleShouldNotBeExecuted() {
         // Given
-        val facts = Facts()
+        val facts = FactsMap()
         val ageRule = AgeRule()
         val rules = Rules2(ageRule)
-        val rulesEngine = DefaultRulesEngine()
+        val rulesEngine = DefaultRulesEngine<FactsMap>()
 
         // When
         rulesEngine.fire(rules, facts)
@@ -118,10 +118,10 @@ class FactInjectionTest {
     @Throws(Exception::class)
     fun whenADeclaredFactIsMissingInExecuteMethod_thenTheRuleShouldNotBeExecuted() {
         // Given
-        val facts = Facts()
+        val facts = FactsMap()
         val rule = AnotherDummyRule()
         val rules = Rules2(rule)
-        val rulesEngine = DefaultRulesEngine()
+        val rulesEngine = DefaultRulesEngine<FactsMap>()
 
         // When
         rulesEngine.fire(rules, facts)
@@ -137,7 +137,7 @@ class FactInjectionTest {
             private set
         var fact2: Object? = null
             private set
-        var facts: Facts? = null
+        var facts: FactsMap? = null
             private set
 
         @Condition
@@ -148,7 +148,7 @@ class FactInjectionTest {
         }
 
         @Action
-        fun then(facts: Facts) {
+        fun then(facts: FactsMap) {
             this.facts = facts
         }
     }
@@ -201,7 +201,7 @@ class FactInjectionTest {
         }
 
         @Action
-        fun takeAnUmbrella(facts: Facts) {
+        fun takeAnUmbrella(facts: FactsMap) {
             System.out.println("It rains, take an umbrella!")
             isExecuted = true
         }

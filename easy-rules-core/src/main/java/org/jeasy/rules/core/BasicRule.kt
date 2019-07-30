@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.core
 
-import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 
 /**
@@ -34,7 +33,7 @@ import org.jeasy.rules.api.Rule
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-open class BasicRule(override var name: String = Rule.DEFAULT_NAME,
+open class BasicRule<Facts>(override var name: String = Rule.DEFAULT_NAME,
                      /**
                       * Rule description.
                       */
@@ -42,7 +41,7 @@ open class BasicRule(override var name: String = Rule.DEFAULT_NAME,
                      /**
                       * Rule priority.
                       */
-                     override var priority: Int = Rule.DEFAULT_PRIORITY) : Rule {
+                     override var priority: Int = Rule.DEFAULT_PRIORITY) : Rule<Facts> {
     /**
      * Create a new [BasicRule].
      *
@@ -77,7 +76,7 @@ open class BasicRule(override var name: String = Rule.DEFAULT_NAME,
         if (o == null || this::class !== o!!::class)
             return false
 
-        val basicRule = o as BasicRule?
+        val basicRule = o as BasicRule<Facts>?
 
         if (priority != basicRule!!.priority)
             return false
@@ -99,7 +98,7 @@ open class BasicRule(override var name: String = Rule.DEFAULT_NAME,
     }
 
 
-    override operator fun compareTo(rule: Rule): Int {
+    override operator fun compareTo(rule: Rule<Facts>): Int {
         return if (priority < rule.priority) {
             -1
         } else if (priority > rule.priority) {

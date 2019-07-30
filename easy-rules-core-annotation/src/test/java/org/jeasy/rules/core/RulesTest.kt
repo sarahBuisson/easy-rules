@@ -53,9 +53,9 @@ class RulesTest {
     @Test
     @Throws(Exception::class)
     fun rulesMustHaveUniqueName() {
-        val r1 = BasicRule("rule")
-        val r2 = BasicRule("rule")
-        val ruleSet = mutableSetOf<Rule>()
+        val r1 = BasicRule<FactsMap>("rule")
+        val r2 = BasicRule<FactsMap>("rule")
+        val ruleSet = mutableSetOf<Rule<FactsMap>>()
         ruleSet.add(r1)
         ruleSet.add(r2)
 
@@ -77,9 +77,9 @@ class RulesTest {
     @Test
     @Throws(Exception::class)
     fun unregisterByName() {
-        val r1 = BasicRule("rule1")
-        val r2 = BasicRule("rule2")
-        val ruleSet = mutableSetOf<Rule>()
+        val r1 = BasicRule<FactsMap>("rule1")
+        val r2 = BasicRule<FactsMap>("rule2")
+        val ruleSet = mutableSetOf<Rule<FactsMap>>()
         ruleSet.add(r1)
         ruleSet.add(r2)
 
@@ -92,8 +92,8 @@ class RulesTest {
     @Test
     @Throws(Exception::class)
     fun unregisterByNameNonExistingRule() {
-        val r1 = BasicRule("rule1")
-        val ruleSet = HashSet<Rule>()
+        val r1 = BasicRule<FactsMap>("rule1")
+        val ruleSet = HashSet<Rule<FactsMap>>()
         ruleSet.add(r1)
 
         rules = Rules2(ruleSet)
@@ -122,8 +122,8 @@ class RulesTest {
     @Test
     @Throws(Exception::class)
     fun sort() {
-        val r1 = BasicRule("rule", "", 1)
-        val r2 = BasicRule("rule", "", Integer.MAX_VALUE)
+        val r1 = BasicRule<FactsMap>("rule", "", 1)
+        val r2 = BasicRule<FactsMap>("rule", "", Integer.MAX_VALUE)
         val r3 = DummyRule()
 
         rules.register(r3)

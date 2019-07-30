@@ -28,7 +28,7 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-interface RuleListener {
+interface RuleListener<Facts> {
 
     /**
      * Triggered before the evaluation of a rule.
@@ -37,7 +37,7 @@ interface RuleListener {
      * @param facts known before evaluating the rule
      * @return true if the rule should be evaluated, false otherwise
      */
-    fun beforeEvaluate(rule: Rule, facts: Facts): Boolean
+    fun beforeEvaluate(rule: Rule<Facts>, facts: Facts): Boolean
 
     /**
      * Triggered after the evaluation of a rule.
@@ -46,7 +46,7 @@ interface RuleListener {
      * @param facts known after evaluating the rule
      * @param evaluationResult true if the rule evaluated to true, false otherwise
      */
-    fun afterEvaluate(rule: Rule, facts: Facts, evaluationResult: Boolean)
+    fun afterEvaluate(rule: Rule<Facts>, facts: Facts, evaluationResult: Boolean)
 
     /**
      * Triggered before the execution of a rule.
@@ -54,7 +54,7 @@ interface RuleListener {
      * @param rule the current rule
      * @param facts known facts before executing the rule
      */
-    fun beforeExecute(rule: Rule, facts: Facts)
+    fun beforeExecute(rule: Rule<Facts>, facts: Facts)
 
     /**
      * Triggered after a rule has been executed successfully.
@@ -62,7 +62,7 @@ interface RuleListener {
      * @param rule the current rule
      * @param facts known facts after executing the rule
      */
-    fun onSuccess(rule: Rule, facts: Facts)
+    fun onSuccess(rule: Rule<Facts>, facts: Facts)
 
     /**
      * Triggered after a rule has failed.
@@ -71,6 +71,6 @@ interface RuleListener {
      * @param facts known facts after executing the rule
      * @param exception the exception thrown when attempting to execute the rule
      */
-    fun onFailure(rule: Rule, facts: Facts, exception: Exception)
+    fun onFailure(rule: Rule<Facts>, facts: Facts, exception: Exception)
 
 }

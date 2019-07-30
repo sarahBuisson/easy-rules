@@ -27,7 +27,7 @@ import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Fact
 import org.jeasy.rules.annotation.Rule
-import org.jeasy.rules.api.Facts
+import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.core.AbstractTest2
 import org.jeasy.rules.core.Rules2
 import kotlin.test.*
@@ -42,7 +42,7 @@ class NullFactAnnotationParameterTest : AbstractTest2() {
         val rules = Rules2()
         rules.register(AnnotatedParametersRule())
 
-        val facts = Facts()
+        val facts = FactsMap()
         facts.put("fact1", Object())
         facts.put("fact2", null)
 
@@ -59,7 +59,7 @@ class NullFactAnnotationParameterTest : AbstractTest2() {
         val rules = Rules2()
         rules.register(AnnotatedParametersRule())
 
-        val facts = Facts()
+        val facts = FactsMap()
         facts.put("fact1", Object())
 
         val results = rulesEngine.check(rules, facts)

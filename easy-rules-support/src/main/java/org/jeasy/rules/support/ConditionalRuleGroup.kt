@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.support
 
-import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 
 /**
@@ -33,13 +32,13 @@ import org.jeasy.rules.api.Rule
  *
  * @author Dag Framstad (dagframstad@gmail.com)
  */
-class ConditionalRuleGroup : CompositeRule {
+class ConditionalRuleGroup<Facts> : CompositeRule<Facts> {
 
-    private var successfulEvaluations: MutableSet<Rule>? = null
-    private var conditionalRule: Rule? = null
+    private var successfulEvaluations: MutableSet<Rule<Facts>>? = null
+    private var conditionalRule: Rule<Facts>? = null
 
     private// make sure that we only have one rule with the highest priority
-    val ruleWithHighestPriority: Rule
+    val ruleWithHighestPriority: Rule<Facts>
         get() {
             val copy = sortRules()
             val highest = copy[0]
@@ -115,11 +114,11 @@ class ConditionalRuleGroup : CompositeRule {
         }
     }
 
-    fun sortRules(): List<Rule> {
+    fun sortRules(): List<Rule<Facts>> {
         val copy = ArrayList(rules)
-        copy.sortWith( object : Comparator<Rule> {
+        copy.sortWith( object : Comparator<Rule<Facts>> {
 
-            override fun compare(o1: Rule, o2: Rule): Int {
+            override fun compare(o1: Rule<Facts>, o2: Rule<Facts>): Int {
                 val i2 = o2.priority
                 return i2.compareTo(o1.priority)
             }
