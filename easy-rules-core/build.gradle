@@ -1,37 +1,29 @@
 import groovy.json.*
 buildscript {
     dependencies {
-       // classpath 'io.github.microutils:kotlin-logging:1.6.22'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-//        classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.44"
-
-
     }
-    group 'org.jeasy'
-    version '3.2.4'
 }
 plugins {
-    id 'java' //need for the "from"
-    id 'org.jetbrains.kotlin.multiplatform'
-    id 'java-library'
-    id("maven-publish")
+    id "java" //need for the "from"
+    id "org.jetbrains.kotlin.multiplatform"
+    id "java-library"
+    id "maven-publish"
     id "com.moowork.node"
-   // id "kotlin-platform-js"
-    //id 'org.jetbrains.kotlin.frontend'
 
 }
 
 kotlin {
     targets {
         println(presets.getAsMap().keySet())
-        fromPreset(presets.jvm, 'jvm') {
+        fromPreset(presets.jvm, "jvm") {
             compilations.all {
                 tasks[compileKotlinTaskName].kotlinOptions {
-                    jvmTarget = '1.8'
+                    jvmTarget = "1.8"
                 }
             }
         }
-        fromPreset(presets.js, 'nodeJs') {
+        fromPreset(presets.js, "nodeJs") {
             compilations.all {
                 tasks[compileKotlinTaskName].kotlinOptions {
                 }
@@ -40,38 +32,38 @@ kotlin {
     }
     sourceSets {
         commonMain {
-            kotlin.srcDir('src/main/java')
-            resources.srcDir('src/main/resource')
+            kotlin.srcDir("src/main/java")
+            resources.srcDir("src/main/resource")
             dependencies {
                 implementation "io.github.microutils:kotlin-logging-common:$kotlin_logging_version"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib"
                 implementation "org.jetbrains.kotlin:kotlin-test"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-common"
-                implementation 'io.mockk:mockk:1.9'
+                implementation "io.mockk:mockk:1.9"
             }
         }
 
         /*commonTest {
-            kotlin.srcDir('src/test/java')
+            kotlin.srcDir("src/test/java")
             dependencies {
                 implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib"
                 implementation "org.jetbrains.kotlin:kotlin-test"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-common"
-                implementation 'io.mockk:mockk:1.9'
-                implementation 'io.mockk:mockk-common:1.9'
+                implementation "io.mockk:mockk:1.9"
+                implementation "io.mockk:mockk-common:1.9"
             //    implementation(project(":easy-rules-core"))
             }
         }*/
 
 
         jvmTest {//TODO : commonTest instead of jvmtest, wwhen mockk.js will be better at it
-            kotlin.srcDir('src/test/java')
+            kotlin.srcDir("src/test/java")
             dependencies {
 
                 implementation "org.jetbrains.kotlin:kotlin-test-common"
                 implementation "org.jetbrains.kotlin:kotlin-test-annotations-common"
-                implementation 'io.mockk:mockk-common:1.9'
+                implementation "io.mockk:mockk-common:1.9"
             }
         }
         jvm {
@@ -87,7 +79,7 @@ kotlin {
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
                 implementation "io.github.microutils:kotlin-logging-js:$kotlin_logging_version"
                 //implementation "org.jetbrains.kotlin:kotlin-test-js"
-                //  implementation 'io.mockk:mockk:1.7.17'
+                //implementation "io.mockk:mockk:1.7.17"
             }
 
         }
@@ -95,8 +87,6 @@ kotlin {
             dependencies {
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
                 implementation "io.github.microutils:kotlin-logging-js:$kotlin_logging_version"
-                //implementation "org.jetbrains.kotlin:kotlin-test-js"
-                //  implementation 'io.mockk:mockk:1.7.17'
             }
 
         }
@@ -106,7 +96,6 @@ kotlin {
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
                 implementation "io.github.microutils:kotlin-logging-js:$kotlin_logging_version"
                 implementation "org.jetbrains.kotlin:kotlin-test-js"
-                //  implementation 'io.mockk:mockk:1.7.17'
             }
         }
         metadata {
@@ -114,14 +103,13 @@ kotlin {
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
                 implementation "io.github.microutils:kotlin-logging-common:$kotlin_logging_version"
                 implementation "org.jetbrains.kotlin:kotlin-test-common"
-              //  implementation 'io.mockk:mockk:1.7.17'
             }
         }
     }
 
     jvm {
         compilations.main.kotlinOptions {
-            // Setup the Kotlin compiler options for the 'main' compilation:
+            // Setup the Kotlin compiler options for the "main" compilation:
             jvmTarget = "1.8"
         }
         mavenPublication {
@@ -138,7 +126,7 @@ kotlin {
             artifactId project.name + "-js"
         }
         compilations.main.kotlinOptions {
-            // Setup the Kotlin compiler options for the 'main' compilation:
+            // Setup the Kotlin compiler options for the "main" compilation:
             moduleKind = "umd"
         }
         configurePublishingWithNPM(it, project.version, configurations,this)
@@ -147,7 +135,6 @@ kotlin {
         mavenPublication {
             artifactId project.name + "-common"
         }
-
         preparePublishing(it,this)
     }
 

@@ -4,34 +4,20 @@ ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
 
     that.tasks.add(task(initNpm() {
         doLast {
-            System.out.println("init npm dir")
             def dir = that.file("$buildDir/npm")
-            System.out.println(dir)
             dir.mkdirs()
             that.file("$buildDir/npm/node_modules").mkdirs()
-            System.out.println("end npm dir")
         }
     }))
 
 
     that.tasks.add(task(buildPackageJson() {
-
-
-        dependsOn 'embeddedDependency'
-        System.out.println("init buildPackageJson")
-        doLast { System.out.println("start exec buildPackageJson")}
         doLast {
-            System.out.println("start exec buildPackageJson")
 
-            def dir = that.file("$buildDir/npm")
-            def packagejson = that.file("$buildDir/npm/package.json")
-            def packagejsondata = [name               : that.project.name + "-js",
+            def packageJsonData = [name               : that.project.name + "-js",
                                    version: baseVersion,
-                                   "private": true,
-                                 /*  devDependencies    : [
-                                           "install-jar-dependency":
-                                                   "0.0.2"
-                                   ],*/ dependencies    : new HashMap(),
+                                   private: true,
+                                   dependencies    : new HashMap(),
                                    scripts            : [
                                            postinstall: "install-jar-dependency package.json"
                                    ],
@@ -50,163 +36,35 @@ ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
 
             ]
 
-
+            //download all the maven js dependencies and put them into an embedded directory.
+            //TO DO : we probably don"t need to do so now we have mavenDependancy plugin
             configurations.jsImplementation.allDependencies.each {
                 if (it != null && it.name.contains("js")) {
-
-                    def filter = new FilenameFilter() {
-                        public boolean accept(File directory, String fileName) {
-                            return fileName.endsWith(".js") && !fileName.contains("meta");
-                        }
-                    }
-                    println(it)
-                    println(it.name)
-                    def fileJS = file("$buildDir/npm/libs/$it.name").list(filter)[0]
-                    println(file("$buildDir/npm/libs/$it.name").list())
-                    println(fileJS)
-                    packagejsondata.jarDependencies.put(it.name, "./libs/${it.name}-${it.version}.jar")
-                   // packagejsondata.dependencies.put(it.name.replace("-js",""), "./libs/$it.name/")
-
-                   // packagejsondata.workspaces.add("./libs/$it.name/")
-                   // packagejsondata.bundledDependencies.add(it.name)
-                    def packagejsonDep = that.file("$buildDir/npm/libs/$it.name/package.json")
-                    def packagejsonDepdata = [name: it.name, version: it.version, dependencies: new HashMap(), main: fileJS+".js"]
-                    packagejsonDep.write(new JsonBuilder(packagejsonDepdata).toPrettyString())
-println("packagejsonDep")
-
-
-                }
-
-            }
-            packagejsondata.dependencies.put("kotlin", "$kotlin_version")
-            packagejson.getParentFile().mkdirs()
-            packagejson.createNewFile()
-            packagejson.write(new JsonBuilder(packagejsondata).toPrettyString())
-            //  packagejson.close()
-            println that.file("$buildDir/classes/kotlin/js/main").listFiles()
-            //  from "$buildDir"
-            // into "./npm"
-
-
-            println that.file("$buildDir/npm").listFiles()
-
-            System.out.println("enc of build Package.json:" + packagejson.path + packagejson.exists())
-        }
-    }))
-
-    that.tasks.add(task(embeddedDependency(type:Exec) {
-        dependsOn initNpm
-
-
-            workingDir "."
-            commandLine "echo", "eeee"
-
-
-
-        doLast {
-            configurations.jsImplementation.allDependencies.each {
-
-                if (it.name.contains("js")) {
-
-
-                    printClass(it)
-
-
-                    def artifactId =it.name
-                    def group =  it.group
-                    def version = it.version
-
-                    def command = "mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -Dartifact=$group:$artifactId:$version -DoutputDirectory=$buildDir/npm -DremoteRepositories=https://repo.maven.apache.org/maven2,http://repo1.maven.org/maven2/"
-                    println(command)
-                    println("$buildDir/npm")
-                    exec {
-                        workingDir "$buildDir/npm"
-                        commandLine command.split(" ")
-                    }
-                    exec {
-                        workingDir "$buildDir/npm/node_modules"
-                        commandLine command.split(" ")
-                    }
-
-                    def command2 = "mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:copy -Dartifact=$group:$artifactId:$version -DoutputDirectory=$buildDir/jsDependenciesJar"
-                    exec {
-                        workingDir "$buildDir/npm/node_modules"
-                        commandLine command2.split(" ")
-                    }
-                    copy {
-                        def file = file("$buildDir/jsDependenciesJar/$artifactId-${version}.jar")
-                        println(file)
-                        from file
-                        into "$buildDir/npm/libs/"
-                    }
-                    copy {
-                        def file = file("$buildDir/jsDependenciesJar/$artifactId-${version}.jar")
-                        println(file)
-                        from zipTree(file)
-                        into "$buildDir/npm/libs/${artifactId}"
-                    }
-
-if(artifactId.contains("-js"))
-                    copy {
-                        def file = file("$buildDir/jsDependenciesJar/$artifactId-${version}.jar")
-                        println(file)
-                        from zipTree(file)
-                        into "$buildDir/npm/libs/${artifactId.replaceAll("-js","")}"
-                    }
-
-
+                    packageJsonData.mavenDependencies.put(it.name, "${it.group}:${it.name}:${it.version}")
                 }
             }
+            packageJsonData.dependencies.put("kotlin", "$kotlin_version")
 
-        }
+            def packageJson = that.file("$buildDir/npm/package.json")
+            packageJson.getParentFile().mkdirs()
+            packageJson.createNewFile()
+            packageJson.write(new JsonBuilder(packageJsonData).toPrettyString())
 
-/*
-        doLast {
-            println("embeddedDependency")
-            println(configurations.compile)
-            printClass(configurations)
-            println(configurations.getAsMap().keySet())
-
-            println("embeddedDependency")
-            printClass(configurations.jsImplementation)
-            println(configurations.jsImplementation.getAll())
-            println(configurations.jsImplementation.getAllDependencies())
-
-
-
-            println(configurations.jsImplementation.getDependencies())
-            println(configurations.metadataCompileClasspath)
-            printClass(configurations.metadataCompileClasspath)
-            printClass(configurations.metadataCompileClasspath.getPath())
-            println(configurations.metadataCompileClasspath)
-            println("configurations.jsRuntimeClasspath")
-            println("configurations.jsRuntimeClasspath")
-            println(configurations.jsRuntime)
-            println(configurations.jsImplementation)
-            println("IIIIII")
-            println("cSSSSSS")
-            printClass(configurations.jsImplementation)
-
-            copy {
-                from configurations.runtimeClasspath
-
-                into "$buildDir/npm"
-            }
-        }*/
+           }
     }))
 
+//TODO : why I can"t rename it npmInstall?
     that.tasks.add(task(npmInstall2(type: Exec) {
 
-        dependsOn 'buildPackageJson'
-        dependsOn 'assemble'
-        dependsOn 'extractCompiledFiles'
+        dependsOn "buildPackageJson"
+        dependsOn "assemble"
+        dependsOn "extractCompiledFiles"
         workingDir "$buildDir/npm"
-        commandLine 'echo',"4"
+        commandLine "echo","4" //TODO : do we need-it?
         doLast {
-            println "npmInstall"
             exec {
                 workingDir "$buildDir/npm"
-                commandLine 'npm', 'install'
+                commandLine "npm", "install"
             }
 
 
@@ -227,41 +85,15 @@ if(artifactId.contains("-js"))
     }))
 
 
-    that.tasks.add(task(execNpmInstallGlobal(type: Exec) {
-        dependsOn 'buildPackageJson'
-        dependsOn 'jsMainClasses'
-        dependsOn 'extractCompiledFiles'
-        doLast {
-            workingDir that.file('./build').absolutePath
-            commandLine 'cd', 'npm'
-            //executable "npm"
-            commandLine 'yarn', 'global', 'add'//,"file:npm/${that.project.name}-js-${that.project.version}.tgz"
-            //"/usr/local/bin/npm","init"
-            standardOutput = new ByteArrayOutputStream()
-            errorOutput = standardOutput
-            ignoreExitValue = true
-            def output = {
-                return standardOutput.toString()
-            }
-        }
-        doLast {
-            if (execResult.exitValue != 0) {
-                println(standardOutput.toString())
-                throw new GradleException("exec failed; see output above")
-            }
-            println(standardOutput.toString())
-        }
-    }))
-
-
+//DO  i need it?
     that.tasks.add(task(execNpmPack(type: Exec) {
 
-        dependsOn 'buildPackageJson'
-        dependsOn 'npmInstall2'
-        dependsOn 'extractCompiledFiles'
+        dependsOn "buildPackageJson"
+        dependsOn "npmInstall2"
+        dependsOn "extractCompiledFiles"
 
         workingDir "."
-        commandLine 'echo', '"execNpmPack"'
+        commandLine "echo", "execNpmPack"
 
         standardOutput = new ByteArrayOutputStream()
         errorOutput = standardOutput
@@ -273,7 +105,7 @@ if(artifactId.contains("-js"))
             System.out.println("beg exec pack")
             exec {
                 workingDir that.file("$buildDir/npm").absolutePath
-                commandLine 'yarn','pack'
+                commandLine "yarn","pack"
             }
             //"/usr/local/bin/npm","init"
 
@@ -288,62 +120,24 @@ if(artifactId.contains("-js"))
 
 
     that.tasks.add(task(extractCompiledFiles() {
-        dependsOn 'jsMainClasses'
-        dependsOn 'buildPackageJson'
+        dependsOn "jsMainClasses"
+        dependsOn "buildPackageJson"
         doLast {
             copy {
 
                 println( configurations.jsImplementation.allDependencies)
                 from "$buildDir/classes/kotlin/nodeJs/main"
                 into "$buildDir/npm"
-               /* filter {
-                    line ->
-                        configurations.jsImplementation.allDependencies.each {
-                            line = line.replaceAll("'" + it.name + "'", "'./libs/" + it.name + "'");
-                            line = line.replaceAll('"' + it.name + '"', '"./libs/' + it.name + '"');
-                            if(it.name.contains("-js")){
-                               def nName=it.name.replaceAll("-js","")
-                                line = line.replaceAll("'" + nName + "'", "'./libs/" + nName + "'");
-                                line = line.replaceAll('"' + nName + '"', '"./libs/' + nName + '"');
-
-                            }
-
-                        }
-                     //   println("printL"+line)
-                        return line;
-
-
-                }*/
 
 
             }
-            // exclude 'package/package.json'
-            // exclude "$buildDir/npm"
         }
     }
     ))
 
 
-    // in order to have a tgz in maven , who could be used by npm
-    /*that.tasks.add(task(assembleArtifact(type: Zip, group: 'DB') {
-        println "assembleArtifact"
-        println "$buildDir/libs/"
-        archiveName "${that.project.name}.tgz"
-        destinationDir file("$buildDir/libs/")
-        from "$buildDir/npm"
-        description "Assemble archive $archiveName into ${relativePath(destinationDir)}"
-        println "end assembleArtifact"
-    }))
-
-*/
-
-    that.tasks.add(task(publishNpmLocsal() {
-
-    }
-    ))
-
-    publish.dependsOn 'buildPackageJson'
-    publish.dependsOn 'execNpmPack'
+    publish.dependsOn "buildPackageJson"
+    publish.dependsOn "execNpmPack"
 
     that.tasks.add(task(publishNpmLocal() {
     that.publishing{
@@ -360,7 +154,7 @@ if(artifactId.contains("-js"))
                     artifactId that.project.name + "-js-tgz"
                     groupId project.group
                     version project.version
-                    artifact source: sourceFile, extension: 'tgz'
+                    artifact source: sourceFile, extension: "tgz"
 
                     println "end"
                 }
@@ -376,8 +170,8 @@ if(artifactId.contains("-js"))
     publishNodeJsPublicationToMavenLocal.dependsOn(publishNpmLocal)
     publishToMavenLocal.dependsOn(publishNpmLocal)
     publishJsPublicationToMavenLocal.dependsOn(publishNpmLocal)
-    publishNpmLocal.dependsOn('nodeJsMainClasses')
-    publishNpmLocal.dependsOn('execNpmPack')
+    publishNpmLocal.dependsOn("nodeJsMainClasses")
+    publishNpmLocal.dependsOn("execNpmPack")
 
 
 };
@@ -412,31 +206,32 @@ ext.printClass = { obj ->
 };
 
 ext.preparePublishing = { target, that ->
+    println("preparePublishing maven")
     publishing {
         publications {
             "mavenPublication${target.name}"(MavenPublication) { pub ->
-
+println("run preparePublishing maven")
                 from components[target.name]
                 pom {}
                 pom.withXml {
-                    def dependenciesNode = asNode().get('dependencies')
+                    def dependenciesNode = asNode().get("dependencies")
                     if (dependenciesNode == null) {
-                        dependenciesNode = asNode().appendNode('dependencies')
+                        dependenciesNode = asNode().appendNode("dependencies")
                     }
 
-                    //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                    //Iterate over the compile dependencies (we don"t want the test ones), adding a <dependency> node for each
                     configurations.implementation.allDependencies.each {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', it.group)
-                        dependencyNode.appendNode('artifactId', it.name)
-                        dependencyNode.appendNode('version', it.version)
+                        def dependencyNode = dependenciesNode.appendNode("dependency")
+                        dependencyNode.appendNode("groupId", it.group)
+                        dependencyNode.appendNode("artifactId", it.name)
+                        dependencyNode.appendNode("version", it.version)
                     }
                 }
                 def artifactName = "${buildDir}/libs/${that.project.name}-${target.name}-${project.version}.jar"
                 def artifactSourceName = "${buildDir}/libs/$that.project.name}-${target.name}-${project.version}-sources.jar"
 
                 artifact source: artifactName, classifier: "jar", extension: "jar"
-
+println artifactName
                 if (file(artifactSourceName).exists()) {
                     artifact source: artifactSourceName, classifier: "sources", extension: "jar"
                 }
