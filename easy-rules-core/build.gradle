@@ -14,6 +14,7 @@ plugins {
 }
 def scriptsDirectory = "https://raw.githubusercontent.com/sarahBuisson/kotlin-multiplatform-multiproject-sample/master/gradle/scripts/";
 apply from: scriptsDirectory + "kotlinMultiNpm.gradle.kts"
+apply from: scriptsDirectory + "jacoco.gradle.kts"
 
 kotlin {
     targets {
