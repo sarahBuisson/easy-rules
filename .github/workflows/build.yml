@@ -40,6 +40,7 @@ jobs:
                    do
                       :
                         echo $ART_TYPE
+                        unset DISTRO_MAVEN
                         case $ART_TYPE in
                             'jvm') DISTRO_MAVEN=$DISTRO_MAVEN;echo jvmCase;;
                             '') DISTRO_MAVEN=$DISTRO_MAVEN;echo emptyCase;;
