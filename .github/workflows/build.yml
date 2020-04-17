@@ -33,23 +33,21 @@ jobs:
           ARTIFACTS=("easy-rules-core")
           ARTIFACT_TYPE=("npm" "jvm" "metadata")
 
-          for ARTIFACT in "${ARTIFACTS[@]}"
-          do
-             :
-              for ART_TYPE in "${ARTIFACT_TYPE[@]}"
-                   do
-                      :
-                        echo $ART_TYPE
-                        unset DISTRO_MAVEN
-                        case $ART_TYPE in
-                            'jvm') DISTRO_MAVEN=$DISTRO_MAVEN;echo jvmCase;;
-                            '') DISTRO_MAVEN=$DISTRO_MAVEN;echo emptyCase;;
-                            'js') DISTRO_MAVEN=$DISTRO_NODEJS;echo jsCase;;
-                            'npm') DISTRO_MAVEN=$DISTRO_NODEJS;echo npmCase;;
-                            *) DISTRO_MAVEN=0;echo noCase;;
-                        esac
+          DISTRIBUTION_PACKAGECLOUD_FOR_TYPE() {
+               case $1 in
+                   'jvm') echo $DISTRO_MAVEN;;
+                   'js') echo $DISTRO_NODEJS;;
+                   *) echo 0;;
+               esac
+           }
+           for ARTIFACT in "${ARTIFACTS[@]}"
+           do
+              :
+               for ART_TYPE in "${ARTIFACT_TYPE[@]}"
+                    do
+                       :
+                        $DISTRIBUTION_PACKAGECLOUD=$(DISTRIBUTION_PACKAGECLOUD_FOR_TYPE $ART_TYPE)
 
-                        #DISTRO_MAVEN=$(DISTRO_MAVEN_FOR_TYPE $ART_TYPE)
                         FILE_NAME="$ARTIFACT-$ART_TYPE-${{env.BUILD_VERSION}}.jar"
                         FILE_PATH="$ARTIFACT/build/libs/$FILE_NAME"
                         if test -f "$FILE_PATH"; then
@@ -60,7 +58,7 @@ jobs:
                           curl -X DELETE "https://${{secrets.REPO_PACKAGE_KEY}}@packagecloud.io/api/v1/repos/${{env.PACKAGECLOUD_REPO}}/java/maven2/${{env.BUILD_GROUP_ID}}/$FILE_NAME" || true
                           #save new version
                           echo "delete previous"
-                          curl -X POST -F "package[distro_version_id]=$DISTRO_MAVEN" -F "package[package_file]=@$FILE_PATH" -F "package[coordinates]=${COORDINATES}"  "https://${{secrets.REPO_PACKAGE_KEY}}@packagecloud.io/api/v1/repos/${{env.PACKAGECLOUD_REPO}}/packages.json"
+                          curl -X POST -F "package[distro_version_id]=$DISTRIBUTION_PACKAGECLOUD" -F "package[package_file]=@$FILE_PATH" -F "package[coordinates]=${COORDINATES}"  "https://${{secrets.REPO_PACKAGE_KEY}}@packagecloud.io/api/v1/repos/${{env.PACKAGECLOUD_REPO}}/packages.json"
                           echo "send new package $FILE_NAME"
                         fi
               done
