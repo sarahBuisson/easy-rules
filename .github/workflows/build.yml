@@ -41,11 +41,11 @@ jobs:
                       :
                         echo $ART_TYPE
                         case $ART_TYPE in
-                            'jvm') DISTRO_MAVEN=$DISTRO_MAVEN;;
-                            '') DISTRO_MAVEN=$DISTRO_MAVEN;;
-                            'js') DISTRO_MAVEN=$DISTRO_NODEJS;;
-                            'npm') DISTRO_MAVEN=$DISTRO_NODEJS;;
-                            *) DISTRO_MAVEN=0;;
+                            'jvm') DISTRO_MAVEN=$DISTRO_MAVEN;echo jvmCase;;
+                            '') DISTRO_MAVEN=$DISTRO_MAVEN;echo emptyCase;;
+                            'js') DISTRO_MAVEN=$DISTRO_NODEJS;echo jsCase;;
+                            'npm') DISTRO_MAVEN=$DISTRO_NODEJS;echo npmCase;;
+                            *) DISTRO_MAVEN=0;echo noCase;;
                         esac
 
                         #DISTRO_MAVEN=$(DISTRO_MAVEN_FOR_TYPE $ART_TYPE)
