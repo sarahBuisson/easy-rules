@@ -35,7 +35,7 @@ jobs:
           DISTRIBUTION_PACKAGECLOUD_FOR_TYPE() {
                case $1 in
                    'jvm') echo $DISTRO_MAVEN;;
-                   'js') echo $DISTRO_NODEJS;;
+                   'npm') echo $DISTRO_NODEJS;;
                    *) echo 0;;
                esac
            }
