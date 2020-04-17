@@ -17,9 +17,9 @@ jobs:
       - name: extract build version
         run: |
           gradle generatePomFileForKotlinMultiplatformPublication
-          echo "::set-env name=BUILD_VERSION::$(mvn help:evaluate -Dexpression=project.version -q -f M3/build/publications/kotlinMultiplatform/pom-default.xml -DforceStdout)"
-          echo "::set-env name=BUILD_ARTIFACT_ID::$(mvn help:evaluate -Dexpression=project.artifactId -q -f M3/build/publications/kotlinMultiplatform/pom-default.xml -DforceStdout)"
-          echo "::set-env name=BUILD_GROUP_ID::$(mvn help:evaluate -Dexpression=project.groupId -q -f M3/build/publications/kotlinMultiplatform/pom-default.xml -DforceStdout)"
+          echo "::set-env name=BUILD_VERSION::$(mvn help:evaluate -Dexpression=project.version -q -f easy-rules-core/build/publications/kotlinMultiplatform/pom-default.xml -DforceStdout)"
+          echo "::set-env name=BUILD_ARTIFACT_ID::$(mvn help:evaluate -Dexpression=project.artifactId -q -f easy-rules-core/build/publications/kotlinMultiplatform/pom-default.xml -DforceStdout)"
+          echo "::set-env name=BUILD_GROUP_ID::$(mvn help:evaluate -Dexpression=project.groupId -q -f easy-rules-core/build/publications/kotlinMultiplatform/pom-default.xml -DforceStdout)"
 
       - if: contains(env.BUILD_VERSION, 'SNAPSHOT')
         name: Publish to GitHub Packages private
@@ -63,7 +63,7 @@ jobs:
               done
           done
 
-      - if: false == contains(env.BUILD_VERSION, 'SNAPSHOT')
+      - if: env.BUILD_VERSION!= "" && false == contains(env.BUILD_VERSION, 'SNAPSHOT')
         name: Publish to GitHub Packages
         env:
           GITHUB_ACTOR: ${{ github.actor }}
