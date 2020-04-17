@@ -31,7 +31,7 @@ jobs:
           PACKAGECLOUD_REPO: 'sarahBuisson/sarahbuisson'
         run: |
           ARTIFACTS=("easy-rules-core")
-          ARTIFACT_TYPE=("npm" "jvm" "metadata")
+          ARTIFACT_TYPE=("npm" "jvm")
           DISTRIBUTION_PACKAGECLOUD_FOR_TYPE() {
                case $1 in
                    'jvm') echo $DISTRO_MAVEN;;
