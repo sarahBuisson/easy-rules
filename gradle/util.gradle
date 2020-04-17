@@ -2,24 +2,25 @@ import groovy.json.JsonBuilder
 
 ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
 
-    that.tasks.add(task(initNpm() {
+    that.task('initNpm')     {
         doLast {
             def dir = that.file("$buildDir/npm")
             dir.mkdirs()
             that.file("$buildDir/npm/node_modules").mkdirs()
         }
-    }))
+    }
 
 
-    that.tasks.add(task(buildPackageJson() {
+    that.task('buildPackageJson') {
         doLast {
 
             def packageJsonData = [name               : that.project.name + "-js",
                                    version: baseVersion,
                                    private: true,
                                    dependencies    : new HashMap(),
+                                   devDependencies    : ["install-jar-dependency": "latest"],
                                    scripts            : [
-                                           postinstall: "install-jar-dependency package.json"
+                                           postinstall: "npx install-jar-dependency package.json"
                                    ],
                                    jarDependencies    : new HashMap(),
                                    mavenDependencies  : new HashMap(),
@@ -51,10 +52,10 @@ ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
             packageJson.write(new JsonBuilder(packageJsonData).toPrettyString())
 
            }
-    }))
+    }
 
 //TODO : why I can"t rename it npmInstall?
-    that.tasks.add(task(npmInstall2(type: Exec) {
+    that.task('npmInstall2',type: Exec) {
 
         dependsOn "buildPackageJson"
         dependsOn "assemble"
@@ -82,11 +83,11 @@ ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
             }
             println(standardOutput.toString())
         }
-    }))
+    }
 
 
 //DO  i need it?
-    that.tasks.add(task(execNpmPack(type: Exec) {
+    that.task("execNpmPack",type: Exec) {
 
         dependsOn "buildPackageJson"
         dependsOn "npmInstall2"
@@ -116,30 +117,30 @@ ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
             println(standardOutput.toString())
             System.out.println("end exec link")
         }
-    }))
+    }
 
 
-    that.tasks.add(task(extractCompiledFiles() {
+    that.task("extractCompiledFiles") {
         dependsOn "jsMainClasses"
         dependsOn "buildPackageJson"
         doLast {
             copy {
 
                 println( configurations.jsImplementation.allDependencies)
-                from "$buildDir/classes/kotlin/nodeJs/main"
+                from "$buildDir/classes/kotlin/js/main"
                 into "$buildDir/npm"
 
 
             }
         }
     }
-    ))
+
 
 
     publish.dependsOn "buildPackageJson"
     publish.dependsOn "execNpmPack"
 
-    that.tasks.add(task(publishNpmLocal() {
+    that.task("publishNpmLocal") {
     that.publishing{
         publications {
 
@@ -166,11 +167,11 @@ ext.configurePublishingWithNPM = { target, baseVersion, configurations, that ->
 
         }
 
-    }}));
-    publishNodeJsPublicationToMavenLocal.dependsOn(publishNpmLocal)
+    }};
+    //publishNodeJsPublicationToMavenLocal.dependsOn(publishNpmLocal)
     publishToMavenLocal.dependsOn(publishNpmLocal)
     publishJsPublicationToMavenLocal.dependsOn(publishNpmLocal)
-    publishNpmLocal.dependsOn("nodeJsMainClasses")
+    publishNpmLocal.dependsOn("jsMainClasses")
     publishNpmLocal.dependsOn("execNpmPack")
 
 
@@ -211,7 +212,7 @@ ext.preparePublishing = { target, that ->
         publications {
             "mavenPublication${target.name}"(MavenPublication) { pub ->
 println("run preparePublishing maven")
-                from components[target.name]
+                from components[0]
                 pom {}
                 pom.withXml {
                     def dependenciesNode = asNode().get("dependencies")
