@@ -30,7 +30,7 @@ jobs:
           DISTRO_NODEJS: 191 # nodejs packages
           PACKAGECLOUD_REPO: 'sarahBuisson/sarahbuisson'
         run: |
-          ARTIFACTS=(M3 M4)
+          ARTIFACTS=("easy-rules-core")
           ARTIFACT_TYPE=("npm" "jvm" "metadata")
 
           DISTRO_MAVEN_FOR_TYPE() {
