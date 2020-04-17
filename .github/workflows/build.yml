@@ -12,53 +12,7 @@ jobs:
           java-version: 11
       - name: Build
         run: gradle build packJsNpmToMaven
-      - name: Build reportDir
-        env:
-          buildReportsDir: "buildReports"
-          branchName: "branch"
-        run: |
-          gradle jacocoTestReport
-          mkdir ${{env.buildReportsDir}}
-          cat > ${{env.buildReportsDir}}/index.html <<EOL
-          <!doctype html>
-          <html>
-          <head>
-           <title>GitHub reports deployed!</title>
-          </head>
-          <body>
-           <p>GitHub Pages with <strong>${{ github.sha }}</strong> commit ID has been deployed through <a href="https://github.com/marketplace/actions/github-pages">GitHub Pages action</a> successfully.</p>
-          <p>jacocoReports:
 
-          <a href="${{env.branchName}}/M3/jacoco/reports/index.html">M3</a>
-          <a href="${{env.branchName}}/M4/jacoco/reports/index.html">M4</a>
-          </p>
-          <p>
-          artifacts:
-          <ul>
-          <li></li></ul>
-          </p>
-          </body>
-          </html>
-          EOL
-      - name: move into reports
-        env:
-          buildReportsDir: "buildReports"
-          branchName:  "branch"
-
-        run: |
-          mkdir -p ${{env.buildReportsDir}}/${{env.branchName}}/reports/M3
-          mkdir -p ${{env.buildReportsDir}}/${{env.branchName}}/reports/M4
-          cp -b -r M3/build/reports ${{env.buildReportsDir}}/${{env.branchName}}/reports/M3/jacoco;
-          cp -b -r M4/build/reports ${{env.buildReportsDir}}/${{env.branchName}}/reports/M4/jacoco;
-
-      - name: publish test coverage
-        if: success()
-        uses: crazy-max/ghaction-github-pages@v1
-        with:
-          target_branch: gh-pages
-          build_dir: "buildReports"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: extract build version
         run: |
