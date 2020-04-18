@@ -61,7 +61,7 @@ jobs:
                         FILE_NAME="$ARTIFACT-$ART_TYPE-${{env.BUILD_VERSION}}.jar"
                         FILE_PATH="$ARTIFACT/build/libs/$FILE_NAME"
                         if test -f "$FILE_PATH"; then
-                          echo "$FILE_NAME DISTRIBUTION_PACKAGECLOUD"
+                          echo "$FILE_NAME $DISTRIBUTION_PACKAGECLOUD"
                           COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-$ART_TYPE:${{env.BUILD_VERSION}}"
                           #delete previous version
                           curl -X DELETE "https://${{secrets.REPO_PACKAGE_KEY}}@packagecloud.io/api/v1/repos/${{env.PACKAGECLOUD_REPO}}/java/maven2/${{env.BUILD_GROUP_ID}}/$FILE_NAME" || true
