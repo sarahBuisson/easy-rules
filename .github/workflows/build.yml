@@ -37,7 +37,7 @@ jobs:
                for ART_TYPE in "${ARTIFACT_TYPE[@]}"
                     do
 
-                        case $1 in
+                        case $ART_TYPE in
                           'jvm')
                             DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
                             FILE_NAME="$ARTIFACT-jvm-${{env.BUILD_VERSION}}.jar"
