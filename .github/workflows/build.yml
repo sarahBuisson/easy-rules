@@ -58,7 +58,6 @@ jobs:
                             ;;
                         esac
                         echo $DISTRIBUTION_PACKAGECLOUD
-                        FILE_NAME="$ARTIFACT-$ART_TYPE-${{env.BUILD_VERSION}}.jar"
                         FILE_PATH="$ARTIFACT/build/libs/$FILE_NAME"
                         if test -f "$FILE_PATH"; then
                           echo "$FILE_NAME $DISTRIBUTION_PACKAGECLOUD"
