@@ -31,25 +31,37 @@ jobs:
           PACKAGECLOUD_REPO: 'sarahBuisson/sarahbuisson'
         run: |
           ARTIFACTS=("easy-rules-core")
-          ARTIFACT_TYPE=("npm" "jvm")
-          DISTRIBUTION_PACKAGECLOUD_FOR_TYPE() {
-               case $1 in
-                   'jvm') echo $DISTRO_MAVEN;;
-                   'npm') echo $DISTRO_MAVEN;;
-                   *) echo 0;;
-               esac
-           }
+          ARTIFACT_TYPE=("npm" "jvm" "metadata")
            for ARTIFACT in "${ARTIFACTS[@]}"
            do
                for ART_TYPE in "${ARTIFACT_TYPE[@]}"
                     do
-                        DISTRIBUTION_PACKAGECLOUD=$(DISTRIBUTION_PACKAGECLOUD_FOR_TYPE $ART_TYPE)
+
+                        case $1 in
+                          'jvm')
+                            DISTRIBUTION_PACKAGECLOUD= $DISTRO_MAVEN
+                            FILE_NAME="$ARTIFACT-jvm-${{env.BUILD_VERSION}}.jar"
+
+                          ;;
+                          'metadata')
+                            DISTRIBUTION_PACKAGECLOUD= $DISTRO_MAVEN
+                            FILE_NAME="$ARTIFACT-common-${{env.BUILD_VERSION}}.jar"
+
+                          ;;
+                          'npm')
+                              DISTRIBUTION_PACKAGECLOUD=$DISTRO_MAVEN
+                              FILE_NAME="$ARTIFACT-npm-${{env.BUILD_VERSION}}.jar"
+                          ;;
+                          '*')
+                            DISTRIBUTION_PACKAGECLOUD= 0;
+                            FILE_NAME= 'noFile'
+                            ;;
+                        esac
 
                         FILE_NAME="$ARTIFACT-$ART_TYPE-${{env.BUILD_VERSION}}.jar"
                         FILE_PATH="$ARTIFACT/build/libs/$FILE_NAME"
                         if test -f "$FILE_PATH"; then
                           echo $FILE_NAME
-                          echo " $FILE_NAME $ARTIFACT : :$ART_TYPE: $DISTRIBUTION_PACKAGECLOUD "
                           COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-$ART_TYPE:${{env.BUILD_VERSION}}"
                           #delete previous version
                           curl -X DELETE "https://${{secrets.REPO_PACKAGE_KEY}}@packagecloud.io/api/v1/repos/${{env.PACKAGECLOUD_REPO}}/java/maven2/${{env.BUILD_GROUP_ID}}/$FILE_NAME" || true
