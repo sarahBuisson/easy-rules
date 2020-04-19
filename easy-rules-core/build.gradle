@@ -104,9 +104,6 @@ kotlin {
         mavenPublication {
             artifactId project.name + "-jvm"
         }
-//        preparePublishing(it,this)
-
-
     }
     js() {
         browser{}
@@ -117,15 +114,13 @@ kotlin {
             // Setup the Kotlin compiler options for the "main" compilation:
             moduleKind = "umd"
         }
-      //  configurePublishingWithNPM(it, project.version, configurations,this)
     }
     metadata {
         mavenPublication {
-            artifactId project.name + "-common"
+            artifactId = project.name + "-common"
         }
-//        preparePublishing(it,this)
+        this.metadataJar.appendix("common")
     }
-
 }
 
 
