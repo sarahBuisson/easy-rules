@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.api
 
-import org.jeasy.rules.core.InferenceRulesEngine
 
 /**
  * A listener for rules engine execution events.

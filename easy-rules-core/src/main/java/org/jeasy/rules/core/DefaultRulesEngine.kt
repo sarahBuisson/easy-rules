@@ -24,6 +24,9 @@
 package org.jeasy.rules.core
 
 import mu.KotlinLogging
+import org.jeasy.rules.api.Rule
+import org.jeasy.rules.api.RulesEngine
+import org.jeasy.rules.api.Rules
 import org.jeasy.rules.api.*
 
 /**
@@ -52,7 +55,7 @@ class DefaultRulesEngine<Facts> : RulesEngine<Facts> {
 
 
     constructor() {
-        this.parameters = RulesEngineParameters()
+        this.parameters = RulesEngineParametersImpl()
         this.ruleListeners = mutableListOf()
         this.ruleListeners.add(DefaultRuleListener())
         this.rulesEngineListeners = ArrayList()

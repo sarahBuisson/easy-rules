@@ -26,7 +26,6 @@ package org.jeasy.rules.core
 import io.mockk.*
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
-import org.jeasy.rules.api.FactsMap
 import kotlin.test.Test
 
 class DefaultRuleTest : AbstractTest() {

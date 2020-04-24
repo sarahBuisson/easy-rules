@@ -23,42 +23,44 @@
  */
 package org.jeasy.rules.api
 
+import org.jeasy.rules.api.RulesEngineParameters
+
 /**
- * This interface represents a rule's condition.
+ * Rules engine interface.
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-interface Condition<Facts> {
+interface RulesEngine<Facts> {
 
     /**
-     * Evaluate the condition according to the known facts.
+     * Return the rules engine parameters.
      *
-     * @param facts known when evaluating the rule.
-     *
-     * @return true if the rule should be triggered, false otherwise
+     * @return The rules engine parameters
      */
-    fun evaluate(facts: Facts): Boolean
+    val parameters: RulesEngineParameters
 
-    companion object {
+    /**
+     * Return the list of registered rule listeners.
+     *
+     * @return the list of registered rule listeners
+     */
+    val ruleListeners: List<RuleListener<Facts>>
 
-        /**
-         * A NoOp [Condition] that always returns false.
-         */
-        val FALSE: Condition<Any> = object : Condition<Any> {
+    /**
+     * Return the list of registered rules engine listeners.
+     *
+     * @return the list of registered rules engine listeners
+     */
+    val rulesEngineListeners: List<RulesEngineListener<Facts>>
 
-            override fun evaluate(facts: Any): Boolean {
-                return false
-            }
-        }
+    /**
+     * Fire all registered rules on given facts.
+     */
+    fun fire(rules: Rules<Facts>, facts: Facts)
 
-        /**
-         * A NoOp [Condition] that always returns true.
-         */
-        val TRUE: Condition<Any> = object : Condition<Any> {
-
-            override fun evaluate(facts: Any): Boolean {
-                return true
-            }
-        }
-    }
+    /**
+     * Check rules without firing them.
+     * @return a map with the result of evaluation of each rule
+     */
+    fun check(rules: Rules<Facts>, facts: Facts): Map<Rule<Facts>, Boolean>
 }

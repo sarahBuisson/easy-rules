@@ -25,7 +25,7 @@ package org.jeasy.rules.support
 
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
-import org.jeasy.rules.api.FactsMap
+import org.jeasy.rules.core.FactsMap
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.DefaultRulesEngine
 import kotlin.test.Test

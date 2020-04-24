@@ -26,6 +26,7 @@ package org.jeasy.rules.api
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.core.BasicRule
+import org.jeasy.rules.core.FactsMap
 import org.jeasy.rules.core.Rules2
 import kotlin.test.BeforeTest
 import kotlin.test.Test

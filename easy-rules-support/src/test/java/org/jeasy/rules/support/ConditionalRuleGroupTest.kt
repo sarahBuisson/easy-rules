@@ -30,7 +30,7 @@ import io.mockk.verify
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Priority
-import org.jeasy.rules.api.FactsMap
+import org.jeasy.rules.core.FactsMap
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.DefaultRulesEngine

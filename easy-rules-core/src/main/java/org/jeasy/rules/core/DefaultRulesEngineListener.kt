@@ -26,6 +26,7 @@ package org.jeasy.rules.core
 import mu.KotlinLogging
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.api.RulesEngineListener
+import org.jeasy.rules.api.RulesEngineParameters
 
 internal class DefaultRulesEngineListener<Facts>(private val parameters: RulesEngineParameters) : RulesEngineListener<Facts> {
 

@@ -23,8 +23,6 @@
  */
 package org.jeasy.rules.core
 
-import org.jeasy.rules.api.FactsMap
-import org.jeasy.rules.api.Rules
 import kotlin.test.Test
 
 import kotlin.test.assertEquals
@@ -54,7 +52,7 @@ class BasicRuleTest : AbstractTest() {
         val rule2 = SecondRule()
         val rule3 = ThirdRule()
 
-        rules = Rules(setOf(rule1, rule2, rule3))
+        rules = RulesImpl(setOf(rule1, rule2, rule3))
 
         rulesEngine.check(rules, facts)
         assertEquals(rules[0], rule1)

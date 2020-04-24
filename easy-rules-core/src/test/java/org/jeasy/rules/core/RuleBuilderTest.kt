@@ -27,7 +27,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
-import org.jeasy.rules.api.FactsMap
+import org.jeasy.rules.core.FactsMap
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.core.DefaultRule
 import org.jeasy.rules.core.RuleBuilder

@@ -25,7 +25,6 @@ package org.jeasy.rules.core
 
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
-import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
 import kotlin.test.BeforeTest
@@ -56,7 +55,7 @@ open abstract class AbstractTest {
         facts = FactsMap()
         facts.put("fact1", fact1)
         facts.put("fact2", fact2)
-        rules = Rules()
+        rules = RulesImpl()
 
         rulesEngine = DefaultRulesEngine()
     }

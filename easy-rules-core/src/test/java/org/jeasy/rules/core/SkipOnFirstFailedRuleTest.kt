@@ -25,7 +25,6 @@ package org.jeasy.rules.core
 
 import io.mockk.every
 import io.mockk.verify
-import org.jeasy.rules.api.FactsMap
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
@@ -35,7 +34,7 @@ class SkipOnFirstFailedRuleTest : AbstractTest() {
     //@Throws(Exception::class)
     override fun setup() {
         super.setup()
-        val parameters = RulesEngineParameters().skipOnFirstFailedRule(true)
+        val parameters = RulesEngineParametersImpl().skipOnFirstFailedRule(true)
         rulesEngine = DefaultRulesEngine<FactsMap>(parameters)
     }
 

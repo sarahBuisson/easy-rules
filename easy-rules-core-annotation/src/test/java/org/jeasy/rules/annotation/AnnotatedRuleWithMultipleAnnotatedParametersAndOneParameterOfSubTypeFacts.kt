@@ -23,7 +23,7 @@
  */
 package org.jeasy.rules.annotation
 
-import org.jeasy.rules.api.FactsMap
+import org.jeasy.rules.core.FactsMap
 
 @Rule
 class AnnotatedRuleWithMultipleAnnotatedParametersAndOneParameterOfSubTypeFacts {

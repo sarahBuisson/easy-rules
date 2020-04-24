@@ -21,20 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jeasy.rules.annotation
+package org.jeasy.rules.api
 
-import org.jeasy.rules.core.FactsMap
+/**
+ * This interface represents a rule's condition.
+ *
+ * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+ */
+interface Condition<Facts> {
 
-@Rule
-class AnnotatedRuleWithMultipleAnnotatedParametersAndOneParameterOfTypeFacts {
+    /**
+     * Evaluate the condition according to the known facts.
+     *
+     * @param facts known when evaluating the rule.
+     *
+     * @return true if the rule should be triggered, false otherwise
+     */
+    fun evaluate(facts: Facts): Boolean
 
-    @Condition
-    fun `when`(@Fact("fact1") fact1: Object, @Fact("fact2") fact2: Object, facts: FactsMap): Boolean {
-        return true
+    companion object {
+
+        /**
+         * A NoOp [Condition] that always returns false.
+         */
+        val FALSE: Condition<Any> = object :
+            Condition<Any> {
+
+            override fun evaluate(facts: Any): Boolean {
+                return false
+            }
+        }
+
+        /**
+         * A NoOp [Condition] that always returns true.
+         */
+        val TRUE: Condition<Any> = object :
+            Condition<Any> {
+
+            override fun evaluate(facts: Any): Boolean {
+                return true
+            }
+        }
     }
-
-    @Action
-    fun then(@Fact("fact1") fact1: Object, @Fact("fact2") fact2: Object, facts: FactsMap) {
-    }
-
 }

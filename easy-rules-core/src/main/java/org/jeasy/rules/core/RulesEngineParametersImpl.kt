@@ -23,6 +23,8 @@
  */
 package org.jeasy.rules.core
 
+import org.jeasy.rules.api.RulesEngineParameters
+
 /**
  * Parameters of a rules engine.
  *
@@ -33,27 +35,27 @@ package org.jeasy.rules.core
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class RulesEngineParameters {
+class RulesEngineParametersImpl: org.jeasy.rules.api.RulesEngineParameters {
 
     /**
      * Parameter to skip next applicable rules when a rule is applied.
      */
-    var isSkipOnFirstAppliedRule: Boolean = false
+    override var isSkipOnFirstAppliedRule: Boolean = false
 
     /**
      * Parameter to skip next applicable rules when a rule is non triggered
      */
-    var isSkipOnFirstNonTriggeredRule: Boolean = false
+    override var isSkipOnFirstNonTriggeredRule: Boolean = false
 
     /**
      * Parameter to skip next applicable rules when a rule has failed.
      */
-    var isSkipOnFirstFailedRule: Boolean = false
+    override var isSkipOnFirstFailedRule: Boolean = false
 
     /**
      * Parameter to skip next rules if priority exceeds a user defined threshold.
      */
-    var priorityThreshold: Int = 0
+    override var priorityThreshold: Int = 0
 
     /**
      * Create a new [RulesEngineParameters] with default values.
@@ -77,22 +79,22 @@ class RulesEngineParameters {
         this.priorityThreshold = priorityThreshold
     }
 
-    fun priorityThreshold(priorityThreshold: Int): RulesEngineParameters {
+    override fun priorityThreshold(priorityThreshold: Int): RulesEngineParameters {
         this.priorityThreshold = priorityThreshold
         return this
     }
 
-    fun skipOnFirstAppliedRule(skipOnFirstAppliedRule: Boolean): RulesEngineParameters {
+    override fun skipOnFirstAppliedRule(skipOnFirstAppliedRule: Boolean): RulesEngineParameters {
         isSkipOnFirstAppliedRule = skipOnFirstAppliedRule
         return this
     }
 
-    fun skipOnFirstNonTriggeredRule(skipOnFirstNonTriggeredRule: Boolean): RulesEngineParameters {
+    override fun skipOnFirstNonTriggeredRule(skipOnFirstNonTriggeredRule: Boolean): RulesEngineParameters {
         isSkipOnFirstNonTriggeredRule = skipOnFirstNonTriggeredRule
         return this
     }
 
-    fun skipOnFirstFailedRule(skipOnFirstFailedRule: Boolean): RulesEngineParameters {
+    override fun skipOnFirstFailedRule(skipOnFirstFailedRule: Boolean): RulesEngineParameters {
         isSkipOnFirstFailedRule = skipOnFirstFailedRule
         return this
     }

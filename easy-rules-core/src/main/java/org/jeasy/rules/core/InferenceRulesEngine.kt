@@ -24,6 +24,8 @@
 package org.jeasy.rules.core
 
 import mu.KotlinLogging
+import org.jeasy.rules.api.Rule
+import org.jeasy.rules.api.Rules
 import org.jeasy.rules.api.*
 
 /**
@@ -42,7 +44,7 @@ class InferenceRulesEngine<Facts>
  * @param parameters of the engine
  */
  constructor(
-                          override val parameters: RulesEngineParameters = RulesEngineParameters()) : RulesEngine<Facts> {
+                          override val parameters: RulesEngineParameters = RulesEngineParametersImpl()) : RulesEngine<Facts> {
 
     override val ruleListeners: MutableList<RuleListener<Facts>>
 
@@ -62,7 +64,7 @@ class InferenceRulesEngine<Facts>
             LOGGER.info{"Selecting candidate rules based on the following facts: $facts"}
             selectedRules = selectCandidates(rules, facts)
             if (!selectedRules.isEmpty()) {
-                delegate.doFire(Rules<Facts>(selectedRules), facts)
+                delegate.doFire(RulesImpl<Facts>(selectedRules), facts)
             } else {
                 LOGGER.info{"No candidate rules found for facts: $facts" }
             }

@@ -26,9 +26,7 @@ package org.jeasy.rules.core
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import org.jeasy.rules.annotation.Fact
-import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rule
-import org.jeasy.rules.api.Rules
 import kotlin.test.BeforeTest
 
 open abstract class AbstractTest2 {

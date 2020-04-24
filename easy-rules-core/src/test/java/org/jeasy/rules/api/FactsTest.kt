@@ -23,6 +23,7 @@
  */
 package org.jeasy.rules.api
 
+import org.jeasy.rules.core.FactsMap
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

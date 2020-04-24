@@ -27,7 +27,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
 import io.mockk.verifyOrder
-import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.RuleListener
 import kotlin.test.BeforeTest
 import kotlin.test.Test

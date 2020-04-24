@@ -41,7 +41,7 @@ class RulePriorityThresholdTest : AbstractTest() {
         every {rule1.priority} returns (1)
         every {rule1.evaluate(facts)} returns (true)
 
-        val parameters = RulesEngineParameters().priorityThreshold(1)
+        val parameters = RulesEngineParametersImpl().priorityThreshold(1)
         rulesEngine = DefaultRulesEngine(parameters)
     }
 

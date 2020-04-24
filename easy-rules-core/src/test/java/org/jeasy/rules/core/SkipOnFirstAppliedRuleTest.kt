@@ -35,7 +35,7 @@ class SkipOnFirstAppliedRuleTest : AbstractTest() {
     //@Throws(Exception::class)
     override fun setup() {
         super.setup()
-        val parameters = RulesEngineParameters().skipOnFirstAppliedRule(true)
+        val parameters = RulesEngineParametersImpl().skipOnFirstAppliedRule(true)
         rulesEngine = DefaultRulesEngine(parameters)
     }
 

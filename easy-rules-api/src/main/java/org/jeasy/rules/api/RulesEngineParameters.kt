@@ -23,44 +23,53 @@
  */
 package org.jeasy.rules.api
 
-import org.jeasy.rules.core.RulesEngineParameters
-
 /**
- * Rules engine interface.
+ * Parameters of a rules engine.
+ *
+ *
+ *  * When parameters are used with a [DefaultRulesEngine], they are applied on **all registered rules**.
+ *  * When parameters are used with a [InferenceRulesEngine], they are applied on **candidate rules in each iteration**.
+ *
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-interface RulesEngine<Facts> {
+interface RulesEngineParameters {
 
     /**
-     * Return the rules engine parameters.
-     *
-     * @return The rules engine parameters
+     * Parameter to skip next applicable rules when a rule is applied.
      */
-    val parameters: RulesEngineParameters
+    var isSkipOnFirstAppliedRule: Boolean
 
     /**
-     * Return the list of registered rule listeners.
-     *
-     * @return the list of registered rule listeners
+     * Parameter to skip next applicable rules when a rule is non triggered
      */
-    val ruleListeners: List<RuleListener<Facts>>
+    var isSkipOnFirstNonTriggeredRule: Boolean
 
     /**
-     * Return the list of registered rules engine listeners.
-     *
-     * @return the list of registered rules engine listeners
+     * Parameter to skip next applicable rules when a rule has failed.
      */
-    val rulesEngineListeners: List<RulesEngineListener<Facts>>
+    var isSkipOnFirstFailedRule: Boolean
 
     /**
-     * Fire all registered rules on given facts.
+     * Parameter to skip next rules if priority exceeds a user defined threshold.
      */
-    fun fire(rules: Rules<Facts>, facts: Facts)
+    var priorityThreshold: Int
 
-    /**
-     * Check rules without firing them.
-     * @return a map with the result of evaluation of each rule
-     */
-    fun check(rules: Rules<Facts>, facts: Facts): Map<Rule<Facts>, Boolean>
+
+    fun priorityThreshold(priorityThreshold: Int): RulesEngineParameters 
+
+    fun skipOnFirstAppliedRule(skipOnFirstAppliedRule: Boolean): RulesEngineParameters
+
+    fun skipOnFirstNonTriggeredRule(skipOnFirstNonTriggeredRule: Boolean): RulesEngineParameters
+
+    fun skipOnFirstFailedRule(skipOnFirstFailedRule: Boolean): RulesEngineParameters
+
+
+    companion object {
+
+        /**
+         * Default rule priority threshold.
+         */
+        val DEFAULT_RULE_PRIORITY_THRESHOLD = Int.MAX_VALUE
+    }
 }

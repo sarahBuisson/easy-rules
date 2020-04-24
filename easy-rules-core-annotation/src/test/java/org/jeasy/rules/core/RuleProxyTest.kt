@@ -27,7 +27,6 @@ import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.AnnotatedRuleWithMetaRuleAnnotation
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.annotation.Priority
-import org.jeasy.rules.api.FactsMap
 import org.jeasy.rules.api.Rule
 import kotlin.test.Test
 import kotlin.test.*

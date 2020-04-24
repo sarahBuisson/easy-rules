@@ -34,7 +34,7 @@ class SkipOnFirstNonTriggeredRuleTest : AbstractTest() {
     //@Throws(Exception::class)
     override fun setup() {
         super.setup()
-        val parameters = RulesEngineParameters().skipOnFirstNonTriggeredRule(true)
+        val parameters = RulesEngineParametersImpl().skipOnFirstNonTriggeredRule(true)
         rulesEngine = DefaultRulesEngine(parameters)
     }
 

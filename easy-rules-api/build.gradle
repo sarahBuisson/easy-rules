@@ -43,22 +43,10 @@ kotlin {
                 implementation "org.jetbrains.kotlin:kotlin-test"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-common"
                 implementation "io.mockk:mockk:1.9"
-                implementation(project(":easy-rules-api"))
             }
         }
 
-        /*commonTest {
-            kotlin.srcDir("src/test/java")
-            dependencies {
-                implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
-                implementation "org.jetbrains.kotlin:kotlin-stdlib"
-                implementation "org.jetbrains.kotlin:kotlin-test"
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-common"
-                implementation "io.mockk:mockk:1.9"
-                implementation "io.mockk:mockk-common:1.9"
-            //    implementation(project(":easy-rules-core"))
-            }
-        }*/
+
 
 
         jvmTest {//TODO : commonTest instead of jvmtest, wwhen mockk.js will be better at it
@@ -83,7 +71,6 @@ kotlin {
             dependencies {
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
                 implementation "io.github.microutils:kotlin-logging-js:$kotlin_logging_version"
-                implementation(project(":easy-rules-api"))
             }
 
         }

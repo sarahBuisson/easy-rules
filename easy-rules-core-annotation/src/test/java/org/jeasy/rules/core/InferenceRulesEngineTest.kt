@@ -24,11 +24,6 @@
 package org.jeasy.rules.core
 
 import org.jeasy.rules.annotation.*
-import org.jeasy.rules.api.FactsMap
-import org.jeasy.rules.api.Rules
-import org.jeasy.rules.api.RulesEngine
-import kotlin.test.Test
-
 
 
 class InferenceRulesEngineTest {

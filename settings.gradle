@@ -32,8 +32,9 @@ pluginManagement {
 enableFeaturePreview("GRADLE_METADATA")
 
 rootProject.name = 'easy-rules-kotlin'
+include(":easy-rules-api")
 include(":easy-rules-core")
-include(":easy-rules-core-annotation")
+/*include(":easy-rules-core-annotation")
 include(":easy-rules-support")
-include(":easy-rules-tutorials")
+include(":easy-rules-tutorials")*/
 

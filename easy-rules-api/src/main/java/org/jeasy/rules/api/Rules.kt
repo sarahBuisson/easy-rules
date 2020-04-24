@@ -30,9 +30,10 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-open class Rules<Facts> : Iterable<Rule<Facts>> {
 
-    protected var rules = mutableSetOf<Rule<Facts>>();
+interface Rules<Facts> : Iterable<Rule<Facts>> {
+
+
 
     /**
      * Check if the rule set is empty.
@@ -40,63 +41,30 @@ open class Rules<Facts> : Iterable<Rule<Facts>> {
      * @return true if the rule set is empty, false otherwise
      */
     val isEmpty: Boolean
-        get() = rules.isEmpty()
     val size: Int
-        get() = rules.size
-
-    /**
-     * Create a new [Rules] object.
-     *
-     * @param rules to register
-     */
-    constructor(rules: Set<Rule<Facts>>) {
-        this.rules.addAll(rules)
-    }
-
-    constructor() {
-    }
-
 
     /**
      * Clear rules.
      */
-    fun clear() {
-        rules.clear()
-    }
+    fun clear()
 
 
-    override fun iterator(): Iterator<Rule<Facts>> {
-        return rules.sorted().iterator()
-    }
-
+    override fun iterator(): Iterator<Rule<Facts>>
     /**
      * Register a new rule.
      *
      * @param rule to register
      */
-    fun register(rule: Rule<Facts>) {
-        this.rules.add(rule)
-    }
+    fun register(rule: Rule<Facts>)
 
     /**
      * Unregister a rule.
      *
      * @param rule to unregister
      */
-    fun unregister(rule: Rule<Facts>) {
-        this.rules.remove(rule)
-    }
+    fun unregister(rule: Rule<Facts>)
 
 
-    operator fun get(i: Int): Rule<Facts> {
-        return rules.sorted().toList()[i];
-    }
+    operator fun get(i: Int): Rule<Facts>
 
-    protected fun findRuleByName(ruleName: String): Rule<Facts>? {
-        for (rule in rules) {
-            if (rule.name.toUpperCase().equals(ruleName.toUpperCase()))
-                return rule
-        }
-        return null
-    }
 }
