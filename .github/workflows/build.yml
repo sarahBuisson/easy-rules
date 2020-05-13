@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISTRO_MAVEN: 167 # maven java packages
           DISTRO_NODEJS: 191 # nodejs packages
-          PACKAGECLOUD_REPO: 'sarahBuisson/test'
+          PACKAGECLOUD_REPO: 'sarahBuisson/snapshot'
         run: |
           ARTIFACTS=("easy-rules-api" "easy-rules-core")
           ARTIFACT_TYPE=("jvm" "npm" "js" "metadata")
