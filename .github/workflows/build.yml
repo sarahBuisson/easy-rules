@@ -53,6 +53,11 @@ jobs:
                               FILE_NAME="$ARTIFACT-npm-${{env.BUILD_VERSION}}.jar"
                               COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-$ART_TYPE:${{env.BUILD_VERSION}}"
                           ;;
+                          'js')
+                              DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
+                              FILE_NAME="$ARTIFACT-js-${{env.BUILD_VERSION}}.jar"
+                              COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-$ART_TYPE:${{env.BUILD_VERSION}}"
+                          ;;
                           '*')
                             DISTRIBUTION_PACKAGECLOUD= 0;
                             FILE_NAME= 'noFile'
