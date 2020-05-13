@@ -31,7 +31,7 @@ jobs:
           PACKAGECLOUD_REPO: 'sarahBuisson/snapshot'
         run: |
           ARTIFACTS=("easy-rules-api" "easy-rules-core")
-          ARTIFACT_TYPE=("jvm" "npm" "js" "metadata")
+          ARTIFACT_TYPE=("jvm" "npm" "js" "metadata" "common")
            for ARTIFACT in "${ARTIFACTS[@]}"
            do
                for ART_TYPE in "${ARTIFACT_TYPE[@]}"
@@ -43,10 +43,15 @@ jobs:
                             FILE_NAME="$ARTIFACT-jvm-${{env.BUILD_VERSION}}.jar"
                             COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-$ART_TYPE:${{env.BUILD_VERSION}}"
                           ;;
+                          'common')
+                            DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
+                            FILE_NAME="$ARTIFACT-common-${{env.BUILD_VERSION}}.jar"
+                            COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-common:${{env.BUILD_VERSION}}"
+                          ;;
                           'metadata')
                             DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
                             FILE_NAME="$ARTIFACT-metadata-${{env.BUILD_VERSION}}.jar"
-                            COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-common:${{env.BUILD_VERSION}}"
+                            COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-metadata:${{env.BUILD_VERSION}}"
                           ;;
                           'npm')
                               DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
