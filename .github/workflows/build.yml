@@ -31,7 +31,7 @@ jobs:
           PACKAGECLOUD_REPO: 'sarahBuisson/test'
         run: |
           ARTIFACTS=("easy-rules-api" "easy-rules-core")
-          ARTIFACT_TYPE=("jvm" "npm" "js")
+          ARTIFACT_TYPE=("jvm" "npm" "js" "metadata")
            for ARTIFACT in "${ARTIFACTS[@]}"
            do
                for ART_TYPE in "${ARTIFACT_TYPE[@]}"
