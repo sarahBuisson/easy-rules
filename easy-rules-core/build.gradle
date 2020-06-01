@@ -108,7 +108,6 @@ kotlin {
         }
     }
     js() {
-        browser{}
         mavenPublication {
             artifactId project.name + "-js"
         }
@@ -134,5 +133,6 @@ task listrepos {
 }
 
 kt2ts {
+    declarationsFile.set(file("${project.buildDir}/jsNpmToMaven/index.d.ts"))
     classPatterns.set(["org.jeasy.rules.core.*"])
 }
