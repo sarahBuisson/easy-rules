@@ -10,6 +10,7 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        gradlePluginPortal()
         google()
         maven {
             url 'http://oss.sonatype.org/content/repositories/snapshots'
@@ -31,8 +32,10 @@ buildscript {
         classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
         classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.44"
         classpath "gradle.plugin.com.dorongold.plugins:task-tree:1.4"
+        classpath "net.akehurst.kotlin.kt2ts:kt2ts-plugin:1.5.0"
 
     }
+
 }
 allprojects {
     group 'org.jeasy'

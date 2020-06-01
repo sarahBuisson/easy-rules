@@ -10,7 +10,7 @@ plugins {
     id "java-library"
     id "maven-publish"
     id "com.moowork.node"
-
+    id("net.akehurst.kotlin.kt2ts") apply(true)
 }
 def scriptsDirectory = "https://raw.githubusercontent.com/sarahBuisson/kotlin-multiplatform-multiproject-sample/master/gradle/scripts/";
 apply from: scriptsDirectory + "kotlinMultiNpm.gradle.kts"
@@ -131,4 +131,8 @@ task listrepos {
         println "Repositories:"
         project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
     }
+}
+
+kt2ts {
+    classPatterns.set(["org.jeasy.rules.core.*"])
 }
