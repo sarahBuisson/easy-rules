@@ -5,3 +5,4 @@
  //TODO : test pas executé par maven
  renommer package
  renommer repo java en kotlin
+ 
