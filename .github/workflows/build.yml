@@ -59,12 +59,12 @@ jobs:
                           ;;
                           'js')
                               DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
-                              FILE_NAME="$ARTIFACT-js-${{env.BUILD_VERSION}}.jar"
+                              FILE_NAME="$ARTIFACT-jsir-${{env.BUILD_VERSION}}.jar"
                               COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-js:${{env.BUILD_VERSION}}"
                           ;;
                           'js-klib')
                               DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
-                              FILE_NAME="$ARTIFACT-js-${{env.BUILD_VERSION}}.klib"
+                              FILE_NAME="$ARTIFACT-jslegacy-${{env.BUILD_VERSION}}.klib"
                               COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-$ART_TYPE:${{env.BUILD_VERSION}}"
                           ;;
                           '*')
