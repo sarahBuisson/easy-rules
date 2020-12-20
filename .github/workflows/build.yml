@@ -31,7 +31,7 @@ jobs:
           PACKAGECLOUD_REPO: 'sarahBuisson/snapshot'
         run: |
           ARTIFACTS=("easy-rules-api" "easy-rules-core")
-          ARTIFACT_TYPE=("jvm" "js" "common" "kotlin")
+          ARTIFACT_TYPE=("jvm" "js" "js-klib" "common" "kotlin")
            for ARTIFACT in "${ARTIFACTS[@]}"
            do
                for ART_TYPE in "${ARTIFACT_TYPE[@]}"
@@ -57,12 +57,12 @@ jobs:
                             FILE_NAME="$ARTIFACT-metadata-${{env.BUILD_VERSION}}.jar"
                             COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-metadata:${{env.BUILD_VERSION}}"
                           ;;
-                          'npm')
+                          'js')
                               DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
                               FILE_NAME="$ARTIFACT-js-${{env.BUILD_VERSION}}.jar"
                               COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-js:${{env.BUILD_VERSION}}"
                           ;;
-                          'js')
+                          'js-klib')
                               DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
                               FILE_NAME="$ARTIFACT-js-${{env.BUILD_VERSION}}.klib"
                               COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-$ART_TYPE:${{env.BUILD_VERSION}}"
