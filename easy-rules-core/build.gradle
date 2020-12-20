@@ -1,4 +1,5 @@
 import groovy.json.*
+
 buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -10,35 +11,22 @@ plugins {
     id "java-library"
     id "maven-publish"
     id "com.moowork.node"
-    id("net.akehurst.kotlin.kt2ts") apply(true)
 }
-def scriptsDirectory = "https://raw.githubusercontent.com/sarahBuisson/kotlin-multiplatform-multiproject-sample/master/gradle/scripts/";
-apply from: scriptsDirectory + "kotlinMultiNpm.gradle.kts"
 
 kotlin {
-    targets {
-        println(presets.getAsMap().keySet())
-        fromPreset(presets.jvm, "jvm") {
-            compilations.all {
-                tasks[compileKotlinTaskName].kotlinOptions {
-                    jvmTarget = "1.8"
-                }
-            }
+    jvm {
+    }
+    js(BOTH) {
+        browser {
         }
-        fromPreset(presets.js, "js") {
-            compilations.all {
-                tasks[compileKotlinTaskName].kotlinOptions {
-
-                }
-            }
-        }
+        nodejs {}
     }
     sourceSets {
         commonMain {
             kotlin.srcDir("src/main/java")
             resources.srcDir("src/main/resource")
             dependencies {
-                implementation "io.github.microutils:kotlin-logging-common:$kotlin_logging_version"
+                implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib"
                 implementation "org.jetbrains.kotlin:kotlin-test"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-common"
@@ -72,7 +60,7 @@ kotlin {
         }
         jvmMain {
             dependencies {
-                implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
+                implementation "io.github.microutils:kotlin-logging-jvm:$kotlin_logging_version"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
                 implementation "org.jetbrains.kotlin:kotlin-test-junit"
 
@@ -87,40 +75,6 @@ kotlin {
             }
 
         }
-
-
-        metadata {
-            dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-                implementation "io.github.microutils:kotlin-logging-common:$kotlin_logging_version"
-                implementation "org.jetbrains.kotlin:kotlin-test-common"
-            }
-        }
-    }
-
-    jvm {
-        compilations.main.kotlinOptions {
-            // Setup the Kotlin compiler options for the "main" compilation:
-            jvmTarget = "1.8"
-        }
-        mavenPublication {
-            artifactId project.name + "-jvm"
-        }
-    }
-    js() {
-        mavenPublication {
-            artifactId project.name + "-js"
-        }
-        compilations.main.kotlinOptions {
-            // Setup the Kotlin compiler options for the "main" compilation:
-            moduleKind = "umd"
-        }
-    }
-    metadata {
-        mavenPublication {
-            artifactId = project.name + "-common"
-        }
-        this.metadataJar.appendix("common")
     }
 }
 
@@ -130,9 +84,4 @@ task listrepos {
         println "Repositories:"
         project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
     }
-}
-
-kt2ts {
-    declarationsFile.set(file("${project.buildDir}/jsNpmToMaven/index.d.ts"))
-    classPatterns.set(["org.jeasy.rules.core.*"])
 }
