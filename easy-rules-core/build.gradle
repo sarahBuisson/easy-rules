@@ -19,9 +19,12 @@ apply from: scriptsDirectory + "kotlinMultiNpm.gradle.kts"
 kotlin {
     jvm {
     }
-    js(BOTH) {
-        browser {
-        }
+    js(LEGACY) {
+        browser {}
+        nodejs {}
+    }
+    js("ir",IR) {
+        browser {}
         nodejs {}
     }
     sourceSets {
