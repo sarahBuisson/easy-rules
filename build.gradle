@@ -59,7 +59,6 @@ subprojects {
     apply plugin: "com.dorongold.task-tree"
     def scriptsDirectory = "https://raw.githubusercontent.com/sarahBuisson/kotlin-multiplatform-multiproject-sample/master/gradle/scripts/";
     apply from: scriptsDirectory + "github.gradle.kts"
-
 }
 
 task listrepos {

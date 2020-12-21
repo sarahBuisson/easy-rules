@@ -13,6 +13,9 @@ plugins {
     id "com.moowork.node"
 }
 
+def scriptsDirectory = "https://raw.githubusercontent.com/sarahBuisson/kotlin-multiplatform-multiproject-sample/master/gradle/scripts/";
+apply from: scriptsDirectory + "kotlinMultiNpm.gradle.kts"
+
 kotlin {
     jvm {
     }

@@ -11,7 +11,7 @@ jobs:
         with:
           java-version: 11
       - name: Build
-        run: gradle build --stacktrace
+        run: gradle build packJsNpmToMaven --stacktrace
 
 
       - name: extract build version
@@ -31,7 +31,7 @@ jobs:
           PACKAGECLOUD_REPO: 'sarahBuisson/snapshot'
         run: |
           ARTIFACTS=("easy-rules-api" "easy-rules-core")
-          ARTIFACT_TYPE=("jvm" "js" "js-klib" "common" "kotlin")
+          ARTIFACT_TYPE=("jvm" "js" "npm" "js-klib" "common" "kotlin")
            for ARTIFACT in "${ARTIFACTS[@]}"
            do
                for ART_TYPE in "${ARTIFACT_TYPE[@]}"
@@ -56,6 +56,11 @@ jobs:
                             DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
                             FILE_NAME="$ARTIFACT-metadata-${{env.BUILD_VERSION}}.jar"
                             COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-metadata:${{env.BUILD_VERSION}}"
+                          ;;
+                          'npm')
+                              DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
+                              FILE_NAME="$ARTIFACT-npm-${{env.BUILD_VERSION}}.jar"
+                              COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-$ART_TYPE:${{env.BUILD_VERSION}}"
                           ;;
                           'js')
                               DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
