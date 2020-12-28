@@ -23,6 +23,16 @@
  */
 package org.jeasy.rules.spel;
 
+import org.assertj.core.api.Assertions;
+import org.jeasy.rules.api.Rule;
+import org.jeasy.rules.api.Rules;
+import org.jeasy.rules.support.composite.UnitRuleGroup;
+import org.jeasy.rules.support.reader.JsonRuleDefinitionReader;
+import org.jeasy.rules.support.reader.YamlRuleDefinitionReader;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
@@ -33,16 +43,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-
-import org.assertj.core.api.Assertions;
-import org.jeasy.rules.api.Rule;
-import org.jeasy.rules.api.Rules;
-import org.jeasy.rules.support.composite.UnitRuleGroup;
-import org.jeasy.rules.support.reader.JsonRuleDefinitionReader;
-import org.jeasy.rules.support.reader.YamlRuleDefinitionReader;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
