@@ -25,7 +25,6 @@ package org.jeasy.rules.support.composite
 
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
-import java.util.*
 
 /**
  * An activation rule group is a composite rule that fires the first applicable
@@ -43,7 +42,6 @@ class ActivationRuleGroup : CompositeRule {
      * Create an activation rule group.
      */
     constructor() {
-        rules = TreeSet(rules)
     }
 
     /**
@@ -52,7 +50,6 @@ class ActivationRuleGroup : CompositeRule {
      * @param name of the activation rule group
      */
     constructor(name: String) : super(name) {
-        rules = TreeSet(rules)
     }
 
     /**
@@ -62,7 +59,6 @@ class ActivationRuleGroup : CompositeRule {
      * @param description of the activation rule group
      */
     constructor(name: String, description: String) : super(name, description) {
-        rules = TreeSet(rules)
     }
 
     /**
@@ -73,7 +69,6 @@ class ActivationRuleGroup : CompositeRule {
      * @param priority    of the activation rule group
      */
     constructor(name: String, description: String, priority: Int) : super(name, description, priority) {
-        rules = TreeSet(rules)
     }
 
     override fun evaluate(facts: Facts): Boolean {

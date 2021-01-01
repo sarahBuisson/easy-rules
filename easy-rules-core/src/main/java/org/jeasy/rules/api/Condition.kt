@@ -36,7 +36,7 @@ fun interface Condition {
      *
      * @return true if the rule should be triggered, false otherwise
      */
-    open fun evaluate(facts: Facts): Boolean
+    fun evaluate(facts: Facts): Boolean
 
     companion object {
         /**

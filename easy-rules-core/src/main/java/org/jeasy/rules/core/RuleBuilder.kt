@@ -26,14 +26,13 @@ package org.jeasy.rules.core
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
 import org.jeasy.rules.api.Rule
-import java.util.*
 
 /**
  * Builder to create [Rule] instances.
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class RuleBuilder {
+open class RuleBuilder {
     private var name: String = Rule.DEFAULT_NAME
     private var description: String = Rule.DEFAULT_DESCRIPTION
     private var priority: Int = Rule.DEFAULT_PRIORITY
@@ -82,6 +81,15 @@ class RuleBuilder {
     fun `when`(condition: Condition): RuleBuilder {
         this.condition = condition
         return this
+    }
+    /**
+     * Set rule condition.
+     *
+     * @param condition of the rule
+     * @return the builder instance
+     */
+    fun condition(condition: Condition): RuleBuilder {
+        return this.`when`(condition)
     }
 
     /**

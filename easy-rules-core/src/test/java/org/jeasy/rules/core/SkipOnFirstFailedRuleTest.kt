@@ -23,15 +23,18 @@
  */
 package org.jeasy.rules.core
 
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.verify
 import org.jeasy.rules.api.RulesEngineParameters
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mockito
+import kotlin.test.Test
+import kotlin.test.BeforeTest
 
 class SkipOnFirstFailedRuleTest : AbstractTest() {
-    @Before
+    @BeforeTest
     @Throws(Exception::class)
     override fun setup() {
+        MockKAnnotations.init(this, relaxed = true)
         super.setup()
         val parameters = RulesEngineParameters().skipOnFirstFailedRule(true)
         rulesEngine = DefaultRulesEngine(parameters)
@@ -41,10 +44,10 @@ class SkipOnFirstFailedRuleTest : AbstractTest() {
     @Throws(Exception::class)
     fun testSkipOnFirstFailedRule() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
-        Mockito.`when`(rule2.compareTo(rule1)).thenReturn(1)
+        every { rule1.evaluate(facts) } returns (true)
+        every { rule2.compareTo(rule1) } returns (1)
         val exception = Exception("fatal error!")
-        Mockito.doThrow(exception).`when`(rule1).execute(facts)
+        every { (rule1).execute(facts) } throws exception
         rules.register(rule1)
         rules.register(rule2)
 
@@ -53,8 +56,8 @@ class SkipOnFirstFailedRuleTest : AbstractTest() {
 
         // Then
         //Rule 1 should be executed
-        Mockito.verify(rule1).execute(facts)
+        verify { rule1.execute(facts) }
         //Rule 2 should be skipped since Rule 1 has failed
-        Mockito.verify(rule2, Mockito.never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { rule2.execute(facts) }
     }
 }

@@ -32,28 +32,29 @@ import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.BasicRule
 import org.jeasy.rules.core.DefaultRulesEngine
 import org.junit.Before
-import org.junit.Test
+import kotlin.test.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
+import io.mockk.impl.annotations.MockK
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class UnitRuleGroupTest {
-    @Mock
+    @MockK
     private lateinit var rule1: Rule
 
-    @Mock
+    @MockK
     private lateinit var rule2: Rule
     private val facts: Facts = Facts()
     private val rules: Rules = Rules()
     private val rulesEngine: DefaultRulesEngine = DefaultRulesEngine()
     private lateinit var unitRuleGroup: UnitRuleGroup
-    @Before
+    @BeforeTest
     fun setUp() {
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
-        Mockito.`when`(rule2.evaluate(facts)).thenReturn(true)
-        Mockito.`when`(rule2.compareTo(rule1)).thenReturn(1)
+
+        every {rule1.evaluate(facts)} returns(true)
+        every {rule2.evaluate(facts)} returns(true)
+        every {rule2.compareTo(rule1)} returns(1)
     }
 
     @Test
@@ -65,7 +66,7 @@ class UnitRuleGroupTest {
         val evaluationResult = unitRuleGroup.evaluate(facts)
 
         // then
-        Assertions.assertThat(evaluationResult).isFalse
+        assertTrue(evaluationResult).isFalse
     }
 
     @Test
@@ -89,7 +90,7 @@ class UnitRuleGroupTest {
     @Throws(Exception::class)
     fun compositeRuleMustNotBeExecutedIfAComposingRuleEvaluatesToFalse() {
         // Given
-        Mockito.`when`(rule2.evaluate(facts)).thenReturn(false)
+        every {rule2.evaluate(facts)} returns(false)
         unitRuleGroup = UnitRuleGroup()
         unitRuleGroup.addRule(rule1)
         unitRuleGroup.addRule(rule2)
@@ -144,7 +145,7 @@ class UnitRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(rule.isExecuted()).isTrue
+        assertTrue(rule.isExecuted()).isTrue
     }
 
    @Test
@@ -162,8 +163,8 @@ class UnitRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(rule.isExecuted()).isTrue
-        Assertions.assertThat(annotatedRule.isExecuted()).isFalse
+        assertTrue(rule.isExecuted()).isTrue
+        assertTrue(annotatedRule.isExecuted()).isFalse
     }
 
     class MyRule : BasicRule() {

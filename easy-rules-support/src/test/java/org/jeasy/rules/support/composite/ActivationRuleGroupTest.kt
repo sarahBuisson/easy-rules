@@ -23,19 +23,14 @@
  */
 package org.jeasy.rules.support.composite
 
-import org.assertj.core.api.Assertions
-import org.jeasy.rules.annotation.Action
-import org.jeasy.rules.annotation.Condition
-import org.jeasy.rules.annotation.Rule
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.BasicRule
 import org.jeasy.rules.core.DefaultRulesEngine
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
-@RunWith(MockitoJUnitRunner::class)
 class ActivationRuleGroupTest {
     private val facts: Facts = Facts()
     private val rules: Rules = Rules()
@@ -55,8 +50,8 @@ class ActivationRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // then
-        Assertions.assertThat(rule1.isExecuted()).isTrue
-        Assertions.assertThat(rule2.isExecuted()).isFalse
+        assertTrue(rule1.isExecuted())
+        assertFalse(rule2.isExecuted())
     }
 
     @Test
@@ -75,9 +70,9 @@ class ActivationRuleGroupTest {
         // then
         // we don't know upfront which rule will be selected, but only one of them should be executed
         if (rule2.isExecuted()) {
-            Assertions.assertThat(rule3.isExecuted()).isFalse
+            assertFalse(rule3.isExecuted())
         } else {
-            Assertions.assertThat(rule3.isExecuted()).isTrue
+            assertTrue(rule3.isExecuted())
         }
     }
 
@@ -95,11 +90,10 @@ class ActivationRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // rule4 will not be selected, so it should not be executed
-        Assertions.assertThat(rule4.isExecuted()).isFalse
+        assertFalse(rule4.isExecuted())
     }
 
-    @Rule(priority = 1)
-    class Rule1 : BasicRule() {
+    class Rule1 : BasicRule(priority = 1) {
         private var executed = false
 
         override fun evaluate(facts: Facts): Boolean {
@@ -115,8 +109,7 @@ class ActivationRuleGroupTest {
         }
     }
 
-    @Rule(priority = 2)
-    class Rule2 : BasicRule() {
+    class Rule2 : BasicRule(priority = 2) {
         private var executed = false
 
         override fun evaluate(facts: Facts): Boolean {
@@ -132,8 +125,7 @@ class ActivationRuleGroupTest {
         }
     }
 
-    @Rule(priority = 2)
-    class Rule3 : BasicRule() {
+    class Rule3 : BasicRule(priority = 2) {
         private var executed = false
 
         override fun evaluate(facts: Facts): Boolean {
@@ -149,8 +141,7 @@ class ActivationRuleGroupTest {
         }
     }
 
-    @Rule(priority = 1)
-    class Rule4 : BasicRule()  {
+    class Rule4 : BasicRule(priority = 1)  {
         private var executed = false
 
         override fun evaluate(facts: Facts): Boolean {

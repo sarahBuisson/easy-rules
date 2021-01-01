@@ -31,7 +31,7 @@ import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.BasicRule
 import org.jeasy.rules.core.DefaultRulesEngine
-import org.junit.Test
+import kotlin.test.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 
@@ -55,8 +55,8 @@ class ActivationRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // then
-        Assertions.assertThat(rule1.isExecuted()).isTrue
-        Assertions.assertThat(rule2.isExecuted()).isFalse
+        assertTrue(rule1.isExecuted()).isTrue
+        assertTrue(rule2.isExecuted()).isFalse
     }
 
     @Test
@@ -75,9 +75,9 @@ class ActivationRuleGroupTest {
         // then
         // we don't know upfront which rule will be selected, but only one of them should be executed
         if (rule2.isExecuted()) {
-            Assertions.assertThat(rule3.isExecuted()).isFalse
+            assertTrue(rule3.isExecuted()).isFalse
         } else {
-            Assertions.assertThat(rule3.isExecuted()).isTrue
+            assertTrue(rule3.isExecuted()).isTrue
         }
     }
 
@@ -95,7 +95,7 @@ class ActivationRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // rule4 will not be selected, so it should not be executed
-        Assertions.assertThat(rule4.isExecuted()).isFalse
+        assertTrue(rule4.isExecuted()).isFalse
     }
 
     @Rule(priority = 1)

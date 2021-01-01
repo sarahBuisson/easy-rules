@@ -25,12 +25,12 @@ package org.jeasy.rules.core
 
 import org.jeasy.rules.api.*
 
-internal class DefaultRule(
-    name: String,
-    description: String,
-    priority: Int,
+open class DefaultRule(
+    name: String = Rule.DEFAULT_NAME,
+    description: String = Rule.DEFAULT_DESCRIPTION,
+    priority: Int= Rule.DEFAULT_PRIORITY,
     private val condition: Condition,
-    private val actions: MutableList<Action>
+    private val actions: List<Action>
 ) : BasicRule(name, description, priority) {
     override fun evaluate(facts: Facts): Boolean {
         return condition.evaluate(facts)

@@ -30,7 +30,7 @@ import org.apache.commons.jexl3.introspection.JexlSandbox;
 import org.assertj.core.api.Assertions;
 import org.jeasy.rules.api.Action;
 import org.jeasy.rules.api.Facts;
-import org.junit.Test;
+import kotlin.test.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.assertTrue;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**

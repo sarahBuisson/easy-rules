@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.api
 
-import java.util.*
 
 /**
  * This class encapsulates a set of facts and represents a facts namespace.
@@ -41,8 +40,6 @@ open class Facts : Iterable<Fact<*>> {
      * @param value of the fact to add, must not be null
      */
     fun <T> put(name: String, value: T) {
-        Objects.requireNonNull(name, "fact name must not be null")
-        Objects.requireNonNull(value, "fact value must not be null")
         val retrievedFact = getFact(name)
         retrievedFact?.let { remove(it) }
         add(Fact(name, value))
@@ -54,7 +51,6 @@ open class Facts : Iterable<Fact<*>> {
      * @param fact to add, must not be null
      */
     fun <T> add(fact: Fact<T>) {
-        Objects.requireNonNull(fact, "fact must not be null")
         val retrievedFact = getFact(fact.name)
         retrievedFact?.let { remove(it) }
         facts.add(fact)
@@ -66,7 +62,6 @@ open class Facts : Iterable<Fact<*>> {
      * @param factName name of the fact to remove, must not be null
      */
     fun remove(factName: String) {
-        Objects.requireNonNull(factName, "fact name must not be null")
         val fact = getFact(factName)
         fact?.let { remove(it) }
     }
@@ -77,7 +72,6 @@ open class Facts : Iterable<Fact<*>> {
      * @param fact to remove, must not be null
      */
     fun <T> remove(fact: Fact<T>) {
-        Objects.requireNonNull(fact, "fact must not be null")
         facts.remove(fact)
     }
 
@@ -91,10 +85,9 @@ open class Facts : Iterable<Fact<*>> {
      * no fact with the given name
     </T> */
     operator fun <T> get(factName: String): T? {
-        Objects.requireNonNull(factName, "fact name must not be null")
         val fact = getFact(factName)
         return if (fact != null) {
-            fact!!.value as T
+            fact.value as T
         } else null
     }
 
@@ -105,11 +98,7 @@ open class Facts : Iterable<Fact<*>> {
      * @return the fact having the given name, or null if there is no fact with the given name
      */
     fun getFact(factName: String): Fact<*>? {
-        Objects.requireNonNull(factName, "fact name must not be null")
-        return facts.stream()
-            .filter { fact: Fact<*> -> fact.name == factName }
-            .findFirst()
-            .orElse(null)
+        return facts.firstOrNull { fact: Fact<*> -> fact.name == factName }
     }
 
     /**
@@ -155,4 +144,5 @@ open class Facts : Iterable<Fact<*>> {
         stringBuilder.append("]")
         return stringBuilder.toString()
     }
+
 }

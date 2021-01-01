@@ -23,10 +23,10 @@
  */
 package org.jeasy.rules.spel
 
+import mu.KotlinLogging
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.spel.SpELAction
-import org.slf4j.LoggerFactory
 import org.springframework.expression.BeanResolver
 import org.springframework.expression.Expression
 import org.springframework.expression.ExpressionParser
@@ -109,6 +109,6 @@ class SpELAction : Action {
     }
 
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(SpELAction::class.java)
+        private val LOGGER = KotlinLogging.logger {}
     }
 }

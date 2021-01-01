@@ -23,15 +23,18 @@
  */
 package org.jeasy.rules.core
 
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.verify
 import org.jeasy.rules.api.RulesEngineParameters
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mockito
+import kotlin.test.Test
+import kotlin.test.BeforeTest
 
 class SkipOnFirstNonTriggeredRuleTest : AbstractTest() {
-    @Before
+    @BeforeTest
     @Throws(Exception::class)
     override fun setup() {
+        MockKAnnotations.init(this, relaxed = true)
         super.setup()
         val parameters = RulesEngineParameters().skipOnFirstNonTriggeredRule(true)
         rulesEngine = DefaultRulesEngine(parameters)
@@ -41,8 +44,8 @@ class SkipOnFirstNonTriggeredRuleTest : AbstractTest() {
     @Throws(Exception::class)
     fun testSkipOnFirstNonTriggeredRule() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(false)
-        Mockito.`when`(rule2.compareTo(rule1)).thenReturn(1)
+        every { rule1.evaluate(facts) } returns (false)
+        every { rule2.compareTo(rule1) } returns (1)
         rules.register(rule1)
         rules.register(rule2)
 
@@ -51,8 +54,8 @@ class SkipOnFirstNonTriggeredRuleTest : AbstractTest() {
 
         // Then
         //Rule1 is not triggered
-        Mockito.verify(rule1, Mockito.never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { rule1.execute(facts) }
         //Rule 2 should be skipped since Rule 1 has not been executed
-        Mockito.verify(rule2, Mockito.never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { rule2.execute(facts) }
     }
 }

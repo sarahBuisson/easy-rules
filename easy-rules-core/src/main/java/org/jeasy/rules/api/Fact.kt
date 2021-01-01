@@ -23,8 +23,6 @@
  */
 package org.jeasy.rules.api
 
-import java.util.*
-
 /**
  * A class representing a named fact. Facts have unique names within a [Facts]
  * instance.
@@ -48,12 +46,12 @@ class Fact<T>(val name: String, val value: T) {
 	 */
     override fun equals(o: Any?): Boolean {
         if (this === o) return true
-        if (o == null || javaClass != o.javaClass) return false
+        if (o == null) return false
         val fact = o as Fact<*>?
         return name == fact?.name
     }
 
     override fun hashCode(): Int {
-        return Objects.hash(name)
+        return name?.hashCode()
     }
 }

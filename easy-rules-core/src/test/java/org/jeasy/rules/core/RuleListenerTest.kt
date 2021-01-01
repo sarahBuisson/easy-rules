@@ -23,25 +23,29 @@
  */
 package org.jeasy.rules.core
 
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.verify
+import io.mockk.verifyOrder
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.RuleListener
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 class RuleListenerTest : AbstractTest() {
 
-    @Mock
+    @MockK
     private lateinit var ruleListener1: RuleListener
-    @Mock
-    private lateinit var  ruleListener2: RuleListener
-    @Before
+
+    @MockK
+    private lateinit var ruleListener2: RuleListener
+
+    @BeforeTest
     @Throws(Exception::class)
     override fun setup() {
         super.setup()
-        Mockito.`when`(ruleListener1.beforeEvaluate(rule1, facts)).thenReturn(true)
-        Mockito.`when`(ruleListener2.beforeEvaluate(rule1, facts)).thenReturn(true)
+        every { ruleListener1.beforeEvaluate(rule1, facts) } returns (true)
+        every { ruleListener2.beforeEvaluate(rule1, facts) } returns (true)
         rulesEngine.registerRuleListener(ruleListener1)
         rulesEngine.registerRuleListener(ruleListener2)
     }
@@ -49,89 +53,93 @@ class RuleListenerTest : AbstractTest() {
     @Test
     fun whenTheRuleExecutesSuccessfully_thenOnSuccessShouldBeExecuted() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
+        every { rule1.evaluate(facts) } returns (true)
         rules.register(rule1)
 
         // When
         rulesEngine.fire(rules, facts)
 
         // Then
-        val inOrder = Mockito.inOrder(rule1, fact1, fact2, ruleListener1, ruleListener2)
-        inOrder.verify(ruleListener1).beforeExecute(rule1, facts)
-        inOrder.verify(ruleListener2).beforeExecute(rule1, facts)
-        inOrder.verify(ruleListener1).onSuccess(rule1, facts)
-        inOrder.verify(ruleListener2).onSuccess(rule1, facts)
+
+
+        verifyOrder {
+            (ruleListener1).beforeExecute(rule1, facts)
+            (ruleListener2).beforeExecute(rule1, facts)
+            (ruleListener1).onSuccess(rule1, facts)
+            (ruleListener2).onSuccess(rule1, facts)
+        }
     }
 
     @Test
     @Throws(Exception::class)
     fun whenTheRuleFails_thenOnFailureShouldBeExecuted() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
+        every { rule1.evaluate(facts) } returns (true)
         val exception = Exception("fatal error!")
-        Mockito.doThrow(exception).`when`(rule1).execute(facts)
+        every { (rule1).execute(facts) } throws (exception)
         rules.register(rule1)
 
         // When
         rulesEngine.fire(rules, facts)
 
         // Then
-        val inOrder = Mockito.inOrder(rule1, fact1, fact2, ruleListener1, ruleListener2)
-        inOrder.verify(ruleListener1).beforeExecute(rule1, facts)
-        inOrder.verify(ruleListener2).beforeExecute(rule1, facts)
-        inOrder.verify(ruleListener1).onFailure(rule1, facts, exception)
-        inOrder.verify(ruleListener2).onFailure(rule1, facts, exception)
+        verifyOrder {
+            (ruleListener1).beforeExecute(rule1, facts)
+            (ruleListener2).beforeExecute(rule1, facts)
+            (ruleListener1).onFailure(rule1, facts, exception)
+            (ruleListener2).onFailure(rule1, facts, exception)
+        }
     }
 
     @Test
     fun whenListenerBeforeEvaluateReturnsFalse_thenTheRuleShouldBeSkippedBeforeBeingEvaluated() {
         // Given
-        Mockito.`when`(ruleListener1.beforeEvaluate(rule1, facts)).thenReturn(false)
+        every { ruleListener1.beforeEvaluate(rule1, facts) } returns (false)
         rules.register(rule1)
 
         // When
         rulesEngine.fire(rules, facts)
 
         // Then
-        Mockito.verify(rule1, Mockito.never()).evaluate(facts)
+        verify(atLeast = 0, atMost = 0) { rule1.evaluate(facts) }
     }
 
     @Test
     fun whenListenerBeforeEvaluateReturnsTrue_thenTheRuleShouldBeEvaluated() {
         // Given
-        Mockito.`when`(ruleListener1.beforeEvaluate(rule1, facts)).thenReturn(true)
+        every { ruleListener1.beforeEvaluate(rule1, facts) } returns (true)
         rules.register(rule1)
 
         // When
         rulesEngine.fire(rules, facts)
 
         // Then
-        Mockito.verify(rule1).evaluate(facts)
+        verify { rule1.evaluate(facts) }
     }
 
     @Test
     fun whenTheRuleEvaluatesToTrue_thenTheListenerShouldBeInvoked() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
+        every { rule1.evaluate(facts) } returns (true)
         rules.register(rule1)
 
         // When
         rulesEngine.fire(rules, facts)
 
         // Then
-        Mockito.verify(ruleListener1).afterEvaluate(rule1, facts, true)
+        verify { (ruleListener1).afterEvaluate(rule1, facts, true) }
     }
 
     @Test
     fun whenTheRuleEvaluatesToFalse_thenTheListenerShouldBeInvoked() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(false)
+        every { rule1.evaluate(facts) } returns (false)
         rules.register(rule1)
 
         // When
         rulesEngine.fire(rules, facts)
 
         // Then
-        Mockito.verify(ruleListener1).afterEvaluate(rule1, facts, false)
+        verify { (ruleListener1).afterEvaluate(rule1, facts, false) }
     }
 }

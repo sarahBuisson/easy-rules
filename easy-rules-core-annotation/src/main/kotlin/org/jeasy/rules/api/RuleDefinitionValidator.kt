@@ -25,10 +25,8 @@ package org.jeasy.rules.core
 
 import org.jeasy.rules.annotation.*
 import org.jeasy.rules.api.Facts
-import java.lang.reflect.Method
-import java.lang.reflect.Modifier
-import java.lang.reflect.Parameter
-import java.util.*
+import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 
 /**
  * This component validates that an annotated rule object is well defined.
@@ -45,94 +43,64 @@ internal class RuleDefinitionValidator {
 
     private fun checkRuleClass(rule: Any) {
         require(isRuleClassWellDefined(rule)) {
-            String.format(
-                "Rule '%s' is not annotated with '%s'",
-                rule.javaClass.name,
-                Rule::class.java.name
-            )
+            "Rule '${rule::class.simpleName}' is not annotated with '${Rule::class.simpleName}'"
         }
     }
 
     private fun checkConditionMethod(rule: Any) {
         val conditionMethods = getMethodsAnnotatedWith(
-            Condition::class.java, rule
+            Condition::class, rule
         )
         require(!conditionMethods.isEmpty()) {
-            String.format(
-                "Rule '%s' must have a public method annotated with '%s'",
-                rule.javaClass.name,
-                Condition::class.java.name
-            )
+            "Rule '${rule::class.simpleName}' must have a public method annotated with '${Condition::class.simpleName}'"
         }
         require(conditionMethods.size <= 1) {
-            String.format(
-                "Rule '%s' must have exactly one method annotated with '%s'",
-                rule.javaClass.name,
-                Condition::class.java.name
-            )
+            "Rule '${rule::class.simpleName}' must have exactly one method annotated with '${Condition::class.simpleName}'"
         }
         val conditionMethod = conditionMethods.get(0)
         require(isConditionMethodWellDefined(conditionMethod)) {
-            String.format(
-                "Condition method '%s' defined in rule '%s' must be public, must return boolean type and may have parameters annotated with @Fact (and/or exactly one parameter of type Facts or one of its sub-types).",
-                conditionMethod,
-                rule.javaClass.name
-            )
+            "Condition method '${conditionMethod}' defined in rule '${rule::class.simpleName}' must be public, must return boolean type and may have parameters annotated with @Fact (and/or exactly one parameter of type Facts or one of its sub-types)."
         }
     }
 
     private fun checkActionMethods(rule: Any) {
-        val actionMethods = getMethodsAnnotatedWith(Action::class.java, rule)
+        val actionMethods = getMethodsAnnotatedWith(Action::class, rule)
         require(!actionMethods.isEmpty()) {
-            String.format(
-                "Rule '%s' must have at least one public method annotated with '%s'",
-                rule.javaClass.name,
-                Action::class.java.name
-            )
+            "Rule '${rule::class.simpleName}' must have at least one public method annotated with '${Action::class.simpleName}'"
         }
         for (actionMethod in actionMethods) {
             require(isActionMethodWellDefined(actionMethod)) {
-                String.format(
-                    "Action method '%s' defined in rule '%s' must be public, must return void type and may have parameters annotated with @Fact (and/or exactly one parameter of type Facts or one of its sub-types).",
-                    actionMethod,
-                    rule.javaClass.name
-                )
+
+                "Action method '$actionMethod' defined in rule '${rule::class.simpleName}' must be public, must return void type and may have parameters annotated with @Fact (and/or exactly one parameter of type Facts or one of its sub-types)."
             }
         }
     }
 
     private fun checkPriorityMethod(rule: Any) {
-        val priorityMethods = getMethodsAnnotatedWith(Priority::class.java, rule)
+        val priorityMethods = getMethodsAnnotatedWith(Priority::class, rule)
         if (priorityMethods.isEmpty()) {
             return
         }
         require(priorityMethods.size <= 1) {
-            String.format(
-                "Rule '%s' must have exactly one method annotated with '%s'",
-                rule.javaClass.name,
-                Priority::class.java.name
-            )
+            "Rule '${rule::class.simpleName}' must have exactly one method annotated with '${Priority::class.simpleName}'"
         }
         val priorityMethod = priorityMethods.get(0)
         require(isPriorityMethodWellDefined(priorityMethod)) {
-            String.format(
-                "Priority method '%s' defined in rule '%s' must be public, have no parameters and return integer type.",
-                priorityMethod,
-                rule.javaClass.name
-            )
+
+            "Priority method '$priorityMethod' defined in rule '${rule::class.simpleName}' must be public, have no parameters and return integer type."
         }
     }
 
     private fun isRuleClassWellDefined(rule: Any): Boolean {
-        return Utils.isAnnotationPresent(Rule::class.java, rule.javaClass)
+        return Utils.isAnnotationPresent(Rule::class, rule::class)
     }
 
-    private fun isConditionMethodWellDefined(method: Method): Boolean {
+    private fun isConditionMethodWellDefined(method: KFunction): Boolean {
         return (Modifier.isPublic(method.getModifiers())
                 && method.getReturnType() == java.lang.Boolean.TYPE && validParameters(method))
     }
 
-    private fun validParameters(method: Method): Boolean {
+    private fun validParameters(method: KFunction): Boolean {
         var notAnnotatedParameterCount = 0
         val parameterAnnotations = method.getParameterAnnotations()
         for (annotations in parameterAnnotations) {
@@ -141,7 +109,7 @@ internal class RuleDefinitionValidator {
             } else {
                 //Annotation types has to be Fact
                 for (annotation in annotations) {
-                    if (annotation.annotationType != Fact::class.java) {
+                    if (annotation.annotationType != Fact::class) {
                         return false
                     }
                 }
@@ -153,13 +121,13 @@ internal class RuleDefinitionValidator {
         if (notAnnotatedParameterCount == 1) {
             val notAnnotatedParameter = getNotAnnotatedParameter(method)
             if (notAnnotatedParameter != null) {
-                return Facts::class.java.isAssignableFrom(notAnnotatedParameter.type)
+                return Facts::class.isAssignableFrom(notAnnotatedParameter.type)
             }
         }
         return true
     }
 
-    private fun getNotAnnotatedParameter(method: Method): Parameter? {
+    private fun getNotAnnotatedParameter(method: KFunction): Parameter? {
         val parameters = method.getParameters()
         for (parameter in parameters) {
             if (parameter.annotations.size == 0) {
@@ -169,19 +137,19 @@ internal class RuleDefinitionValidator {
         return null
     }
 
-    private fun isActionMethodWellDefined(method: Method): Boolean {
+    private fun isActionMethodWellDefined(method: KFunction): Boolean {
         return (Modifier.isPublic(method.getModifiers())
                 && method.getReturnType() == Void.TYPE && validParameters(method))
     }
 
-    private fun isPriorityMethodWellDefined(method: Method): Boolean {
+    private fun isPriorityMethodWellDefined(method: KFunction): Boolean {
         return (Modifier.isPublic(method.getModifiers())
                 && method.getReturnType() == Integer.TYPE && method.getParameterTypes().size == 0)
     }
 
-    private fun getMethodsAnnotatedWith(annotation: Class<out Annotation>, rule: Any): MutableList<Method> {
+    private fun getMethodsAnnotatedWith(annotation: KClass<out Annotation>, rule: Any): MutableList<KFunction> {
         val methods = getMethods(rule)
-        val annotatedMethods: MutableList<Method> = ArrayList()
+        val annotatedMethods: MutableList<KFunction> = ArrayList()
         for (method in methods) {
             if (method.isAnnotationPresent(annotation)) {
                 annotatedMethods.add(method)
@@ -190,7 +158,7 @@ internal class RuleDefinitionValidator {
         return annotatedMethods
     }
 
-    private fun getMethods(rule: Any): Array<Method> {
-        return rule.javaClass.methods
+    private fun getMethods(rule: Any): Array<KFunction> {
+        return rule::class.methods
     }
 }

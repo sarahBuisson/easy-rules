@@ -1,6 +1,7 @@
 package org.jeasy.rules.core
 
-@RunWith(MockitoJUnitRunner::class)
+
+
 class FactInjectionTest {
     @Test
     fun declaredFactsShouldBeCorrectlyInjectedByNameOrType() {
@@ -18,9 +19,9 @@ class FactInjectionTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(rule.getFact1()).isSameAs(fact1)
-        Assertions.assertThat(rule.getFact2()).isSameAs(fact2)
-        Assertions.assertThat(rule.getFacts()).isSameAs(facts)
+        assertTrue(rule.getFact1()).isSameAs(fact1)
+        assertTrue(rule.getFact2()).isSameAs(fact2)
+        assertTrue(rule.getFacts()).isSameAs(facts)
     }
 
     @Test
@@ -38,8 +39,8 @@ class FactInjectionTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(ageRule.isExecuted()).isTrue
-        Assertions.assertThat(weatherRule.isExecuted()).isTrue
+        assertTrue(ageRule.isExecuted()).isTrue
+        assertTrue(weatherRule.isExecuted()).isTrue
     }
 
     @Test
@@ -55,7 +56,7 @@ class FactInjectionTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(ageRule.isExecuted()).isFalse
+        assertTrue(ageRule.isExecuted()).isFalse
     }
 
     @Test
@@ -70,7 +71,7 @@ class FactInjectionTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(ageRule.isExecuted()).isFalse
+        assertTrue(ageRule.isExecuted()).isFalse
     }
 
     @Test
@@ -85,7 +86,7 @@ class FactInjectionTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(rule.isExecuted()).isFalse
+        assertTrue(rule.isExecuted()).isFalse
     }
 
     @Rule

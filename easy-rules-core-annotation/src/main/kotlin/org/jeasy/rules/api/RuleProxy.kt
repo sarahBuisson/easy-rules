@@ -26,13 +26,13 @@ package org.jeasy.rules.core
 import org.jeasy.rules.annotation.*
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
-import org.jeasy.rules.core.RuleProxy
-import org.slf4j.LoggerFactory
-import java.lang.reflect.InvocationHandler
-import java.lang.reflect.InvocationTargetException
-import java.lang.reflect.Method
-import java.lang.reflect.Proxy
-import java.util.*
+
+import kotlin.reflect.KCallable
+import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
+import kotlin.reflect.KParameter
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.functions
 
 /**
  * Main class to create rule proxies from annotated objects.
@@ -43,14 +43,14 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
     private lateinit var name: String
     private lateinit var description: String
     private var priority: Int = Rule.DEFAULT_PRIORITY
-    private lateinit var methods: Array<Method>
-    private lateinit var conditionMethod: Method
+    private lateinit var methods: Array<KFunction>
+    private lateinit var conditionMethod: KFunction
     private lateinit var actionMethods: MutableSet<ActionMethodOrderBean>
-    private lateinit var compareToMethod: Method
-    private lateinit var toStringMethod: Method
+    private lateinit var compareToMethod: KFunction
+    private lateinit var toStringMethod: KFunction
     private lateinit var annotation: org.jeasy.rules.annotation.Rule
     @Throws(Throwable::class)
-    override fun invoke(proxy: Any, method: Method, args: Array<Any>): Any? {
+    override fun invoke(proxy: Any, method: KFunction, args: Array<Any>): Any? {
         val methodName = method.getName()
         return when (methodName) {
             "getName" -> getRuleName()
@@ -103,7 +103,7 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
     private fun compareToMethod(args: Array<Any>): Any {
         val compareToMethod = getCompareToMethod()
         val otherRule = args.get(0) // validated upfront
-        return if (compareToMethod != null && Proxy.isProxyClass(otherRule.javaClass)) {
+        return if (compareToMethod != null && Proxy.isProxyClass(otherRule::class)) {
             require(compareToMethod.parameters.size == 1) { "compareTo method must have a single argument" }
             val ruleProxy = Proxy.getInvocationHandler(otherRule) as RuleProxy
             compareToMethod.invoke(target, ruleProxy.getTarget())
@@ -112,7 +112,7 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
         }
     }
 
-    private fun getActualParameters(method: Method, facts: Facts): MutableList<Any> {
+    private fun getActualParameters(method: KFunction, facts: Facts): MutableList<Any> {
         val actualParameters: MutableList<Any> = ArrayList()
         val parameterAnnotations = method.getParameterAnnotations()
         for (annotations in parameterAnnotations) {
@@ -142,17 +142,17 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
             return false
         }
         val otherRule = args.get(0) as Rule
-        val otherPriority = otherRule.getPriority()
+        val otherPriority = otherRule.priority
         val priority = getRulePriority()
         if (priority != otherPriority) {
             return false
         }
-        val otherName = otherRule.getName()
+        val otherName = otherRule.name
         val name = getRuleName()
         if (name != otherName) {
             return false
         }
-        val otherDescription = otherRule.getDescription()
+        val otherDescription = otherRule.description
         val description = getRuleDescription()
         return description == otherDescription
     }
@@ -167,7 +167,7 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
         return result
     }
 
-    private fun getToStringMethod(): Method? {
+    private fun getToStringMethod(): KFunction? {
         if (toStringMethod == null) {
             val methods = getMethods()
             for (method in methods) {
@@ -192,14 +192,14 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
 
     @Throws(Exception::class)
     private operator fun compareTo(otherRule: Rule): Int {
-        val otherPriority = otherRule.getPriority()
+        val otherPriority = otherRule.priority
         val priority = getRulePriority()
         return if (priority < otherPriority) {
             -1
         } else if (priority > otherPriority) {
             1
         } else {
-            val otherName = otherRule.getName()
+            val otherName = otherRule.name
             val name = getRuleName()
             name.compareTo(otherName)
         }
@@ -225,7 +225,7 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
         return priority
     }
 
-    private fun getConditionMethod(): Method {
+    private fun getConditionMethod(): KFunction {
         if (conditionMethod == null) {
             val methods = getMethods()
             for (method in methods) {
@@ -253,7 +253,7 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
         return actionMethods
     }
 
-    private fun getCompareToMethod(): Method? {
+    private fun getCompareToMethod(): KFunction? {
         if (compareToMethod == null) {
             val methods = getMethods()
             for (method in methods) {
@@ -266,7 +266,7 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
         return compareToMethod
     }
 
-    private fun getMethods(): Array<Method> {
+    private fun getMethods(): Array<KFunction> {
         if (methods == null) {
             methods = getTargetClass().getMethods()
         }
@@ -275,7 +275,7 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
 
     private fun getRuleAnnotation(): org.jeasy.rules.annotation.Rule {
         if (annotation == null) {
-            annotation = Utils.findAnnotation(org.jeasy.rules.annotation.Rule::class, getTargetClass())
+            annotation = Utils.findAnnotation(org.jeasy.rules.annotation.Rule::class.java, getTargetClass())
         }
         return annotation
     }

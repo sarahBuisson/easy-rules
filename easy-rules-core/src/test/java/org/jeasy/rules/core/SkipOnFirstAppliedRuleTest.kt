@@ -23,18 +23,19 @@
  */
 package org.jeasy.rules.core
 
-import org.jeasy.rules.api.Rule
+import io.mockk.MockKAnnotations
+import io.mockk.every
 import org.jeasy.rules.api.RulesEngineParameters
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito
+import kotlin.test.Test
+import io.mockk.verify
+import kotlin.test.BeforeTest
 
 class SkipOnFirstAppliedRuleTest : AbstractTest() {
 
-    @Before
+    @BeforeTest
     @Throws(Exception::class)
     override fun setup() {
+        MockKAnnotations.init(this, relaxed = true)
         super.setup()
         val parameters = RulesEngineParameters().skipOnFirstAppliedRule(true)
         rulesEngine = DefaultRulesEngine(parameters)
@@ -44,8 +45,8 @@ class SkipOnFirstAppliedRuleTest : AbstractTest() {
     @Throws(Exception::class)
     fun testSkipOnFirstAppliedRule() {
         // Given
-        Mockito.`when`(rule2.compareTo(rule1)).thenReturn(1)
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
+        every { rule2.compareTo(rule1) } returns (1)
+        every { rule1.evaluate(facts) } returns (true)
         rules.register(rule1)
         rules.register(rule2)
 
@@ -54,21 +55,21 @@ class SkipOnFirstAppliedRuleTest : AbstractTest() {
 
         // Then
         //Rule 1 should be executed
-        Mockito.verify(rule1).execute(facts)
+        verify { rule1.execute(facts) }
 
         //Rule 2 should be skipped since Rule 1 has been executed
-        Mockito.verify(rule2, Mockito.never()).execute(facts)
+        verify(atMost = 0, atLeast = 0) { rule2.execute(facts) }
     }
 
     @Test
     @Throws(Exception::class)
     fun testSkipOnFirstAppliedRuleWithException() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
-        Mockito.`when`(rule2.evaluate(facts)).thenReturn(true)
-        Mockito.`when`(rule2.compareTo(rule1)).thenReturn(1)
+        every { rule1.evaluate(facts) } returns (true)
+        every { rule2.evaluate(facts) } returns (true)
+        every { rule2.compareTo(rule1) } returns (1)
         val exception = Exception("fatal error!")
-        Mockito.doThrow(exception).`when`(rule1).execute(facts)
+        every { (rule1).execute(facts) }.throws(exception)
         rules.register(rule1)
         rules.register(rule2)
 
@@ -76,6 +77,6 @@ class SkipOnFirstAppliedRuleTest : AbstractTest() {
         rulesEngine.fire(rules, facts)
 
         //If an exception occurs when executing Rule 1, Rule 2 should still be applied
-        Mockito.verify(rule2).execute(facts)
+        verify { rule2.execute(facts) }
     }
 }

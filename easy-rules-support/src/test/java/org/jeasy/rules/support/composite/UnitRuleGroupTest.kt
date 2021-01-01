@@ -23,35 +23,37 @@
  */
 package org.jeasy.rules.support.composite
 
-import org.assertj.core.api.Assertions
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.BasicRule
 import org.jeasy.rules.core.DefaultRulesEngine
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.junit.MockitoJUnitRunner
+import kotlin.test.Test
+import kotlin.test.BeforeTest
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
-@RunWith(MockitoJUnitRunner::class)
 class UnitRuleGroupTest {
-    @Mock
+    @MockK
     private lateinit var rule1: Rule
 
-    @Mock
+    @MockK
     private lateinit var rule2: Rule
     private val facts: Facts = Facts()
     private val rules: Rules = Rules()
     private val rulesEngine: DefaultRulesEngine = DefaultRulesEngine()
     private lateinit var unitRuleGroup: UnitRuleGroup
-    @Before
+
+    @BeforeTest
     fun setUp() {
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
-        Mockito.`when`(rule2.evaluate(facts)).thenReturn(true)
-        Mockito.`when`(rule2.compareTo(rule1)).thenReturn(1)
+        MockKAnnotations.init(this, relaxed = true)
+        every { rule1.evaluate(facts) } returns (true)
+        every { rule2.evaluate(facts) } returns (true)
+        every { rule2.compareTo(rule1) } returns (1)
     }
 
     @Test
@@ -63,7 +65,7 @@ class UnitRuleGroupTest {
         val evaluationResult = unitRuleGroup.evaluate(facts)
 
         // then
-        Assertions.assertThat(evaluationResult).isFalse
+        assertFalse(evaluationResult)
     }
 
     @Test
@@ -79,15 +81,15 @@ class UnitRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Mockito.verify(rule1).execute(facts)
-        Mockito.verify(rule2).execute(facts)
+        verify { (rule1.execute(facts)) }
+        verify { (rule2.execute(facts)) }
     }
 
     @Test
     @Throws(Exception::class)
     fun compositeRuleMustNotBeExecutedIfAComposingRuleEvaluatesToFalse() {
         // Given
-        Mockito.`when`(rule2.evaluate(facts)).thenReturn(false)
+        every { rule2.evaluate(facts) } returns (false)
         unitRuleGroup = UnitRuleGroup()
         unitRuleGroup.addRule(rule1)
         unitRuleGroup.addRule(rule2)
@@ -103,9 +105,9 @@ class UnitRuleGroupTest {
          */
 
         //Rule 1 should not be executed
-        Mockito.verify(rule1, Mockito.never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { rule1.execute(facts) }
         //Rule 2 should not be executed
-        Mockito.verify(rule2, Mockito.never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { rule2.execute(facts) }
     }
 
     @Test
@@ -123,11 +125,12 @@ class UnitRuleGroupTest {
 
         // Then
         //Rule 1 should be executed
-        Mockito.verify(rule1).execute(facts)
+        verify { rule1.execute(facts) }
 
         //Rule 2 should not be evaluated nor executed
-        Mockito.verify(rule2, Mockito.never()).evaluate(facts)
-        Mockito.verify(rule2, Mockito.never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { rule2.evaluate(facts) }
+        verify(atLeast = 0, atMost = 0) { rule2.execute(facts) }
+
     }
 
     @Test
@@ -142,7 +145,7 @@ class UnitRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(rule.isExecuted()).isTrue
+        assertTrue(rule.isExecuted())
     }
 
     class MyRule : BasicRule() {

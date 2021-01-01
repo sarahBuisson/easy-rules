@@ -29,7 +29,6 @@ import org.jeasy.rules.api.RulesEngine
 import org.jeasy.rules.core.DefaultRulesEngine
 
 object Launcher {
-    @JvmStatic
     fun main(args: Array<String>) {
 
         // create facts

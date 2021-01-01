@@ -74,7 +74,7 @@ open class BasicRule
      */
     override fun equals(o: Any?): Boolean {
         if (this === o) return true
-        if (o == null || javaClass != o.javaClass) return false
+        if (o == null) return false
         val basicRule = o as BasicRule
         if (priority != basicRule.priority) return false
         return if (name != basicRule.name) false else description == basicRule.description

@@ -27,14 +27,13 @@ import org.jeasy.rules.api.RuleListener
 import org.jeasy.rules.api.RulesEngine
 import org.jeasy.rules.api.RulesEngineListener
 import org.jeasy.rules.api.RulesEngineParameters
-import java.util.*
 
 /**
  * Base class for [RulesEngine] implementations.
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-abstract class AbstractRulesEngine @JvmOverloads internal constructor(protected var _parameters: RulesEngineParameters = RulesEngineParameters()) :
+abstract class AbstractRulesEngine internal constructor(protected var _parameters: RulesEngineParameters = RulesEngineParameters()) :
     RulesEngine {
     protected var _ruleListeners = mutableListOf<RuleListener>()
     protected var _rulesEngineListeners = mutableListOf<RulesEngineListener> ()
@@ -56,23 +55,23 @@ abstract class AbstractRulesEngine @JvmOverloads internal constructor(protected 
      * Return an unmodifiable list of the registered rule listeners.
      * @return an unmodifiable list of the registered rule listeners
      */
-    override fun getRuleListeners(): MutableList<RuleListener> {
-        return Collections.unmodifiableList(_ruleListeners)
+    override fun getRuleListeners(): List<RuleListener> {
+        return _ruleListeners.toList()
     }
 
     /**
      * Return an unmodifiable list of the registered rules engine listeners
      * @return an unmodifiable list of the registered rules engine listeners
      */
-    override fun getRulesEngineListeners(): MutableList<RulesEngineListener> {
-        return Collections.unmodifiableList(_rulesEngineListeners)
+    override fun getRulesEngineListeners(): List<RulesEngineListener> {
+        return _rulesEngineListeners.toList()
     }
 
     open fun registerRuleListener(ruleListener: RuleListener) {
         _ruleListeners.add(ruleListener)
     }
 
-    open fun registerRuleListeners(ruleListeners: MutableList<RuleListener>) {
+    open fun registerRuleListeners(ruleListeners: List<RuleListener>) {
         this._ruleListeners.addAll(ruleListeners)
     }
 
@@ -80,7 +79,7 @@ abstract class AbstractRulesEngine @JvmOverloads internal constructor(protected 
         _rulesEngineListeners.add(rulesEngineListener)
     }
 
-    open fun registerRulesEngineListeners(rulesEngineListeners: MutableList<RulesEngineListener>) {
+    open fun registerRulesEngineListeners(rulesEngineListeners: List<RulesEngineListener>) {
         this._rulesEngineListeners.addAll(rulesEngineListeners)
     }
 }

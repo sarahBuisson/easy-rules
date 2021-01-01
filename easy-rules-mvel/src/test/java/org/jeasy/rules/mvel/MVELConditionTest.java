@@ -25,10 +25,10 @@ package org.jeasy.rules.mvel;
 
 import org.jeasy.rules.api.Condition;
 import org.jeasy.rules.api.Facts;
-import org.junit.Test;
+import kotlin.test.Test;
 import org.mvel2.ParserContext;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.assertTrue;
 
 public class MVELConditionTest {
 

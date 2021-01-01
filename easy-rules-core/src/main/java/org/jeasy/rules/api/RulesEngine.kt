@@ -41,7 +41,7 @@ interface RulesEngine {
      *
      * @return the list of registered rule listeners
      */
-    open fun getRuleListeners(): MutableList<RuleListener> {
+    open fun getRuleListeners(): List<RuleListener> {
         return mutableListOf()
     }
 
@@ -50,7 +50,7 @@ interface RulesEngine {
      *
      * @return the list of registered rules engine listeners
      */
-    open fun getRulesEngineListeners(): MutableList<RulesEngineListener> {
+    open fun getRulesEngineListeners(): List<RulesEngineListener> {
         return mutableListOf()
     }
 

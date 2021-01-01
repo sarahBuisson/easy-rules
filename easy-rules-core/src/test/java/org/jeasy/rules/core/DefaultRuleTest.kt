@@ -23,26 +23,29 @@
  */
 package org.jeasy.rules.core
 
+import io.mockk.every
+import io.mockk.verify
+import io.mockk.impl.annotations.MockK
+import io.mockk.verifyOrder
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
-import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito
+import kotlin.test.Test
 
 class DefaultRuleTest : AbstractTest() {
-    @Mock
-    private lateinit var  condition: Condition
+    @MockK
+    private lateinit var condition: Condition
 
-    @Mock
-    private lateinit var  action1: Action
+    @MockK
+    private lateinit var action1: Action
 
-    @Mock
-    private lateinit var  action2: Action
+    @MockK
+    private lateinit var action2: Action
+
     @Test
     @Throws(Exception::class)
     fun WhenConditionIsTrue_ThenActionsShouldBeExecutedInOrder() {
         // given
-        Mockito.`when`(condition.evaluate(facts)).thenReturn(true)
+        every { condition.evaluate(facts) } returns (true)
         val rule = RuleBuilder()
             .`when`(condition)
             .then(action1)
@@ -54,16 +57,17 @@ class DefaultRuleTest : AbstractTest() {
         rulesEngine.fire(rules, facts)
 
         // then
-        val inOrder = Mockito.inOrder(action1, action2)
-        inOrder.verify(action1).execute(facts)
-        inOrder.verify(action2).execute(facts)
+        verifyOrder {
+            (action1).execute(facts)
+            (action2).execute(facts)
+        }
     }
 
     @Test
     @Throws(Exception::class)
     fun WhenConditionIsFalse_ThenActionsShouldNotBeExecuted() {
         // given
-        Mockito.`when`(condition.evaluate(facts)).thenReturn(false)
+        every { condition.evaluate(facts) } returns (false)
         val rule = RuleBuilder()
             .`when`(condition)
             .then(action1)
@@ -75,7 +79,7 @@ class DefaultRuleTest : AbstractTest() {
         rulesEngine.fire(rules, facts)
 
         // then
-        Mockito.verify(action1, Mockito.never()).execute(facts)
-        Mockito.verify(action2, Mockito.never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { action1.execute(facts) }
+        verify(atLeast = 0, atMost = 0) { action2.execute(facts) }
     }
 }

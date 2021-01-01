@@ -23,29 +23,30 @@
  */
 package org.jeasy.rules.core
 
+import io.mockk.MockKAnnotations
 import org.jeasy.rules.api.*
-import org.junit.Before
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import io.mockk.impl.annotations.MockK
+import kotlin.test.BeforeTest
 
-@RunWith(MockitoJUnitRunner::class)
 abstract class AbstractTest {
-    @Mock
+
+    @MockK
     protected lateinit var rule1: Rule
-    @Mock
+    @MockK
     protected lateinit var rule2: Rule
-    @Mock
+    @MockK
     protected lateinit var fact1: Any 
 
-    @Mock
+    @MockK
     protected lateinit var fact2: Any 
     protected lateinit var facts: Facts 
     protected lateinit var rules: Rules
     protected lateinit var rulesEngine: DefaultRulesEngine
-    @Before
+
+    @BeforeTest
     @Throws(Exception::class)
     open fun setup() {
+        MockKAnnotations.init(this, relaxed = true)
         facts = Facts()
         facts.put("fact1", fact1)
         facts.put("fact2", fact2)

@@ -21,18 +21,36 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-package org.jeasy.rules.annotation
+package org.jeasy.rules.core
 
-import org.jeasy.rules.api.Facts
+import io.mockk.MockKAnnotations
+import io.mockk.impl.annotations.MockK
+import org.jeasy.rules.api.*
+import kotlin.test.BeforeTest
 
-@Rule
-class AnnotatedRuleWithActionMethodHavingMoreThanOneArgumentOfTypeFacts {
-    @Condition
-    fun `when`(): Boolean {
-        return true
-    }
+abstract class AbstractTest {
 
-    @Action
-    fun then(facts: Facts?, otherFacts: Facts?) {
+    @MockK
+    protected lateinit var rule1: Rule
+    @MockK
+    protected lateinit var rule2: Rule
+    @MockK
+    protected lateinit var fact1: Any 
+
+    @MockK
+    protected lateinit var fact2: Any 
+    protected lateinit var facts: Facts 
+    protected lateinit var rules: Rules
+    protected lateinit var rulesEngine: DefaultRulesEngine
+
+    @BeforeTest
+    @Throws(Exception::class)
+    open fun setup() {
+        MockKAnnotations.init(this, relaxed = true)
+        facts = Facts()
+        facts.put("fact1", fact1)
+        facts.put("fact2", fact2)
+        rules = Rules()
+        rulesEngine = DefaultRulesEngine()
     }
 }

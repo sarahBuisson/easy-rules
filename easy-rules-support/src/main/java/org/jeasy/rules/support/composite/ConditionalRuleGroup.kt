@@ -25,7 +25,6 @@ package org.jeasy.rules.support.composite
 
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
-import java.util.*
 
 /**
  * A conditional rule group is a composite rule where the rule with the highest
@@ -119,6 +118,6 @@ class ConditionalRuleGroup : CompositeRule {
     }
 
     private fun sort(rules: MutableSet<Rule>): MutableList<Rule> {
-        return ArrayList(TreeSet(rules))
+        return ArrayList(rules.toList().sorted())
     }
 }

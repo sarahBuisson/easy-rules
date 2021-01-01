@@ -23,10 +23,8 @@
  */
 package org.jeasy.rules.support.composite
 
-import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.core.BasicRule
-import java.util.*
 
 /**
  * Base class representing a composite rule composed of a set of rules.
@@ -36,7 +34,7 @@ import java.util.*
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-abstract class CompositeRule @JvmOverloads constructor(
+abstract class CompositeRule constructor(
     name: String = Rule.DEFAULT_NAME,
     description: String = Rule.DEFAULT_DESCRIPTION,
     priority: Int = Rule.DEFAULT_PRIORITY
@@ -44,7 +42,7 @@ abstract class CompositeRule @JvmOverloads constructor(
     /**
      * The set of composing rules.
      */
-    protected var rules: MutableSet<Rule> = TreeSet()
+    protected var rules: MutableSet<Rule> = mutableSetOf()
 
     /**
      * Add a rule to the composite rule.
@@ -60,6 +58,5 @@ abstract class CompositeRule @JvmOverloads constructor(
      */
     fun removeRule(rule: Rule) {
             rules.remove(rule)
-
     }
 }

@@ -24,7 +24,6 @@
 package org.jeasy.rules.support
 
 import org.jeasy.rules.api.Rule
-import java.util.*
 
 /**
  * Rule definition as defined in a rule descriptor.

@@ -23,10 +23,9 @@
  */
 package org.jeasy.rules.core
 
+import mu.KotlinLogging
 import org.jeasy.rules.api.*
 import org.jeasy.rules.core.InferenceRulesEngine
-import org.slf4j.LoggerFactory
-import java.util.*
 
 /**
  * Inference [RulesEngine] implementation.
@@ -43,18 +42,18 @@ class InferenceRulesEngine constructor(parameters: RulesEngineParameters = Rules
     override fun fire(rules: Rules, facts: Facts) {
         var selectedRules: MutableSet<Rule>
         do {
-            LOGGER.debug("Selecting candidate rules based on the following facts: {}", facts)
+            LOGGER.debug { "Selecting candidate rules based on the following facts: ${facts}" }
             selectedRules = selectCandidates(rules, facts)
             if (!selectedRules.isEmpty()) {
                 delegate.fire(Rules(selectedRules), facts)
             } else {
-                LOGGER.debug("No candidate rules found for facts: {}", facts)
+                LOGGER.debug { "No candidate rules found for facts: ${facts}" }
             }
         } while (!selectedRules.isEmpty())
     }
 
     private fun selectCandidates(rules: Rules, facts: Facts): MutableSet<Rule> {
-        val candidates: MutableSet<Rule> = TreeSet()
+        val candidates: MutableSet<Rule> = mutableSetOf()
         for (rule in rules) {
             if (rule.evaluate(facts)) {
                 candidates.add(rule)
@@ -80,7 +79,7 @@ class InferenceRulesEngine constructor(parameters: RulesEngineParameters = Rules
      * Register a list of rule listener.
      * @param ruleListeners to register
      */
-    override fun registerRuleListeners(ruleListeners: MutableList<RuleListener>) {
+    override fun registerRuleListeners(ruleListeners: List<RuleListener>) {
         super.registerRuleListeners(ruleListeners)
         delegate.registerRuleListeners(ruleListeners)
     }
@@ -98,13 +97,13 @@ class InferenceRulesEngine constructor(parameters: RulesEngineParameters = Rules
      * Register a list of rules engine listener.
      * @param rulesEngineListeners to register
      */
-    override fun registerRulesEngineListeners(rulesEngineListeners: MutableList<RulesEngineListener>) {
+    override fun registerRulesEngineListeners(rulesEngineListeners: List<RulesEngineListener>) {
         super.registerRulesEngineListeners(rulesEngineListeners)
         delegate.registerRulesEngineListeners(rulesEngineListeners)
     }
 
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(InferenceRulesEngine::class.java)
+        private val LOGGER = KotlinLogging.logger {}
     }
     /**
      * Create a new inference rules engine.

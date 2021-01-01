@@ -29,7 +29,7 @@ import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.support.composite.UnitRuleGroup;
 import org.jeasy.rules.support.reader.JsonRuleDefinitionReader;
 import org.jeasy.rules.support.reader.YamlRuleDefinitionReader;
-import org.junit.Test;
+import kotlin.test.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -44,7 +44,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.assertTrue;
 
 @RunWith(Parameterized.class)
 public class SpELRuleFactoryTest {
@@ -72,7 +72,7 @@ public class SpELRuleFactoryTest {
         Rules rules = factory.createRules(new FileReader(rulesDescriptor));
 
         // then
-        assertThat(rules).hasSize(2);
+        assertThat(rules.asMap().size, 2);
         Iterator<Rule> iterator = rules.iterator();
 
         Rule rule = iterator.next();
@@ -126,7 +126,7 @@ public class SpELRuleFactoryTest {
         Rules rules = factory.createRules(new FileReader(rulesDescriptor));
 
         // then
-        assertThat(rules).hasSize(2);
+        assertThat(rules.asMap().size, 2);
         Iterator<Rule> iterator = rules.iterator();
 
         Rule rule = iterator.next();

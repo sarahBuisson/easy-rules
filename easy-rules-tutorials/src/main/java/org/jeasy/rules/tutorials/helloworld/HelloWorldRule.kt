@@ -23,20 +23,17 @@
  */
 package org.jeasy.rules.tutorials.helloworld
 
-import org.jeasy.rules.annotation.Action
-import org.jeasy.rules.annotation.Condition
-import org.jeasy.rules.annotation.Rule
+import org.jeasy.rules.api.Facts
 import org.jeasy.rules.core.BasicRule
 
-@Rule(name = "Hello World rule", description = "Always say hello world")
-class HelloWorldRule : BasicRule() {
 
-    fun ev(): Boolean {
+class HelloWorldRule : BasicRule(name = "Hello World rule", description = "Always say hello world") {
+
+    override fun evaluate(facts: Facts): Boolean {
         return true
     }
 
-    @Action
-    fun then() {
+    override fun execute(facts: Facts) {
         println("hello world")
     }
 }

@@ -30,7 +30,6 @@ import org.jeasy.rules.core.InferenceRulesEngine
 import org.jeasy.rules.core.RuleBuilder
 
 object Launcher {
-    @JvmStatic
     fun main(args: Array<String>) {
         // define facts
         val facts = Facts()

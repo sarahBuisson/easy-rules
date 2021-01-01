@@ -23,14 +23,13 @@
  */
 package org.jeasy.rules.support
 
+import mu.KotlinLogging
 import org.jeasy.rules.api.Rule
 import org.jeasy.rules.support.AbstractRuleFactory
 import org.jeasy.rules.support.composite.ActivationRuleGroup
 import org.jeasy.rules.support.composite.CompositeRule
 import org.jeasy.rules.support.composite.ConditionalRuleGroup
 import org.jeasy.rules.support.composite.UnitRuleGroup
-import org.slf4j.LoggerFactory
-import java.util.*
 
 /**
  * Base class for rule factories.
@@ -49,20 +48,16 @@ abstract class AbstractRuleFactory {
     protected abstract fun createSimpleRule(ruleDefinition: RuleDefinition): Rule
     protected fun createCompositeRule(ruleDefinition: RuleDefinition): Rule {
         if (ruleDefinition.condition != null) {
-            LOGGER.warn(
-                "Condition '{}' in composite rule '{}' of type {} will be ignored.",
-                ruleDefinition.condition,
-                ruleDefinition.name,
-                ruleDefinition.compositeRuleType
-            )
+            LOGGER.warn {
+                "Condition '${ruleDefinition.condition}' in composite rule '${ruleDefinition.name}' of type ${ruleDefinition.compositeRuleType} will be ignored."
+
+            }
         }
         if (ruleDefinition.actions != null && !ruleDefinition.actions.isEmpty()) {
-            LOGGER.warn(
-                "Actions '{}' in composite rule '{}' of type {} will be ignored.",
-                ruleDefinition.actions,
-                ruleDefinition.name,
-                ruleDefinition.compositeRuleType
-            )
+            LOGGER.warn {
+                "Actions '${ruleDefinition.actions}' in composite rule '${ruleDefinition.name}' of type ${ruleDefinition.compositeRuleType} will be ignored."
+
+            }
         }
         val compositeRule: CompositeRule
         val name = ruleDefinition.name
@@ -72,8 +67,8 @@ abstract class AbstractRuleFactory {
             "ConditionalRuleGroup" -> ConditionalRuleGroup(name)
             else -> throw IllegalArgumentException("Invalid composite rule type, must be one of " + ALLOWED_COMPOSITE_RULE_TYPES)
         }
-        compositeRule.description=(ruleDefinition.description)
-        compositeRule.priority=(ruleDefinition.priority)
+        compositeRule.description = (ruleDefinition.description)
+        compositeRule.priority = (ruleDefinition.priority)
         for (composingRuleDefinition in ruleDefinition.composingRules) {
             compositeRule.addRule(createRule(composingRuleDefinition))
         }
@@ -81,11 +76,11 @@ abstract class AbstractRuleFactory {
     }
 
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(AbstractRuleFactory::class.java)
-        private val ALLOWED_COMPOSITE_RULE_TYPES = Arrays.asList(
-            UnitRuleGroup::class.java.simpleName,
-            ConditionalRuleGroup::class.java.simpleName,
-            ActivationRuleGroup::class.java.simpleName
+        private val LOGGER = KotlinLogging.logger { }
+        private val ALLOWED_COMPOSITE_RULE_TYPES = listOf(
+            "UnitRuleGroup",
+            "ConditionalRuleGroup",
+            "ActivationRuleGroup"
         )
     }
 }

@@ -23,19 +23,11 @@
  */
 package org.jeasy.rules.support.composite
 
-import org.assertj.core.api.Assertions
-import org.jeasy.rules.annotation.Action
-import org.jeasy.rules.annotation.Condition
-import org.jeasy.rules.annotation.Priority
-import org.jeasy.rules.annotation.Rule
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.core.BasicRule
 import org.jeasy.rules.core.DefaultRulesEngine
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import java.util.*
+import kotlin.test.*
 
 class ConditionalRuleGroupTest {
     private lateinit var rule1: TestRule
@@ -46,7 +38,7 @@ class ConditionalRuleGroupTest {
     private val rules: Rules = Rules()
     private val rulesEngine: DefaultRulesEngine = DefaultRulesEngine()
 
-    @Before
+    @BeforeTest
     fun setUp() {
         conditionalRule = TestRule("conditionalRule", "description0", 0, true)
         rule1 = TestRule("rule1", "description1", 1, true)
@@ -58,7 +50,7 @@ class ConditionalRuleGroupTest {
         rules.register(conditionalRuleGroup)
     }
 
-    @After
+    @AfterTest
     fun tearDown() {
         rules.clear()
         actions.clear()
@@ -67,7 +59,7 @@ class ConditionalRuleGroupTest {
     @Test
     fun rulesMustNotBeExecutedIfConditionalRuleEvaluatesToFalse() {
         // Given
-        conditionalRule.evaluationResult = (false)
+        conditionalRule.evaluationResult = false
 
         // When
         rulesEngine.fire(rules, facts)
@@ -79,11 +71,11 @@ class ConditionalRuleGroupTest {
          */
 
         // primaryRule should not be executed
-        Assertions.assertThat(conditionalRule.isExecuted()).isFalse
+        assertFalse(conditionalRule.isExecuted())
         //Rule 1 should not be executed
-        Assertions.assertThat(rule1.isExecuted()).isFalse
+        assertFalse(rule1.isExecuted())
         //Rule 2 should not be executed
-        Assertions.assertThat(rule2.isExecuted()).isFalse
+        assertFalse(rule2.isExecuted())
     }
 
     @Test
@@ -101,11 +93,11 @@ class ConditionalRuleGroupTest {
          */
 
         // primaryRule should be executed
-        Assertions.assertThat(conditionalRule.isExecuted()).isTrue
+        assertTrue(conditionalRule.isExecuted())
         //Rule 1 should not be executed
-        Assertions.assertThat(rule1.isExecuted()).isFalse
+        assertFalse(rule1.isExecuted())
         //Rule 2 should be executed
-        Assertions.assertThat(rule2.isExecuted()).isTrue
+        assertTrue(rule2.isExecuted())
     }
 
     @Test
@@ -118,11 +110,11 @@ class ConditionalRuleGroupTest {
 
         // Then
         // primaryRule should be executed
-        Assertions.assertThat(conditionalRule.isExecuted()).isTrue
+        assertTrue(conditionalRule.isExecuted())
         //Rule 1 should be executed
-        Assertions.assertThat(rule1.isExecuted()).isTrue
+        assertTrue(rule1.isExecuted())
         // Rule 2 should not be executed
-        Assertions.assertThat(rule2.isExecuted()).isFalse
+        assertFalse(rule2.isExecuted())
     }
 
     @Test
@@ -135,34 +127,35 @@ class ConditionalRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(conditionalRule.isExecuted()).isTrue
-        Assertions.assertThat(rule.isExecuted()).isTrue
+        assertTrue(conditionalRule.isExecuted())
+        assertTrue(rule.isExecuted())
     }
-/*
+
+    /*
+        @Test
+        fun whenAnnotatedRuleIsRemoved_thenItsProxyShouldBeRetrieved() {
+            // Given
+            val rule = MyRule()
+            val annotatedRule = MyAnnotatedRule()
+            conditionalRuleGroup.addRule(rule)
+            conditionalRuleGroup.addRule(annotatedRule)
+            conditionalRuleGroup.removeRule(annotatedRule)
+
+            // When
+            rulesEngine.fire(rules, facts)
+
+            // Then
+            assertTrue(conditionalRule.isExecuted()).isTrue
+            assertTrue(rule.isExecuted()).isTrue
+            assertTrue(annotatedRule.isExecuted()).isFalse
+        }
+    */
     @Test
-    fun whenAnnotatedRuleIsRemoved_thenItsProxyShouldBeRetrieved() {
-        // Given
-        val rule = MyRule()
-        val annotatedRule = MyAnnotatedRule()
-        conditionalRuleGroup.addRule(rule)
-        conditionalRuleGroup.addRule(annotatedRule)
-        conditionalRuleGroup.removeRule(annotatedRule)
-
-        // When
-        rulesEngine.fire(rules, facts)
-
-        // Then
-        Assertions.assertThat(conditionalRule.isExecuted()).isTrue
-        Assertions.assertThat(rule.isExecuted()).isTrue
-        Assertions.assertThat(annotatedRule.isExecuted()).isFalse
-    }
-*/
-    @Test(expected = IllegalArgumentException::class)
     fun twoRulesWithSameHighestPriorityIsNotAllowed() {
         conditionalRuleGroup.addRule(MyOtherRule(0)) // same priority as conditionalRule
         conditionalRuleGroup.addRule(MyOtherRule(1))
         conditionalRuleGroup.addRule(MyRule())
-        conditionalRuleGroup.evaluate(facts)
+        assertFailsWith(IllegalArgumentException::class) { conditionalRuleGroup.evaluate(facts) }
     }
 
     @Test
@@ -173,7 +166,7 @@ class ConditionalRuleGroupTest {
         conditionalRuleGroup.addRule(MyRule())
         rules.register(conditionalRuleGroup)
         rulesEngine.fire(rules, facts)
-        Assertions.assertThat(rule1.isExecuted()).isTrue
+        assertTrue(rule1.isExecuted())
     }
 
     @Test
@@ -186,12 +179,18 @@ class ConditionalRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // then
-        Assertions.assertThat(actions).containsExactly(
-            "conditionalRule",
-            "rule1",
-            "rule2",
-            "UnprioritizedRule"
+        assertTrue(
+            actions.containsAll(
+                listOf(
+                    "conditionalRule",
+                    "rule1",
+                    "rule2",
+                    "UnprioritizedRule"
+                )
+            )
         )
+
+        assertEquals(actions.size, 4)
     }
 
     @Test
@@ -202,15 +201,19 @@ class ConditionalRuleGroupTest {
         // Then
         // rule 1 has higher priority than rule 2 (lower values for highers priorities),
         // it should be executed first
-        Assertions.assertThat(actions).containsExactly(
-            "conditionalRule",
-            "rule1",
-            "rule2"
+        assertTrue(
+            actions.containsAll(
+                listOf(
+                    "conditionalRule",
+                    "rule1",
+                    "rule2"
+                )
+            )
         )
+        assertEquals(actions.size, 3)
     }
 
-    @Rule
-    class MyRule : BasicRule() {
+    class MyRule : BasicRule(priority = 2) {
         private var executed = false
 
         override fun evaluate(facts: Facts): Boolean {
@@ -221,33 +224,22 @@ class ConditionalRuleGroupTest {
             executed = true
         }
 
-        @Priority
-        fun priority(): Int {
-            return 2
-        }
-
         fun isExecuted(): Boolean {
             return executed
         }
     }
 
-    @Rule
-    class MyAnnotatedRule {
+    class MyAnnotatedRule : BasicRule(priority = 3) {
         private var executed = false
 
-        @Condition
-        fun evaluate(): Boolean {
+
+        override fun evaluate(facts: Facts): Boolean {
             return true
         }
 
-        @Action
-        fun execute() {
-            executed = true
-        }
 
-        @Priority
-        fun priority(): Int {
-            return 3
+        override fun execute(facts: Facts) {
+            executed = true
         }
 
         fun isExecuted(): Boolean {
@@ -255,7 +247,6 @@ class ConditionalRuleGroupTest {
         }
     }
 
-    @Rule
     class MyOtherRule(priority: Int) : BasicRule(priority = priority) {
         private var executed = false
 
@@ -272,7 +263,6 @@ class ConditionalRuleGroupTest {
         }
     }
 
-    @Rule
     class UnprioritizedRule : BasicRule() {
         var executed = false
         override fun evaluate(facts: Facts): Boolean {

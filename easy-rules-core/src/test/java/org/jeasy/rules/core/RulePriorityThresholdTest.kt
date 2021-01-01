@@ -23,20 +23,19 @@
  */
 package org.jeasy.rules.core
 
-import org.jeasy.rules.api.Rule
+import io.mockk.every
+import io.mockk.verify
 import org.jeasy.rules.api.RulesEngineParameters
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 class RulePriorityThresholdTest : AbstractTest() {
-    @Before
+    @BeforeTest
     @Throws(Exception::class)
     override fun setup() {
         super.setup()
-        Mockito.`when`(rule1.priority).thenReturn(1)
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
+        every { rule1.priority } returns (1)
+        every { rule1.evaluate(facts) } returns (true)
         val parameters = RulesEngineParameters().priorityThreshold(1)
         rulesEngine = DefaultRulesEngine(parameters)
     }
@@ -53,8 +52,8 @@ class RulePriorityThresholdTest : AbstractTest() {
 
         // Then
         //Rule 1 should be executed
-        Mockito.verify(rule1).execute(facts)
+        verify { rule1.execute(facts) }
         //Rule 2 should be skipped since its priority (2) exceeds priority threshold (1)
-        Mockito.verify(rule2, Mockito.never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { rule2.execute(facts) }
     }
 }

@@ -27,7 +27,7 @@ import org.assertj.core.api.Assertions
 import org.jeasy.rules.annotation.Action
 import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.core.BasicRule
-import org.junit.Test
+import kotlin.test.Test
 import java.util.*
 
 class RulesTest {
@@ -35,7 +35,7 @@ class RulesTest {
     @Test
     fun register() {
         rules.register(DummyRule())
-        Assertions.assertThat(rules).hasSize(1)
+        assertTrue(rules.asMap().size, 1)
     }
 
     @Test
@@ -46,7 +46,7 @@ class RulesTest {
         ruleSet.add(r1)
         ruleSet.add(r2)
         rules = Rules(ruleSet)
-        Assertions.assertThat(rules).hasSize(1)
+        assertTrue(rules.asMap().size, 1)
     }
 
     @Test
@@ -54,7 +54,7 @@ class RulesTest {
         val rule = DummyRule()
         rules.register(rule)
         rules.unregister(rule)
-        Assertions.assertThat(rules).isEmpty()
+        assertTrue(rules).isEmpty()
     }
 
     @Test
@@ -66,7 +66,7 @@ class RulesTest {
         ruleSet.add(r2)
         rules = Rules(ruleSet)
         rules.unregister("rule2")
-        Assertions.assertThat(rules).hasSize(1).containsExactly(r1)
+        assertTrue(rules.asMap().size, 1).containsExactly(r1)
     }
 
     @Test
@@ -76,19 +76,19 @@ class RulesTest {
         ruleSet.add(r1)
         rules = Rules(ruleSet)
         rules.unregister("rule2")
-        Assertions.assertThat(rules).hasSize(1).containsExactly(r1)
+        assertTrue(rules.asMap().size, 1).containsExactly(r1)
     }
 
     @Test
     fun isEmpty() {
-        Assertions.assertThat(rules.isEmpty()).isTrue
+        assertTrue(rules.isEmpty()).isTrue
     }
 
     @Test
     fun clear() {
         rules.register(DummyRule())
         rules.clear()
-        Assertions.assertThat(rules).isEmpty()
+        assertTrue(rules).isEmpty()
     }
 
     @Test
@@ -99,38 +99,38 @@ class RulesTest {
         rules.register(r3)
         rules.register(r1)
         rules.register(r2)
-        Assertions.assertThat(rules).startsWith(r1).endsWith(r2)
+        assertTrue(rules).startsWith(r1).endsWith(r2)
     }
 
     @Test
     fun size() {
-        Assertions.assertThat(rules.size()).isEqualTo(0)
+        assertTrue(rules.size()).isEqualTo(0)
         rules.register(DummyRule())
-        Assertions.assertThat(rules.size()).isEqualTo(1)
+        assertTrue(rules.size()).isEqualTo(1)
         rules.unregister(DummyRule())
-        Assertions.assertThat(rules.size()).isEqualTo(0)
+        assertTrue(rules.size()).isEqualTo(0)
     }
 
     @Test
     fun register_multiple() {
         rules.register(BasicRule("ruleA"), BasicRule("ruleB"))
-        Assertions.assertThat(rules.size()).isEqualTo(2)
+        assertTrue(rules.size()).isEqualTo(2)
     }
 
     @Test
     fun unregister_noneLeft() {
         rules.register(BasicRule("ruleA"), BasicRule("ruleB"))
-        Assertions.assertThat(rules.size()).isEqualTo(2)
+        assertTrue(rules.size()).isEqualTo(2)
         rules.unregister(BasicRule("ruleA"), BasicRule("ruleB"))
-        Assertions.assertThat(rules.size()).isEqualTo(0)
+        assertTrue(rules.size()).isEqualTo(0)
     }
 
     @Test
     fun unregister_oneLeft() {
         rules.register(BasicRule("ruleA"), BasicRule("ruleB"))
-        Assertions.assertThat(rules.size()).isEqualTo(2)
+        assertTrue(rules.size()).isEqualTo(2)
         rules.unregister(BasicRule("ruleA"))
-        Assertions.assertThat(rules.size()).isEqualTo(1)
+        assertTrue(rules.size()).isEqualTo(1)
     }
 
     @Test(expected = NullPointerException::class)

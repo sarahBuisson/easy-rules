@@ -25,7 +25,7 @@ package org.jeasy.rules.support.reader
 
 import org.assertj.core.api.Assertions
 import org.jeasy.rules.api.Rule
-import org.junit.Test
+import kotlin.test.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import java.io.File
@@ -52,15 +52,15 @@ class RuleDefinitionReaderTest {
         val ruleDefinitions = ruleDefinitionReader.read(FileReader(adultRuleDescriptor))
 
         // then
-        Assertions.assertThat(ruleDefinitions).hasSize(1)
+        assertTrue(ruleDefinitions.asMap().size, 1)
         val adultRuleDefinition = ruleDefinitions[0]
-        Assertions.assertThat(adultRuleDefinition).isNotNull
-        Assertions.assertThat(adultRuleDefinition.name).isEqualTo("adult rule")
-        Assertions.assertThat(adultRuleDefinition.description)
+        assertTrue(adultRuleDefinition).isNotNull
+        assertTrue(adultRuleDefinition.name,"adult rule")
+        assertTrue(adultRuleDefinition.description)
             .isEqualTo("when age is greater than 18, then mark as adult")
-        Assertions.assertThat(adultRuleDefinition.priority).isEqualTo(1)
-        Assertions.assertThat(adultRuleDefinition.condition).isEqualTo("person.age > 18")
-        Assertions.assertThat(adultRuleDefinition.actions).isEqualTo(listOf<String?>("person.setAdult(true);"))
+        assertTrue(adultRuleDefinition.priority,1)
+        assertTrue(adultRuleDefinition.condition,"person.age > 18")
+        assertTrue(adultRuleDefinition.actions,listOf<String?>("person.setAdult(true);"))
     }
 
     @Test
@@ -74,15 +74,15 @@ class RuleDefinitionReaderTest {
         val ruleDefinitions = ruleDefinitionReader.read(StringReader(adultRuleDescriptor))
 
         // then
-        Assertions.assertThat(ruleDefinitions).hasSize(1)
+        assertTrue(ruleDefinitions.asMap().size, 1)
         val adultRuleDefinition = ruleDefinitions[0]
-        Assertions.assertThat(adultRuleDefinition).isNotNull
-        Assertions.assertThat(adultRuleDefinition.name).isEqualTo("adult rule")
-        Assertions.assertThat(adultRuleDefinition.description)
+        assertTrue(adultRuleDefinition).isNotNull
+        assertTrue(adultRuleDefinition.name,"adult rule")
+        assertTrue(adultRuleDefinition.description)
             .isEqualTo("when age is greater than 18, then mark as adult")
-        Assertions.assertThat(adultRuleDefinition.priority).isEqualTo(1)
-        Assertions.assertThat(adultRuleDefinition.condition).isEqualTo("person.age > 18")
-        Assertions.assertThat(adultRuleDefinition.actions).isEqualTo(listOf<String?>("person.setAdult(true);"))
+        assertTrue(adultRuleDefinition.priority,1)
+        assertTrue(adultRuleDefinition.condition,"person.age > 18")
+        assertTrue(adultRuleDefinition.actions,listOf<String?>("person.setAdult(true);"))
     }
 
     @Test
@@ -95,14 +95,14 @@ class RuleDefinitionReaderTest {
         val ruleDefinitions = ruleDefinitionReader.read(FileReader(adultRuleDescriptor))
 
         // then
-        Assertions.assertThat(ruleDefinitions).hasSize(1)
+        assertTrue(ruleDefinitions.asMap().size, 1)
         val adultRuleDefinition = ruleDefinitions[0]
-        Assertions.assertThat(adultRuleDefinition).isNotNull
-        Assertions.assertThat(adultRuleDefinition.name).isEqualTo(Rule.DEFAULT_NAME)
-        Assertions.assertThat(adultRuleDefinition.description).isEqualTo(Rule.DEFAULT_DESCRIPTION)
-        Assertions.assertThat(adultRuleDefinition.priority).isEqualTo(Rule.DEFAULT_PRIORITY)
-        Assertions.assertThat(adultRuleDefinition.condition).isEqualTo("person.age > 18")
-        Assertions.assertThat(adultRuleDefinition.actions).isEqualTo(listOf<String?>("person.setAdult(true);"))
+        assertTrue(adultRuleDefinition).isNotNull
+        assertTrue(adultRuleDefinition.name,Rule.DEFAULT_NAME)
+        assertTrue(adultRuleDefinition.description,Rule.DEFAULT_DESCRIPTION)
+        assertTrue(adultRuleDefinition.priority,Rule.DEFAULT_PRIORITY)
+        assertTrue(adultRuleDefinition.condition,"person.age > 18")
+        assertTrue(adultRuleDefinition.actions,listOf<String?>("person.setAdult(true);"))
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -141,21 +141,21 @@ class RuleDefinitionReaderTest {
         val ruleDefinitions = ruleDefinitionReader.read(FileReader(rulesDescriptor))
 
         // then
-        Assertions.assertThat(ruleDefinitions).hasSize(2)
+        assertTrue(ruleDefinitions.asMap().size, 2)
         var ruleDefinition = ruleDefinitions[0]
-        Assertions.assertThat(ruleDefinition).isNotNull
-        Assertions.assertThat(ruleDefinition.name).isEqualTo("adult rule")
-        Assertions.assertThat(ruleDefinition.description).isEqualTo("when age is greater than 18, then mark as adult")
-        Assertions.assertThat(ruleDefinition.priority).isEqualTo(1)
-        Assertions.assertThat(ruleDefinition.condition).isEqualTo("person.age > 18")
-        Assertions.assertThat(ruleDefinition.actions).isEqualTo(listOf<String?>("person.setAdult(true);"))
+        assertTrue(ruleDefinition).isNotNull
+        assertTrue(ruleDefinition.name,"adult rule")
+        assertTrue(ruleDefinition.description,"when age is greater than 18, then mark as adult")
+        assertTrue(ruleDefinition.priority,1)
+        assertTrue(ruleDefinition.condition,"person.age > 18")
+        assertTrue(ruleDefinition.actions,listOf<String?>("person.setAdult(true);"))
         ruleDefinition = ruleDefinitions[1]
-        Assertions.assertThat(ruleDefinition).isNotNull
-        Assertions.assertThat(ruleDefinition.name).isEqualTo("weather rule")
-        Assertions.assertThat(ruleDefinition.description).isEqualTo("when it rains, then take an umbrella")
-        Assertions.assertThat(ruleDefinition.priority).isEqualTo(2)
-        Assertions.assertThat(ruleDefinition.condition).isEqualTo("rain == true")
-        Assertions.assertThat(ruleDefinition.actions)
+        assertTrue(ruleDefinition).isNotNull
+        assertTrue(ruleDefinition.name,"weather rule")
+        assertTrue(ruleDefinition.description,"when it rains, then take an umbrella")
+        assertTrue(ruleDefinition.priority,2)
+        assertTrue(ruleDefinition.condition,"rain == true")
+        assertTrue(ruleDefinition.actions)
             .isEqualTo(listOf<String?>("System.out.println(\"It rains, take an umbrella!\");"))
     }
 
@@ -169,7 +169,7 @@ class RuleDefinitionReaderTest {
         val ruleDefinitions = ruleDefinitionReader.read(FileReader(rulesDescriptor))
 
         // then
-        Assertions.assertThat(ruleDefinitions).hasSize(0)
+        assertTrue(ruleDefinitions.asMap().size, 0)
     }
 
     @Test
@@ -182,33 +182,33 @@ class RuleDefinitionReaderTest {
         val ruleDefinitions = ruleDefinitionReader.read(FileReader(compositeRuleDescriptor))
 
         // then
-        Assertions.assertThat(ruleDefinitions).hasSize(2)
+        assertTrue(ruleDefinitions.asMap().size, 2)
 
         // then
         var ruleDefinition = ruleDefinitions[0]
-        Assertions.assertThat(ruleDefinition).isNotNull
-        Assertions.assertThat(ruleDefinition.name).isEqualTo("Movie id rule")
-        Assertions.assertThat(ruleDefinition.description).isEqualTo("description")
-        Assertions.assertThat(ruleDefinition.priority).isEqualTo(1)
-        Assertions.assertThat(ruleDefinition.compositeRuleType).isEqualTo("UnitRuleGroup")
-        Assertions.assertThat(ruleDefinition.composingRules).isNotEmpty
+        assertTrue(ruleDefinition).isNotNull
+        assertTrue(ruleDefinition.name,"Movie id rule")
+        assertTrue(ruleDefinition.description,"description")
+        assertTrue(ruleDefinition.priority,1)
+        assertTrue(ruleDefinition.compositeRuleType,"UnitRuleGroup")
+        assertTrue(ruleDefinition.composingRules).isNotEmpty
         val subrules = ruleDefinition.composingRules
-        Assertions.assertThat(subrules).hasSize(2)
+        assertTrue(subrules.asMap().size, 2)
         var subrule = subrules[0]
-        Assertions.assertThat(subrule.name).isEqualTo("Time is evening")
-        Assertions.assertThat(subrule.description).isEqualTo("If it's later than 7pm")
-        Assertions.assertThat(subrule.priority).isEqualTo(1)
+        assertTrue(subrule.name,"Time is evening")
+        assertTrue(subrule.description,"If it's later than 7pm")
+        assertTrue(subrule.priority,1)
         subrule = subrules[1]
-        Assertions.assertThat(subrule.name).isEqualTo("Movie is rated R")
-        Assertions.assertThat(subrule.description).isEqualTo("If the movie is rated R")
-        Assertions.assertThat(subrule.priority).isEqualTo(1)
+        assertTrue(subrule.name,"Movie is rated R")
+        assertTrue(subrule.description,"If the movie is rated R")
+        assertTrue(subrule.priority,1)
         ruleDefinition = ruleDefinitions[1]
-        Assertions.assertThat(ruleDefinition).isNotNull
-        Assertions.assertThat(ruleDefinition.name).isEqualTo("weather rule")
-        Assertions.assertThat(ruleDefinition.description).isEqualTo("when it rains, then take an umbrella")
-        Assertions.assertThat(ruleDefinition.composingRules).isEmpty()
-        Assertions.assertThat(ruleDefinition.condition).isEqualTo("rain == True")
-        Assertions.assertThat(ruleDefinition.actions)
+        assertTrue(ruleDefinition).isNotNull
+        assertTrue(ruleDefinition.name,"weather rule")
+        assertTrue(ruleDefinition.description,"when it rains, then take an umbrella")
+        assertTrue(ruleDefinition.composingRules).isEmpty()
+        assertTrue(ruleDefinition.condition,"rain == True")
+        assertTrue(ruleDefinition.actions)
             .isEqualTo(listOf<String?>("System.out.println(\"It rains, take an umbrella!\");"))
     }
 

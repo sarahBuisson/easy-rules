@@ -21,15 +21,35 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-package org.jeasy.rules.tutorials.shop
+package org.jeasy.rules.core
 
-class Person(val name: String, val age: Int) {
-    var isAdult = false
-    override fun toString(): String {
-        return "Person{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                ", adult=" + isAdult +
-                '}'
+internal object Utils {
+    fun <A : Annotation> findAnnotation(targetAnnotation: Class<A>, annotatedType: Class<*>): A? {
+        var foundAnnotation = annotatedType.annotations
+            .find {
+                it.annotationClass==(targetAnnotation)
+            }
+        //        //TODO what the fuck ?
+      /*  if (foundAnnotation == null) {
+            for (superC in annotatedType.annotatedSuperclass.annotations) {
+                val annotationType = superC.annotations.find { it.annotationClass==(targetAnnotation)  }
+                if (annotationType != null) {
+                    foundAnnotation = annotationType
+                    break
+                }
+            }
+
+        }*/
+        if (foundAnnotation == null) {
+            foundAnnotation = annotatedType.annotations.flatMap { it.annotationClass.annotations }
+                .find {
+                    it.annotationClass==(targetAnnotation)
+                }
+        }
+        return foundAnnotation as A?
+    }
+
+    fun isAnnotationPresent(targetAnnotation: Class<out Annotation>, annotatedType: Class<*>): Boolean {
+        return findAnnotation(targetAnnotation, annotatedType) != null
     }
 }

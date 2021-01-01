@@ -23,7 +23,6 @@
  */
 package org.jeasy.rules.api
 
-import java.util.*
 
 /**
  * This class encapsulates a set of rules and represents a rules namespace.
@@ -36,7 +35,7 @@ import java.util.*
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 class Rules : Iterable<Rule?> {
-    private var rules: MutableSet<Rule> = TreeSet()
+    private var rules: MutableSet<Rule> = mutableSetOf()
 
     /**
      * Create a new [Rules] object.
@@ -44,7 +43,7 @@ class Rules : Iterable<Rule?> {
      * @param rules to register
      */
     constructor(rules: MutableSet<Rule>) {
-        this.rules = TreeSet(rules)
+        this.rules = rules.toMutableSet()
     }
 
     /**
@@ -53,7 +52,7 @@ class Rules : Iterable<Rule?> {
      * @param rules to register
      */
     constructor(vararg rules: Rule) {
-        Collections.addAll(this.rules, *rules)
+        this.rules.addAll(rules)
     }
 
     /**
@@ -63,7 +62,6 @@ class Rules : Iterable<Rule?> {
      */
     fun register(vararg rules: Rule) {
         for (rule in rules) {
-            Objects.requireNonNull(rule)
             this.rules.add(rule)
         }
     }
@@ -75,7 +73,6 @@ class Rules : Iterable<Rule?> {
      */
     fun unregister(vararg rules: Rule) {
         for (rule in rules) {
-            Objects.requireNonNull(rule)
             this.rules.remove(rule)
         }
     }
@@ -86,7 +83,6 @@ class Rules : Iterable<Rule?> {
      * @param ruleName name of the rule to unregister, must not be null
      */
     fun unregister(ruleName: String) {
-        Objects.requireNonNull(ruleName)
         val rule = findRuleByName(ruleName)
         rule?.let { unregister(it) }
     }
@@ -120,14 +116,13 @@ class Rules : Iterable<Rule?> {
      * using this iterator.
      * @return an iterator on the rules set
      */
-    override fun iterator(): MutableIterator<Rule> {
-        return rules.iterator()
+    override fun iterator(): Iterator<Rule> {
+        return rules.toList().sorted().iterator()
     }
 
-    private fun findRuleByName(ruleName: String): Rule {
-        return rules.stream()
+    private fun findRuleByName(ruleName: String): Rule? {
+        return rules
             .filter { rule: Rule -> rule.name.equals(ruleName, ignoreCase = true) }
-            .findFirst()
-            .orElse(null)
+            .firstOrNull()
     }
 }

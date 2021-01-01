@@ -21,24 +21,22 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-package org.jeasy.rules.core
+package org.jeasy.rules.annotation
 
-internal object Utils {
-    fun <A : Annotation> findAnnotation(targetAnnotation: Class<A>, annotatedType: Class<*>): A {
-        var foundAnnotation = annotatedType.getAnnotation(targetAnnotation)
-        if (foundAnnotation == null) {
-            for (annotation in annotatedType.getAnnotations()) {
-                val annotationType: Class<out Annotation?> = annotation.annotationType()
-                if (annotationType.isAnnotationPresent(targetAnnotation)) {
-                    foundAnnotation = annotationType.getAnnotation(targetAnnotation)
-                    break
-                }
-            }
-        }
-        return foundAnnotation
+import org.jeasy.rules.api.Facts
+import org.jeasy.rules.annotation.Rule
+import org.jeasy.rules.annotation.Condition
+import org.jeasy.rules.annotation.Action
+
+
+@Rule
+class AnnotatedRuleWithActionMethodHavingMoreThanOneArgumentOfTypeFacts {
+    @Condition
+    fun `when`(): Boolean {
+        return true
     }
 
-    fun isAnnotationPresent(targetAnnotation: Class<out Annotation>, annotatedType: Class<*>): Boolean {
-        return findAnnotation(targetAnnotation, annotatedType) != null
+    @Action
+    fun then(facts: Facts?, otherFacts: Facts?) {
     }
 }

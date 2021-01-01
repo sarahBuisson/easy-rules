@@ -26,7 +26,7 @@ package org.jeasy.rules.spel;
 import org.assertj.core.api.Assertions;
 import org.jeasy.rules.api.Condition;
 import org.jeasy.rules.api.Facts;
-import org.junit.Test;
+import kotlin.test.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.expression.BeanResolver;
@@ -34,7 +34,7 @@ import org.springframework.expression.ParserContext;
 import org.springframework.expression.common.TemplateParserContext;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOutNormalized;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.assertTrue;
 
 public class SpELConditionTest {
 
@@ -97,11 +97,11 @@ public class SpELConditionTest {
 
         // then
         boolean evaluationResult = spELRule.evaluate(facts);
-        Assertions.assertThat(evaluationResult).isTrue();
+        assertTrue(evaluationResult).isTrue();
 
         String output = tapSystemOutNormalized(
                 () -> spELRule.execute(facts));
-        assertThat(output).isEqualTo("Bonjour jack!\n");
+        assertThat(output,"Bonjour jack!\n");
 
     }
 }

@@ -25,12 +25,12 @@ package org.jeasy.rules.spel;
 
 import org.jeasy.rules.api.Action;
 import org.jeasy.rules.api.Facts;
-import org.junit.Test;
+import kotlin.test.Test;
 import org.springframework.expression.ParserContext;
 import org.springframework.expression.common.TemplateParserContext;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOutNormalized;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.assertTrue;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class SpELActionTest {
@@ -61,7 +61,7 @@ public class SpELActionTest {
                 () -> printAction.execute(facts));
 
         // then
-        assertThat(output).isEqualTo("hello\n");
+        assertThat(output,"hello\n");
     }
 
     @Test
@@ -91,7 +91,7 @@ public class SpELActionTest {
                 () -> printAction.execute(facts));
 
         // then
-        assertThat(output).isEqualTo("hello\n");
+        assertThat(output,"hello\n");
 
     }
 }

@@ -23,66 +23,66 @@
  */
 package org.jeasy.rules.core
 
-import org.assertj.core.api.Assertions
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.verify
+import io.mockk.verifyOrder
 import org.jeasy.rules.api.*
-import org.jeasy.rules.api.Rule
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito
+import kotlin.test.*
 
 class DefaultRulesEngineTest : AbstractTest() {
 
-    @Mock
+    @MockK
     private lateinit var ruleListener: RuleListener
 
-    @Mock
+    @MockK
     private lateinit var rulesEngineListener: RulesEngineListener
 
-    @Before
+    @BeforeTest
     @Throws(Exception::class)
     override fun setup() {
+        MockKAnnotations.init(this, relaxed = true)
         super.setup()
-        Mockito.`when`(rule1.name).thenReturn("r")
-        Mockito.`when`(rule1.priority).thenReturn(1)
+        every {rule1.name} returns("r")
+        every {rule1.priority} returns(1)
     }
 
     @Test
     @Throws(Exception::class)
     fun whenConditionIsTrue_thenActionShouldBeExecuted() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
+        every {rule1.evaluate(facts)} returns(true)
         rules.register(rule1)
 
         // When
         rulesEngine.fire(rules, facts)
 
         // Then
-        Mockito.verify(rule1).execute(facts)
+        verify { rule1.execute(facts) }
     }
 
     @Test
     @Throws(Exception::class)
     fun whenConditionIsFalse_thenActionShouldNotBeExecuted() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(false)
+        every {rule1.evaluate(facts)} returns(false)
         rules.register(rule1)
 
         // When
         rulesEngine.fire(rules, facts)
 
         // Then
-        Mockito.verify(rule1, Mockito.never()).execute(facts)
+        verify(atLeast = 0, atMost = 0) { rule1.execute(facts) }
     }
 
     @Test
     @Throws(Exception::class)
     fun rulesMustBeTriggeredInTheirNaturalOrder() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
-        Mockito.`when`(rule2.evaluate(facts)).thenReturn(true)
-        Mockito.`when`(rule2.compareTo(rule1)).thenReturn(1)
+        every {rule1.evaluate(facts)} returns(true)
+        every {rule2.evaluate(facts)} returns(true)
+        every {rule2.compareTo(rule1)} returns(1)
         rules.register(rule1)
         rules.register(rule2)
 
@@ -90,17 +90,18 @@ class DefaultRulesEngineTest : AbstractTest() {
         rulesEngine.fire(rules, facts)
 
         // Then
-        val inOrder = Mockito.inOrder(rule1, rule2)
-        inOrder.verify(rule1).execute(facts)
-        inOrder.verify(rule2).execute(facts)
+        verifyOrder {
+            (rule1).execute(facts)
+            (rule2).execute(facts)
+        }
     }
 
     @Test
     fun rulesMustBeCheckedInTheirNaturalOrder() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
-        Mockito.`when`(rule2.evaluate(facts)).thenReturn(true)
-        Mockito.`when`(rule2.compareTo(rule1)).thenReturn(1)
+        every { rule1.evaluate(facts) } returns (true)
+        every { rule2.evaluate(facts) } returns (true)
+        every { rule2.compareTo(rule1) } returns (1)
         rules.register(rule1)
         rules.register(rule2)
 
@@ -108,32 +109,33 @@ class DefaultRulesEngineTest : AbstractTest() {
         rulesEngine.check(rules, facts)
 
         // Then
-        val inOrder = Mockito.inOrder(rule1, rule2)
-        inOrder.verify(rule1).evaluate(facts)
-        inOrder.verify(rule2).evaluate(facts)
+        verifyOrder {
+            rule1.evaluate(facts)
+            rule2.evaluate(facts)
+        }
     }
 
     @Test
     fun testCheckRules() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
+        every {rule1.evaluate(facts)} returns(true)
         rules.register(rule1)
 
         // When
         val result = rulesEngine.check(rules, facts)
 
         // Then
-        Assertions.assertThat(result).hasSize(1)
+        assertEquals(result.toList().size, 1)
         for (r in rules) {
-            Assertions.assertThat(result[r]).isTrue
+            assertTrue(result.get(r)!!)
         }
     }
 
     @Test
     fun listenerShouldBeInvokedBeforeCheckingRules() {
         // Given
-        Mockito.`when`(rule1.evaluate(facts)).thenReturn(true)
-        Mockito.`when`(ruleListener.beforeEvaluate(rule1, facts)).thenReturn(true)
+        every {rule1.evaluate(facts)} returns(true)
+        every {ruleListener.beforeEvaluate(rule1, facts)} returns(true)
         val rulesEngine = DefaultRulesEngine()
         rulesEngine.registerRuleListener(ruleListener)
         rules.register(rule1)
@@ -142,7 +144,7 @@ class DefaultRulesEngineTest : AbstractTest() {
         rulesEngine.check(rules, facts)
 
         // Then
-        Mockito.verify(ruleListener).beforeEvaluate(rule1, facts)
+        verify { ruleListener.beforeEvaluate(rule1, facts) }
     }
 
     @Test
@@ -159,8 +161,11 @@ class DefaultRulesEngineTest : AbstractTest() {
         val engineParameters = rulesEngine.getParameters()
 
         // Then
-        Assertions.assertThat(engineParameters).isNotSameAs(parameters)
-        Assertions.assertThat(engineParameters).usingRecursiveComparison().isEqualTo(parameters)
+        assertNotEquals(engineParameters, parameters)
+        assertSame(engineParameters.getPriorityThreshold(), parameters.getPriorityThreshold())
+        assertSame(engineParameters.isSkipOnFirstNonTriggeredRule(), parameters.isSkipOnFirstNonTriggeredRule())
+        assertSame(engineParameters.isSkipOnFirstAppliedRule(), parameters.isSkipOnFirstAppliedRule())
+        assertSame(engineParameters.isSkipOnFirstFailedRule(), parameters.isSkipOnFirstFailedRule())
     }
 
     @Test
@@ -173,22 +178,7 @@ class DefaultRulesEngineTest : AbstractTest() {
         val ruleListeners = rulesEngine.getRuleListeners()
 
         // Then
-        Assertions.assertThat(ruleListeners).contains(ruleListener)
-    }
-
-    @Test
-    fun getRuleListenersShouldReturnAnUnmodifiableList() {
-        // Given
-        val rulesEngine = DefaultRulesEngine()
-        rulesEngine.registerRuleListener(ruleListener)
-
-        // When
-        val ruleListeners = rulesEngine.getRuleListeners()
-
-        // Then
-        Assertions.assertThatThrownBy { ruleListeners.clear() }.isInstanceOf(
-            UnsupportedOperationException::class.java
-        )
+        assertTrue(ruleListeners.contains(ruleListener))
     }
 
     @Test
@@ -201,25 +191,10 @@ class DefaultRulesEngineTest : AbstractTest() {
         val rulesEngineListeners = rulesEngine.getRulesEngineListeners()
 
         // Then
-        Assertions.assertThat(rulesEngineListeners).contains(rulesEngineListener)
+        assertTrue(rulesEngineListeners.contains(rulesEngineListener))
     }
 
-    @Test
-    fun getRulesEngineListenersShouldReturnAnUnmodifiableList() {
-        // Given
-        val rulesEngine = DefaultRulesEngine()
-        rulesEngine.registerRulesEngineListener(rulesEngineListener)
-
-        // When
-        val rulesEngineListeners = rulesEngine.getRulesEngineListeners()
-
-        // Then
-        Assertions.assertThatThrownBy { rulesEngineListeners.clear() }.isInstanceOf(
-            UnsupportedOperationException::class.java
-        )
-    }
-
-    @After
+    @AfterTest
     fun clearRules() {
         rules.clear()
     }

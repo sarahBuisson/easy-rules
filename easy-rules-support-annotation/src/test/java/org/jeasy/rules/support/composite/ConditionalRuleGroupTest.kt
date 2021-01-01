@@ -34,7 +34,7 @@ import org.jeasy.rules.core.BasicRule
 import org.jeasy.rules.core.DefaultRulesEngine
 import org.junit.After
 import org.junit.Before
-import org.junit.Test
+import kotlin.test.Test
 import java.util.*
 
 class ConditionalRuleGroupTest {
@@ -79,11 +79,11 @@ class ConditionalRuleGroupTest {
          */
 
         // primaryRule should not be executed
-        Assertions.assertThat(conditionalRule.isExecuted()).isFalse
+        assertTrue(conditionalRule.isExecuted()).isFalse
         //Rule 1 should not be executed
-        Assertions.assertThat(rule1.isExecuted()).isFalse
+        assertTrue(rule1.isExecuted()).isFalse
         //Rule 2 should not be executed
-        Assertions.assertThat(rule2.isExecuted()).isFalse
+        assertTrue(rule2.isExecuted()).isFalse
     }
 
     @Test
@@ -101,11 +101,11 @@ class ConditionalRuleGroupTest {
          */
 
         // primaryRule should be executed
-        Assertions.assertThat(conditionalRule.isExecuted()).isTrue
+        assertTrue(conditionalRule.isExecuted()).isTrue
         //Rule 1 should not be executed
-        Assertions.assertThat(rule1.isExecuted()).isFalse
+        assertTrue(rule1.isExecuted()).isFalse
         //Rule 2 should be executed
-        Assertions.assertThat(rule2.isExecuted()).isTrue
+        assertTrue(rule2.isExecuted()).isTrue
     }
 
     @Test
@@ -118,11 +118,11 @@ class ConditionalRuleGroupTest {
 
         // Then
         // primaryRule should be executed
-        Assertions.assertThat(conditionalRule.isExecuted()).isTrue
+        assertTrue(conditionalRule.isExecuted()).isTrue
         //Rule 1 should be executed
-        Assertions.assertThat(rule1.isExecuted()).isTrue
+        assertTrue(rule1.isExecuted()).isTrue
         // Rule 2 should not be executed
-        Assertions.assertThat(rule2.isExecuted()).isFalse
+        assertTrue(rule2.isExecuted()).isFalse
     }
 
     @Test
@@ -135,8 +135,8 @@ class ConditionalRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(conditionalRule.isExecuted()).isTrue
-        Assertions.assertThat(rule.isExecuted()).isTrue
+        assertTrue(conditionalRule.isExecuted()).isTrue
+        assertTrue(rule.isExecuted()).isTrue
     }
 /*
     @Test
@@ -152,9 +152,9 @@ class ConditionalRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(conditionalRule.isExecuted()).isTrue
-        Assertions.assertThat(rule.isExecuted()).isTrue
-        Assertions.assertThat(annotatedRule.isExecuted()).isFalse
+        assertTrue(conditionalRule.isExecuted()).isTrue
+        assertTrue(rule.isExecuted()).isTrue
+        assertTrue(annotatedRule.isExecuted()).isFalse
     }
 */
     @Test(expected = IllegalArgumentException::class)
@@ -173,7 +173,7 @@ class ConditionalRuleGroupTest {
         conditionalRuleGroup.addRule(MyRule())
         rules.register(conditionalRuleGroup)
         rulesEngine.fire(rules, facts)
-        Assertions.assertThat(rule1.isExecuted()).isTrue
+        assertTrue(rule1.isExecuted()).isTrue
     }
 
     @Test
@@ -186,7 +186,7 @@ class ConditionalRuleGroupTest {
         rulesEngine.fire(rules, facts)
 
         // then
-        Assertions.assertThat(actions).containsExactly(
+        assertTrue(actions).containsExactly(
             "conditionalRule",
             "rule1",
             "rule2",
@@ -202,7 +202,7 @@ class ConditionalRuleGroupTest {
         // Then
         // rule 1 has higher priority than rule 2 (lower values for highers priorities),
         // it should be executed first
-        Assertions.assertThat(actions).containsExactly(
+        assertTrue(actions).containsExactly(
             "conditionalRule",
             "rule1",
             "rule2"

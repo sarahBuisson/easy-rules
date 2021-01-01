@@ -23,18 +23,21 @@
  */
 package org.jeasy.rules.api
 
-import org.assertj.core.api.Assertions
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.test.asserter
 
 class FactsTest {
     private val facts: Facts = Facts()
+
     @Test
     fun factsMustHaveUniqueName() {
         facts.add(Fact("foo", 1))
         facts.add(Fact("foo", 2))
-        Assertions.assertThat(facts).hasSize(1)
+        assertEquals(facts.asMap().size, 1)
         val fact = facts.getFact("foo")
-        Assertions.assertThat(fact?.value).isEqualTo(2)
+        assertEquals(fact?.value, 2)
     }
 
     @Test
@@ -43,16 +46,16 @@ class FactsTest {
         val fact2 = Fact("bar", 2)
         facts.add(fact1)
         facts.add(fact2)
-        Assertions.assertThat(facts).contains(fact1)
-        Assertions.assertThat(facts).contains(fact2)
+        assertTrue(facts.contains(fact1))
+        assertTrue(facts.contains(fact2))
     }
 
     @Test
     fun testPut() {
         facts.put("foo", 1)
         facts.put("bar", 2)
-        Assertions.assertThat(facts).contains(Fact("foo", 1))
-        Assertions.assertThat(facts).contains(Fact("bar", 2))
+        assertTrue(facts.contains(Fact("foo", 1)))
+        assertTrue(facts.contains(Fact("bar", 2)))
     }
 
     @Test
@@ -60,7 +63,7 @@ class FactsTest {
         val foo = Fact("foo", 1)
         facts.add(foo)
         facts.remove(foo)
-        Assertions.assertThat(facts).isEmpty()
+        assertTrue(facts.asMap().isEmpty())
     }
 
     @Test
@@ -68,7 +71,7 @@ class FactsTest {
         val foo = Fact("foo", 1)
         facts.add(foo)
         facts.remove("foo")
-        Assertions.assertThat(facts).isEmpty()
+        assertTrue(facts.asMap().isEmpty())
     }
 
     @Test
@@ -76,7 +79,7 @@ class FactsTest {
         val fact = Fact("foo", 1)
         facts.add(fact)
         val value = facts.get<Int?>("foo")
-        Assertions.assertThat(value).isEqualTo(1)
+        assertEquals(value, 1)
     }
 
     @Test
@@ -84,7 +87,7 @@ class FactsTest {
         val fact = Fact("foo", 1)
         facts.add(fact)
         val retrievedFact = facts.getFact("foo")
-        Assertions.assertThat(retrievedFact).isEqualTo(fact)
+        assertEquals(retrievedFact, fact)
     }
 
     @Test
@@ -94,8 +97,10 @@ class FactsTest {
         facts.add(fact1)
         facts.add(fact2)
         val map = facts.asMap()
-        Assertions.assertThat(map).containsKeys("foo", "bar")
-        Assertions.assertThat(map).containsValues(1, 2)
+        assertTrue(map.containsKey("foo"))
+        assertTrue(map.containsKey("bar"))
+        assertTrue(map.containsValue(1))
+        assertTrue(map.containsValue(2))
     }
 
     @Test
@@ -103,6 +108,6 @@ class FactsTest {
         val facts = Facts()
         facts.add(Fact("foo", 1))
         facts.clear()
-        Assertions.assertThat(facts).isEmpty()
+        assertTrue(facts.asMap().isEmpty())
     }
 }

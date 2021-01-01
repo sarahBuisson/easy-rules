@@ -29,7 +29,7 @@ import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rules
 import org.jeasy.rules.api.RulesEngine
 import org.jeasy.rules.api.RulesEngineListener
-import org.junit.Test
+import kotlin.test.Test
 
 class InferenceRulesEngineTest {
     @Test
@@ -46,8 +46,8 @@ class InferenceRulesEngineTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(dummyRule.isExecuted()).isTrue
-        Assertions.assertThat(anotherDummyRule.isExecuted()).isFalse
+        assertTrue(dummyRule.isExecuted()).isTrue
+        assertTrue(anotherDummyRule.isExecuted()).isFalse
     }
 
     @Test
@@ -65,9 +65,9 @@ class InferenceRulesEngineTest {
         rulesEngine.fire(rules, facts)
 
         // Then
-        Assertions.assertThat(dummyRule.isExecuted()).isTrue
-        Assertions.assertThat(anotherDummyRule.isExecuted()).isTrue
-        Assertions.assertThat(dummyRule.getTimestamp()).isLessThanOrEqualTo(anotherDummyRule.getTimestamp())
+        assertTrue(dummyRule.isExecuted()).isTrue
+        assertTrue(anotherDummyRule.isExecuted()).isTrue
+        assertTrue(dummyRule.getTimestamp()).isLessThanOrEqualTo(anotherDummyRule.getTimestamp())
     }
 
     @Test
@@ -106,9 +106,9 @@ class InferenceRulesEngineTest {
 
         // Then
         // Rules engine listener should be invoked
-        Assertions.assertThat(rulesEngineListener.isExecutedBeforeEvaluate()).isTrue
-        Assertions.assertThat(rulesEngineListener.isExecutedAfterExecute()).isTrue
-        Assertions.assertThat(rule.isExecuted()).isTrue
+        assertTrue(rulesEngineListener.isExecutedBeforeEvaluate()).isTrue
+        assertTrue(rulesEngineListener.isExecutedAfterExecute()).isTrue
+        assertTrue(rule.isExecuted()).isTrue
     }
 
     @Rule

@@ -23,6 +23,7 @@
  */
 package org.jeasy.rules.jexl
 
+import mu.KotlinLogging
 import org.apache.commons.jexl3.JexlEngine
 import org.apache.commons.jexl3.JexlException
 import org.apache.commons.jexl3.JexlScript
@@ -31,7 +32,6 @@ import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Facts
 import org.jeasy.rules.jexl.JexlAction
 import org.jeasy.rules.jexl.JexlRule
-import org.slf4j.LoggerFactory
 import java.util.*
 
 /**
@@ -65,6 +65,6 @@ class JexlAction : Action {
     }
 
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(JexlAction::class.java)
+        private val LOGGER = KotlinLogging.logger {}
     }
 }

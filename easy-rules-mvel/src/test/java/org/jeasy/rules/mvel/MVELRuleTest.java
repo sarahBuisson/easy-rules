@@ -25,9 +25,9 @@ package org.jeasy.rules.mvel;
 
 import org.jeasy.rules.api.Facts;
 import org.junit.Before;
-import org.junit.Test;
+import kotlin.test.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.assertTrue;
 
 public class MVELRuleTest {
 

@@ -22,13 +22,10 @@
  *  THE SOFTWARE.
  */
 package org.jeasy.rules.api
-
-import org.assertj.core.api.Assertions
-import org.jeasy.rules.annotation.Action
-import org.jeasy.rules.annotation.Condition
 import org.jeasy.rules.core.BasicRule
-import org.junit.Test
-import java.util.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class RulesTest {
     private var rules: Rules = Rules()
@@ -41,23 +38,14 @@ class RulesTest {
         ruleSet.add(r1)
         ruleSet.add(r2)
         rules = Rules(ruleSet)
-        Assertions.assertThat(rules).hasSize(1)
+        assertEquals(rules.size(), 1)
     }
 
     @Test
     fun isEmpty() {
-        Assertions.assertThat(rules.isEmpty()).isTrue
+        assertTrue(rules.isEmpty())
     }
 
-    @org.jeasy.rules.annotation.Rule
-    internal class DummyRule {
-        @Condition
-        fun `when`(): Boolean {
-            return true
-        }
-
-        @Action
-        fun then() {
-        }
+    internal class DummyRule: BasicRule() {
     }
 }

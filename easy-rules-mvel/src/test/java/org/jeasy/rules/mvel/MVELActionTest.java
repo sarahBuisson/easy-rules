@@ -25,11 +25,11 @@ package org.jeasy.rules.mvel;
 
 import org.jeasy.rules.api.Action;
 import org.jeasy.rules.api.Facts;
-import org.junit.Test;
+import kotlin.test.Test;
 import org.mvel2.ParserContext;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOutNormalized;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.assertTrue;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class MVELActionTest {
@@ -60,7 +60,7 @@ public class MVELActionTest {
                 () -> printAction.execute(facts));
 
         // then
-        assertThat(output).isEqualTo("Hello from MVEL!\n");
+        assertThat(output,"Hello from MVEL!\n");
     }
 
     @Test
@@ -91,7 +91,7 @@ public class MVELActionTest {
                 () -> printAction.execute(facts));
 
         // then
-        assertThat(output).isEqualTo("Random from MVEL = 2\n");
+        assertThat(output,"Random from MVEL = 2\n");
 
     }
 }

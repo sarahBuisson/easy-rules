@@ -57,14 +57,14 @@ interface Rule : Comparable<Rule> {
      *
      * @return true if the rule should be applied given the provided facts, false otherwise
      */
-    open fun evaluate(facts: Facts): Boolean
+    fun evaluate(facts: Facts): Boolean
 
     /**
      * This method implements the rule's action(s).
      * @throws Exception thrown if an exception occurs when performing action(s)
      */
     @Throws(Exception::class)
-    open fun execute(facts: Facts)
+    fun execute(facts: Facts)
 
     companion object {
         /**
