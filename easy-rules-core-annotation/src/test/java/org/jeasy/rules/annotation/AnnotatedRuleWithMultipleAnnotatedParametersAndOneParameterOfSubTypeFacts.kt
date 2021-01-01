@@ -36,5 +36,5 @@ class AnnotatedRuleWithMultipleAnnotatedParametersAndOneParameterOfSubTypeFacts 
     fun then(@Fact("fact1") fact1: Any?, @Fact("fact2") fact2: Any?, facts: SubFacts?) {
     }
 
-    class SubFacts : Facts()
+    class SubFacts : FactType()
 }

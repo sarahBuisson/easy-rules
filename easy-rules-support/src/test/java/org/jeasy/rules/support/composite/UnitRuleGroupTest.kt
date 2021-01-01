@@ -39,14 +39,14 @@ import kotlin.test.assertTrue
 
 class UnitRuleGroupTest {
     @MockK
-    private lateinit var rule1: Rule
+    private lateinit var rule1: Rule<Facts>
 
     @MockK
-    private lateinit var rule2: Rule
+    private lateinit var rule2: Rule<Facts>
     private val facts: Facts = Facts()
-    private val rules: Rules = Rules()
-    private val rulesEngine: DefaultRulesEngine = DefaultRulesEngine()
-    private lateinit var unitRuleGroup: UnitRuleGroup
+    private val rules: Rules<Facts> = Rules()
+    private val rulesEngine: DefaultRulesEngine<Facts> = DefaultRulesEngine()
+    private lateinit var unitRuleGroup: UnitRuleGroup<Facts>
 
     @BeforeTest
     fun setUp() {
@@ -148,7 +148,7 @@ class UnitRuleGroupTest {
         assertTrue(rule.isExecuted())
     }
 
-    class MyRule : BasicRule() {
+    class MyRule : BasicRule<Facts>() {
         var executed = false
 
         override fun evaluate(facts: Facts): Boolean {

@@ -1,20 +1,103 @@
-name: Java CI
+name: Build
 
 on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout source code
-      uses: actions/checkout@v1
-      with:
-        ref: master
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Build with Maven
-      run: mvn clean package
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 11
+      - name: Build
+        run: gradle build packJsNpmToMaven --stacktrace
+
+
+      - name: extract build version
+        run: |
+          gradle generatePomFileForKotlinMultiplatformPublication
+          echo "BUILD_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -f easy-rules-core/build/publications/kotlinMultiplatform/pom-default.xml -DforceStdout)">> $GITHUB_ENV
+          echo "BUILD_ARTIFACT_ID=$(mvn help:evaluate -Dexpression=project.artifactId -q -f easy-rules-core/build/publications/kotlinMultiplatform/pom-default.xml -DforceStdout)">> $GITHUB_ENV
+          echo "BUILD_GROUP_ID=$(mvn help:evaluate -Dexpression=project.groupId -q -f easy-rules-core/build/publications/kotlinMultiplatform/pom-default.xml -DforceStdout)">> $GITHUB_ENV
+
+      - if: contains(env.BUILD_VERSION, 'SNAPSHOT')
+        name: Publish to GitHub Packages private
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISTRO_MAVEN: 167 # maven java packages
+          DISTRO_NODEJS: 191 # nodejs packages
+          PACKAGECLOUD_REPO: 'sarahBuisson/snapshot'
+        run: |
+          ARTIFACTS=("easy-rules-api" "easy-rules-core")
+          ARTIFACT_TYPE=("jvm" "js" "npm" "js-klib" "common" "kotlin")
+           for ARTIFACT in "${ARTIFACTS[@]}"
+           do
+               for ART_TYPE in "${ARTIFACT_TYPE[@]}"
+                    do
+                        case $ART_TYPE in
+                          'jvm')
+                            DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
+                            FILE_NAME="$ARTIFACT-jvm-${{env.BUILD_VERSION}}.jar"
+                            COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-$ART_TYPE:${{env.BUILD_VERSION}}"
+                          ;;
+                          'common')
+                            DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
+                            FILE_NAME="$ARTIFACT-common-${{env.BUILD_VERSION}}.jar"
+                            COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}:${{env.BUILD_VERSION}}"
+                          ;;
+                          'kotlin')
+                            DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
+                            FILE_NAME="$ARTIFACT-${{env.BUILD_VERSION}}.jar"
+                            COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}:${{env.BUILD_VERSION}}"
+                          ;;
+                          'metadata')
+                            DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
+                            FILE_NAME="$ARTIFACT-metadata-${{env.BUILD_VERSION}}.jar"
+                            COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-metadata:${{env.BUILD_VERSION}}"
+                          ;;
+                          'npm')
+                              DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
+                              FILE_NAME="$ARTIFACT-npm-${{env.BUILD_VERSION}}.jar"
+                              COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-$ART_TYPE:${{env.BUILD_VERSION}}"
+                          ;;
+                          'js')
+                              DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
+                              FILE_NAME="$ARTIFACT-jslegacy-${{env.BUILD_VERSION}}.jar"
+                              COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-jslegacy:${{env.BUILD_VERSION}}"
+                          ;;
+                          'js-klib')
+                              DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
+                              FILE_NAME="$ARTIFACT-jsir-${{env.BUILD_VERSION}}.klib"
+                              COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-$ART_TYPE:${{env.BUILD_VERSION}}"
+                          ;;
+                          '*')
+                            DISTRIBUTION_PACKAGECLOUD= 0;
+                            FILE_NAME= 'noFile'
+                            COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-$ART_TYPE:${{env.BUILD_VERSION}}"
+                            ;;
+                        esac
+                        echo $DISTRIBUTION_PACKAGECLOUD
+                        FILE_PATH="$ARTIFACT/build/libs/$FILE_NAME"
+                        if test -f "$FILE_PATH"; then
+                          echo "$FILE_NAME $DISTRIBUTION_PACKAGECLOUD"
+
+
+                          # delete previous version
+                          curl -X DELETE "https://${{secrets.REPO_PACKAGE_KEY}}@packagecloud.io/api/v1/repos/${{env.PACKAGECLOUD_REPO}}/java/maven2/${{env.BUILD_GROUP_ID}}/$FILE_NAME" || true
+                          #save new version
+                          echo "delete previous"
+                          curl -X POST -F "package[distro_version_id]=$DISTRIBUTION_PACKAGECLOUD" -F "package[package_file]=@$FILE_PATH" -F "package[coordinates]=${COORDINATES}"  "https://${{secrets.REPO_PACKAGE_KEY}}@packagecloud.io/api/v1/repos/${{env.PACKAGECLOUD_REPO}}/packages.json"
+                          echo "send new package $FILE_NAME"
+                        fi
+              done
+          done
+
+      - if: (env.BUILD_VERSION && false == contains(env.BUILD_VERSION, 'SNAPSHOT'))
+        name: Publish to GitHub Packages
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO_URL: ${{ github.repository }}
+        run: gradle build publish

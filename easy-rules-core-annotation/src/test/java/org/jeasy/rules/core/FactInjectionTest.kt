@@ -93,7 +93,7 @@ class FactInjectionTest {
     internal class DummyRule {
         private var fact1: Any? = null
         private var fact2: Any? = null
-        private var facts: Facts? = null
+        private var facts: FactType? = null
         @Condition
         fun `when`(@Fact("fact1") fact1: Any?, @Fact("fact2") fact2: Any?): Boolean {
             this.fact1 = fact1
@@ -102,7 +102,7 @@ class FactInjectionTest {
         }
 
         @Action
-        fun then(facts: Facts?) {
+        fun then(facts: FactType?) {
             this.facts = facts
         }
 
@@ -114,7 +114,7 @@ class FactInjectionTest {
             return fact2
         }
 
-        fun getFacts(): Facts? {
+        fun getFacts(): FactType? {
             return facts
         }
     }
@@ -165,7 +165,7 @@ class FactInjectionTest {
         }
 
         @Action
-        fun takeAnUmbrella(facts: Facts?) {
+        fun takeAnUmbrella(facts: FactType?) {
             println("It rains, take an umbrella!")
             isExecuted = true
         }

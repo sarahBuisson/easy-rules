@@ -53,7 +53,7 @@ class JexlAction : Action {
         compiledScript = jexl.createScript(expression)
     }
 
-    override fun execute(facts: Facts) {
+    override fun execute(facts: FactType) {
         Objects.requireNonNull(facts, "facts cannot be null")
         val ctx = MapContext(facts.asMap())
         try {

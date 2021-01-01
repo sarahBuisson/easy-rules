@@ -32,12 +32,12 @@ import org.jeasy.rules.api.Rule
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-open class RuleBuilder {
+open class RuleBuilder<FactType> {
     private var name: String = Rule.DEFAULT_NAME
     private var description: String = Rule.DEFAULT_DESCRIPTION
     private var priority: Int = Rule.DEFAULT_PRIORITY
-    private var condition: Condition = Condition.FALSE
-    private val actions: MutableList<Action> = ArrayList()
+    private var condition: Condition<FactType> = Condition.FALSE as Condition<FactType>
+    private val actions: MutableList<Action<FactType>> = ArrayList()
 
     /**
      * Set rule name.
@@ -45,7 +45,7 @@ open class RuleBuilder {
      * @param name of the rule
      * @return the builder instance
      */
-    fun name(name: String): RuleBuilder {
+    fun name(name: String): RuleBuilder<FactType> {
         this.name = name
         return this
     }
@@ -56,7 +56,7 @@ open class RuleBuilder {
      * @param description of the rule
      * @return the builder instance
      */
-    fun description(description: String): RuleBuilder {
+    fun description(description: String): RuleBuilder<FactType> {
         this.description = description
         return this
     }
@@ -67,7 +67,7 @@ open class RuleBuilder {
      * @param priority of the rule
      * @return the builder instance
      */
-    fun priority(priority: Int): RuleBuilder {
+    fun priority(priority: Int): RuleBuilder<FactType> {
         this.priority = priority
         return this
     }
@@ -78,7 +78,7 @@ open class RuleBuilder {
      * @param condition of the rule
      * @return the builder instance
      */
-    fun `when`(condition: Condition): RuleBuilder {
+    fun `when`(condition: Condition<FactType>): RuleBuilder<FactType> {
         this.condition = condition
         return this
     }
@@ -88,7 +88,7 @@ open class RuleBuilder {
      * @param condition of the rule
      * @return the builder instance
      */
-    fun condition(condition: Condition): RuleBuilder {
+    fun condition(condition: Condition<FactType>): RuleBuilder<FactType> {
         return this.`when`(condition)
     }
 
@@ -98,7 +98,7 @@ open class RuleBuilder {
      * @param action to add
      * @return the builder instance
      */
-    fun then(action: Action): RuleBuilder {
+    fun then(action: Action<FactType>): RuleBuilder<FactType> {
         actions.add(action)
         return this
     }
@@ -108,7 +108,7 @@ open class RuleBuilder {
      *
      * @return a new rule instance
      */
-    fun build(): Rule {
+    fun build(): Rule<FactType> {
         return DefaultRule(name, description, priority, condition, actions)
     }
 }

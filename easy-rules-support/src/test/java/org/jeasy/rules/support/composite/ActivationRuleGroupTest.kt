@@ -33,15 +33,15 @@ import kotlin.test.assertTrue
 
 class ActivationRuleGroupTest {
     private val facts: Facts = Facts()
-    private val rules: Rules = Rules()
-    private val rulesEngine: DefaultRulesEngine  = DefaultRulesEngine()
+    private val rules: Rules<Facts> = Rules()
+    private val rulesEngine: DefaultRulesEngine<Facts>  = DefaultRulesEngine()
 
     @Test
     fun onlySelectedRuleShouldBeExecuted_whenComposingRulesHaveDifferentPriorities() {
         // given
         val rule1 = Rule1()
         val rule2 = Rule2()
-        val activationRuleGroup = ActivationRuleGroup("my activation rule", "rule1 xor rule2")
+        val activationRuleGroup = ActivationRuleGroup<Facts>("my activation rule", "rule1 xor rule2")
         activationRuleGroup.addRule(rule1)
         activationRuleGroup.addRule(rule2)
         rules.register(activationRuleGroup)
@@ -59,7 +59,7 @@ class ActivationRuleGroupTest {
         // given
         val rule2 = Rule2()
         val rule3 = Rule3()
-        val activationRuleGroup = ActivationRuleGroup("my activation rule", "rule2 xor rule3")
+        val activationRuleGroup = ActivationRuleGroup<Facts>("my activation rule", "rule2 xor rule3")
         activationRuleGroup.addRule(rule2)
         activationRuleGroup.addRule(rule3)
         rules.register(activationRuleGroup)
@@ -80,7 +80,7 @@ class ActivationRuleGroupTest {
     fun whenNoSelectedRule_thenNothingShouldHappen() {
         // given
         val rule4 = Rule4()
-        val activationRuleGroup = ActivationRuleGroup("my activation rule", "rule4")
+        val activationRuleGroup = ActivationRuleGroup<Facts>("my activation rule", "rule4")
         activationRuleGroup.addRule(rule4)
 
         //when
@@ -93,7 +93,7 @@ class ActivationRuleGroupTest {
         assertFalse(rule4.isExecuted())
     }
 
-    class Rule1 : BasicRule(priority = 1) {
+    class Rule1 : BasicRule<Facts>(priority = 1) {
         private var executed = false
 
         override fun evaluate(facts: Facts): Boolean {
@@ -109,7 +109,7 @@ class ActivationRuleGroupTest {
         }
     }
 
-    class Rule2 : BasicRule(priority = 2) {
+    class Rule2 : BasicRule<Facts>(priority = 2) {
         private var executed = false
 
         override fun evaluate(facts: Facts): Boolean {
@@ -125,7 +125,7 @@ class ActivationRuleGroupTest {
         }
     }
 
-    class Rule3 : BasicRule(priority = 2) {
+    class Rule3 : BasicRule<Facts>(priority = 2) {
         private var executed = false
 
         override fun evaluate(facts: Facts): Boolean {
@@ -141,7 +141,7 @@ class ActivationRuleGroupTest {
         }
     }
 
-    class Rule4 : BasicRule(priority = 1)  {
+    class Rule4 : BasicRule<Facts>(priority = 1)  {
         private var executed = false
 
         override fun evaluate(facts: Facts): Boolean {

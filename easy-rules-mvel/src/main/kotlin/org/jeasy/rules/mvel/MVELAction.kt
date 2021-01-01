@@ -62,7 +62,7 @@ class MVELAction : Action {
         compiledExpression = MVEL.compileExpression(expression, parserContext)
     }
 
-    override fun execute(facts: Facts) {
+    override fun execute(facts: FactType) {
         try {
             MVEL.executeExpression(compiledExpression, facts!!.asMap())
         } catch (e: Exception) {

@@ -98,12 +98,12 @@ class MVELRule
         return this
     }
 
-    override fun evaluate(facts: Facts): Boolean {
+    override fun evaluate(facts: FactType): Boolean {
         return condition!!.evaluate(facts)
     }
 
     @Throws(Exception::class)
-    override fun execute(facts: Facts) {
+    override fun execute(facts: FactType) {
         for (action in actions) {
             action.execute(facts)
         }

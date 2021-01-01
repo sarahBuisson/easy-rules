@@ -28,13 +28,13 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class RulesTest {
-    private var rules: Rules = Rules()
+    private var rules: Rules<Facts> = Rules<Facts>()
 
     @Test
     fun rulesMustHaveUniqueName() {
-        val r1: Rule = BasicRule("rule")
-        val r2: Rule = BasicRule("rule")
-        val ruleSet: MutableSet<Rule> = HashSet()
+        val r1: Rule<Facts> = BasicRule<Facts>("rule")
+        val r2: Rule<Facts> = BasicRule<Facts>("rule")
+        val ruleSet: MutableSet<Rule<Facts>> = HashSet()
         ruleSet.add(r1)
         ruleSet.add(r2)
         rules = Rules(ruleSet)
@@ -46,6 +46,6 @@ class RulesTest {
         assertTrue(rules.isEmpty())
     }
 
-    internal class DummyRule: BasicRule() {
+    internal class DummyRule: BasicRule<Facts>() {
     }
 }

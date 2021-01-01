@@ -26,7 +26,7 @@ package org.jeasy.rules.tutorials.airco
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Facts
 
-class DecreaseTemperatureAction : Action {
+class DecreaseTemperatureAction : Action<Facts> {
     override fun execute(facts: Facts) {
         println("It is hot! cooling air..")
         val temperature = facts!!.get<Int>("temperature")

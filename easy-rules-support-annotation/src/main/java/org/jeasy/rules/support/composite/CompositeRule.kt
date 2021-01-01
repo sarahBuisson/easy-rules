@@ -44,7 +44,7 @@ abstract class CompositeRule @JvmOverloads constructor(
     /**
      * The set of composing rules.
      */
-    protected var rules: MutableSet<Rule> = TreeSet()
+    protected var rules: MutableSet<Rule<FactType>> = TreeSet()
     private val proxyRules: MutableMap<Any, Rule> =  HashMap()
 
     /**

@@ -35,8 +35,8 @@ import org.jeasy.rules.api.Rule
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class ActivationRuleGroup : CompositeRule {
-    private lateinit var selectedRule: Rule
+class ActivationRuleGroup<FactType> : CompositeRule<FactType> {
+    private lateinit var selectedRule: Rule<FactType>
 
     /**
      * Create an activation rule group.
@@ -71,7 +71,7 @@ class ActivationRuleGroup : CompositeRule {
     constructor(name: String, description: String, priority: Int) : super(name, description, priority) {
     }
 
-    override fun evaluate(facts: Facts): Boolean {
+    override fun evaluate(facts: FactType): Boolean {
         for (rule in rules) {
             if (rule.evaluate(facts)) {
                 selectedRule = rule
@@ -82,7 +82,7 @@ class ActivationRuleGroup : CompositeRule {
     }
 
     @Throws(Exception::class)
-    override fun execute(facts: Facts) {
+    override fun execute(facts: FactType) {
         if (selectedRule != null) {
             selectedRule.execute(facts)
         }

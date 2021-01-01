@@ -35,11 +35,11 @@ object Launcher {
         val facts = Facts()
 
         // create rules
-        val rules = Rules()
+        val rules = Rules<Facts>()
         rules.register(HelloWorldRule())
 
         // create a rules engine and fire rules on known facts
-        val rulesEngine: RulesEngine = DefaultRulesEngine()
+        val rulesEngine: RulesEngine<Facts> = DefaultRulesEngine()
         rulesEngine.fire(rules, facts)
     }
 }

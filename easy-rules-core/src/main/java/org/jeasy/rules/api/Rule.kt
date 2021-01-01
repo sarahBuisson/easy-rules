@@ -31,7 +31,7 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-interface Rule : Comparable<Rule> {
+interface Rule<FactType> : Comparable<Rule<FactType>> {
     /**
      * Getter for rule name.
      * @return the rule name
@@ -57,14 +57,14 @@ interface Rule : Comparable<Rule> {
      *
      * @return true if the rule should be applied given the provided facts, false otherwise
      */
-    fun evaluate(facts: Facts): Boolean
+    fun evaluate(facts: FactType): Boolean
 
     /**
      * This method implements the rule's action(s).
      * @throws Exception thrown if an exception occurs when performing action(s)
      */
     @Throws(Exception::class)
-    fun execute(facts: Facts)
+    fun execute(facts: FactType)
 
     companion object {
         /**

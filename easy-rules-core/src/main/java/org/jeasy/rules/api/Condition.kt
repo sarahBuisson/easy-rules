@@ -28,7 +28,7 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-fun interface Condition {
+fun interface Condition<FactType> {
     /**
      * Evaluate the condition according to the known facts.
      *
@@ -36,17 +36,17 @@ fun interface Condition {
      *
      * @return true if the rule should be triggered, false otherwise
      */
-    fun evaluate(facts: Facts): Boolean
+    fun evaluate(facts: FactType): Boolean
 
     companion object {
         /**
          * A NoOp [Condition] that always returns false.
          */
-        val FALSE: Condition = Condition { facts: Facts -> false }
+        val FALSE: Condition<Any> = Condition { facts: Any -> false }
 
         /**
          * A NoOp [Condition] that always returns true.
          */
-        val TRUE: Condition = Condition { facts: Facts -> true }
+        val TRUE: Condition<Any> = Condition { facts: Any -> true }
     }
 }

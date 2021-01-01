@@ -112,7 +112,7 @@ class RuleProxy private constructor(private val target: Any) : InvocationHandler
         }
     }
 
-    private fun getActualParameters(method: KFunction, facts: Facts): MutableList<Any> {
+    private fun getActualParameters(method: KFunction, facts: FactType): MutableList<Any> {
         val actualParameters: MutableList<Any> = ArrayList()
         val parameterAnnotations = method.getParameterAnnotations()
         for (annotations in parameterAnnotations) {

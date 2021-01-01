@@ -25,19 +25,25 @@ package org.jeasy.rules.core
 
 import org.jeasy.rules.api.*
 
-open class DefaultRule(
+open class DefaultRule<FactType>(
     name: String = Rule.DEFAULT_NAME,
     description: String = Rule.DEFAULT_DESCRIPTION,
-    priority: Int= Rule.DEFAULT_PRIORITY,
-    private val condition: Condition,
-    private val actions: List<Action>
-) : BasicRule(name, description, priority) {
-    override fun evaluate(facts: Facts): Boolean {
+    priority: Int = Rule.DEFAULT_PRIORITY,
+    private val condition: Condition<FactType>,
+    private val actions: List<Action<FactType>>
+) : BasicRule<FactType>(name, description, priority) {
+
+    constructor(
+        condition: Condition<FactType>,
+        action: Action<FactType>
+    ) : this(condition = condition, actions = listOf(action))
+
+    override fun evaluate(facts: FactType): Boolean {
         return condition.evaluate(facts)
     }
 
     @Throws(Exception::class)
-    override fun execute(facts: Facts) {
+    override fun execute(facts: FactType) {
         for (action in actions) {
             action.execute(facts)
         }

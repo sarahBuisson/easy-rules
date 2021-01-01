@@ -42,7 +42,7 @@ class ConditionalRuleGroupTest {
     private lateinit var rule2: TestRule
     private lateinit var conditionalRule: TestRule
     private lateinit var conditionalRuleGroup: ConditionalRuleGroup
-    private val facts: Facts = Facts()
+    private val facts: FactType = Facts()
     private val rules: Rules = Rules()
     private val rulesEngine: DefaultRulesEngine = DefaultRulesEngine()
 
@@ -213,11 +213,11 @@ class ConditionalRuleGroupTest {
     class MyRule : BasicRule() {
         private var executed = false
 
-        override fun evaluate(facts: Facts): Boolean {
+        override fun evaluate(facts: FactType): Boolean {
             return true
         }
 
-        override fun execute(facts: Facts) {
+        override fun execute(facts: FactType) {
             executed = true
         }
 
@@ -259,11 +259,11 @@ class ConditionalRuleGroupTest {
     class MyOtherRule(priority: Int) : BasicRule(priority = priority) {
         private var executed = false
 
-        override fun evaluate(facts: Facts): Boolean {
+        override fun evaluate(facts: FactType): Boolean {
             return true
         }
 
-        override fun execute(facts: Facts) {
+        override fun execute(facts: FactType) {
             executed = true
         }
 
@@ -275,11 +275,11 @@ class ConditionalRuleGroupTest {
     @Rule
     class UnprioritizedRule : BasicRule() {
         var executed = false
-        override fun evaluate(facts: Facts): Boolean {
+        override fun evaluate(facts: FactType): Boolean {
             return true
         }
 
-        override fun execute(facts: Facts) {
+        override fun execute(facts: FactType) {
             executed = true
             actions.add("UnprioritizedRule")
         }
@@ -296,11 +296,11 @@ class ConditionalRuleGroupTest {
         var evaluationResult: Boolean
     ) : BasicRule(name, description, priority) {
         var executed = false
-        override fun evaluate(facts: Facts): Boolean {
+        override fun evaluate(facts: FactType): Boolean {
             return evaluationResult
         }
 
-        override fun execute(facts: Facts) {
+        override fun execute(facts: FactType) {
             executed = true
             actions.add(name)
         }

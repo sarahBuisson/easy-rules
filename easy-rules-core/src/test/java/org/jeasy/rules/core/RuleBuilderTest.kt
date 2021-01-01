@@ -32,13 +32,13 @@ import kotlin.test.assertEquals
 
 class RuleBuilderTest {
     @MockK
-    private lateinit var condition: Condition
+    private lateinit var condition: Condition<Facts>
 
     @MockK
-    private lateinit var action1: Action
+    private lateinit var action1: Action<Facts>
 
     @MockK
-    private lateinit var action2: Action
+    private lateinit var action2: Action<Facts>
 
     @BeforeTest
     @Throws(Exception::class)
@@ -49,7 +49,7 @@ class RuleBuilderTest {
     @Test
     fun testDefaultRuleCreationWithDefaultValues() {
         // when
-        val rule = RuleBuilder().build()
+        val rule = RuleBuilder<Facts>().build()
 
         // then
         assertEquals(rule.name,Rule.Companion.DEFAULT_NAME)
@@ -60,7 +60,7 @@ class RuleBuilderTest {
     @Test
     fun testDefaultRuleCreationWithCustomValues() {
         // when
-        val rule = RuleBuilder()
+        val rule = RuleBuilder<Facts>()
             .name("myRule")
             .description("myRuleDescription")
             .priority(3)

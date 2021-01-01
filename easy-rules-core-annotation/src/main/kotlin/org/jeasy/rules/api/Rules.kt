@@ -37,14 +37,14 @@ import java.util.*
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 class Rules : Iterable<Rule?> {
-    private var rules: MutableSet<Rule> = TreeSet()
+    private var rules: MutableSet<Rule<FactType>> = TreeSet()
 
     /**
      * Create a new [Rules] object.
      *
      * @param rules to register
      */
-    constructor(rules: MutableSet<Rule>) {
+    constructor(rules: MutableSet<Rule<FactType>>) {
         this.rules = TreeSet(rules)
     }
 
@@ -131,7 +131,7 @@ class Rules : Iterable<Rule?> {
      * using this iterator.
      * @return an iterator on the rules set
      */
-    override fun iterator(): MutableIterator<Rule> {
+    override fun iterator(): MutableIterator<Rule<FactType>> {
         return rules.iterator()
     }
 

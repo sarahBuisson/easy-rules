@@ -29,24 +29,25 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.verifyOrder
 import org.jeasy.rules.api.Action
 import org.jeasy.rules.api.Condition
+import org.jeasy.rules.api.Facts
 import kotlin.test.Test
 
 class DefaultRuleTest : AbstractTest() {
     @MockK
-    private lateinit var condition: Condition
+    private lateinit var condition: Condition<Facts>
 
     @MockK
-    private lateinit var action1: Action
+    private lateinit var action1: Action<Facts>
 
     @MockK
-    private lateinit var action2: Action
+    private lateinit var action2: Action<Facts>
 
     @Test
     @Throws(Exception::class)
     fun WhenConditionIsTrue_ThenActionsShouldBeExecutedInOrder() {
         // given
         every { condition.evaluate(facts) } returns (true)
-        val rule = RuleBuilder()
+        val rule = RuleBuilder<Facts>()
             .`when`(condition)
             .then(action1)
             .then(action2)
@@ -68,7 +69,7 @@ class DefaultRuleTest : AbstractTest() {
     fun WhenConditionIsFalse_ThenActionsShouldNotBeExecuted() {
         // given
         every { condition.evaluate(facts) } returns (false)
-        val rule = RuleBuilder()
+        val rule = RuleBuilder<Facts>()
             .`when`(condition)
             .then(action1)
             .then(action2)

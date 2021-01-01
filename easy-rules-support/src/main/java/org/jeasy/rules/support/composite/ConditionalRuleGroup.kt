@@ -36,9 +36,9 @@ import org.jeasy.rules.api.Rule
  *
  * @author Dag Framstad (dagframstad@gmail.com)
  */
-class ConditionalRuleGroup : CompositeRule {
-    private lateinit var successfulEvaluations: MutableSet<Rule>
-    private lateinit var conditionalRule: Rule
+class ConditionalRuleGroup<FactType> : CompositeRule<FactType> {
+    private lateinit var successfulEvaluations: MutableSet<Rule<FactType>>
+    private lateinit var conditionalRule: Rule<FactType>
 
     /**
      * Create a conditional rule group.
@@ -76,7 +76,7 @@ class ConditionalRuleGroup : CompositeRule {
      * @param facts The facts.
      * @return true if the conditions of all composing rules evaluate to true
      */
-    override fun evaluate(facts: Facts): Boolean {
+    override fun evaluate(facts: FactType): Boolean {
         successfulEvaluations = HashSet()
         conditionalRule = getRuleWithHighestPriority()
         if (conditionalRule.evaluate(facts)) {
@@ -100,14 +100,14 @@ class ConditionalRuleGroup : CompositeRule {
      * @throws Exception thrown if an exception occurs during actions performing
      */
     @Throws(Exception::class)
-    override fun execute(facts: Facts) {
+    override fun execute(facts: FactType) {
         conditionalRule.execute(facts)
         for (rule in sort(successfulEvaluations)) {
             rule.execute(facts)
         }
     }
 
-    private fun getRuleWithHighestPriority(): Rule {
+    private fun getRuleWithHighestPriority(): Rule<FactType> {
         val copy = sort(rules)
         // make sure we only have one rule with the highest priority
         val highest = copy.get(0)
@@ -117,7 +117,7 @@ class ConditionalRuleGroup : CompositeRule {
         return highest
     }
 
-    private fun sort(rules: MutableSet<Rule>): MutableList<Rule> {
+    private fun sort(rules: MutableSet<Rule<FactType>>): MutableList<Rule<FactType>> {
         return ArrayList(rules.toList().sorted())
     }
 }

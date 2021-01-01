@@ -27,7 +27,7 @@ import org.jeasy.rules.api.Facts
 import org.jeasy.rules.core.BasicRule
 
 
-class HelloWorldRule : BasicRule(name = "Hello World rule", description = "Always say hello world") {
+class HelloWorldRule : BasicRule<Facts>(name = "Hello World rule", description = "Always say hello world") {
 
     override fun evaluate(facts: Facts): Boolean {
         return true

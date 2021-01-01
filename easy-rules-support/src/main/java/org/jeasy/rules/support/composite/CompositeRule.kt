@@ -34,21 +34,21 @@ import org.jeasy.rules.core.BasicRule
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-abstract class CompositeRule constructor(
+abstract class CompositeRule<FactType> constructor(
     name: String = Rule.DEFAULT_NAME,
     description: String = Rule.DEFAULT_DESCRIPTION,
     priority: Int = Rule.DEFAULT_PRIORITY
-) : BasicRule(name, description, priority) {
+) : BasicRule<FactType>(name, description, priority) {
     /**
      * The set of composing rules.
      */
-    protected var rules: MutableSet<Rule> = mutableSetOf()
+    protected var rules: MutableSet<Rule<FactType>> = mutableSetOf()
 
     /**
      * Add a rule to the composite rule.
      * @param rule the rule to add
      */
-    fun addRule(rule: Rule) {
+    fun addRule(rule: Rule<FactType>) {
         rules.add(rule)
     }
 
@@ -56,7 +56,7 @@ abstract class CompositeRule constructor(
      * Remove a rule from the composite rule.
      * @param rule the rule to remove
      */
-    fun removeRule(rule: Rule) {
+    fun removeRule(rule: Rule<FactType>) {
             rules.remove(rule)
     }
 }

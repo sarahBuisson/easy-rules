@@ -35,7 +35,7 @@ import org.jeasy.rules.api.*
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class DefaultRulesEngine : AbstractRulesEngine {
+class DefaultRulesEngine<FactType> : AbstractRulesEngine<FactType> {
     /**
      * Create a new [DefaultRulesEngine] with default _parameters.
      */
@@ -48,13 +48,13 @@ class DefaultRulesEngine : AbstractRulesEngine {
      */
     constructor(_parameters: RulesEngineParameters) : super(_parameters) {}
 
-    override fun fire(rules: Rules, facts: Facts) {
+    override fun fire(rules: Rules<FactType>, facts: FactType) {
         triggerListenersBeforeRules(rules, facts)
         doFire(rules, facts)
         triggerListenersAfterRules(rules, facts)
     }
 
-    fun doFire(rules: Rules, facts: Facts) {
+    fun doFire(rules: Rules<FactType>, facts: FactType) {
         if (rules.isEmpty()) {
             LOGGER.warn { "No rules registered! Nothing to apply" }
             return
@@ -123,7 +123,7 @@ class DefaultRulesEngine : AbstractRulesEngine {
         LOGGER.debug { "${_parameters}" }
     }
 
-    private fun log(rules: Rules) {
+    private fun log(rules: Rules<FactType>) {
         LOGGER.debug { "Registered rules:" }
         for (rule in rules) {
             LOGGER.debug {
@@ -132,23 +132,22 @@ class DefaultRulesEngine : AbstractRulesEngine {
         }
     }
 
-    private fun log(facts: Facts) {
+    private fun log(facts: FactType) {
         LOGGER.debug { "Known facts:" }
-        for (fact in facts) {
-            LOGGER.debug { "${fact}" }
-        }
+        LOGGER.debug { "${facts}" }
+
     }
 
-    override fun check(rules: Rules, facts: Facts): MutableMap<Rule, Boolean> {
+    override fun check(rules: Rules<FactType>, facts: FactType): MutableMap<Rule<FactType>, Boolean> {
         triggerListenersBeforeRules(rules, facts)
         val result = doCheck(rules, facts)
         triggerListenersAfterRules(rules, facts)
         return result
     }
 
-    private fun doCheck(rules: Rules, facts: Facts): MutableMap<Rule, Boolean> {
+    private fun doCheck(rules: Rules<FactType>, facts: FactType): MutableMap<Rule<FactType>, Boolean> {
         LOGGER.debug { "Checking rules" }
-        val result: MutableMap<Rule, Boolean> = HashMap()
+        val result: MutableMap<Rule<FactType>, Boolean> = HashMap()
         for (rule in rules) {
             if (shouldBeEvaluated(rule, facts)) {
                 result[rule] = rule.evaluate(facts)
@@ -157,8 +156,8 @@ class DefaultRulesEngine : AbstractRulesEngine {
         return result
     }
 
-    private fun triggerListenersOnFailure(rule: Rule, exception: Exception?, facts: Facts?) {
-        _ruleListeners.forEach({ ruleListener: RuleListener ->
+    private fun triggerListenersOnFailure(rule: Rule<FactType>, exception: Exception, facts: FactType) {
+        _ruleListeners.forEach({ ruleListener: RuleListener<FactType> ->
             ruleListener.onFailure(
                 rule,
                 facts,
@@ -167,20 +166,20 @@ class DefaultRulesEngine : AbstractRulesEngine {
         })
     }
 
-    private fun triggerListenersOnSuccess(rule: Rule, facts: Facts) {
-        _ruleListeners.forEach({ ruleListener: RuleListener -> ruleListener.onSuccess(rule, facts) })
+    private fun triggerListenersOnSuccess(rule: Rule<FactType>, facts: FactType) {
+        _ruleListeners.forEach({ ruleListener: RuleListener<FactType> -> ruleListener.onSuccess(rule, facts) })
     }
 
-    private fun triggerListenersBeforeExecute(rule: Rule, facts: Facts) {
-        _ruleListeners.forEach({ ruleListener: RuleListener -> ruleListener.beforeExecute(rule, facts) })
+    private fun triggerListenersBeforeExecute(rule: Rule<FactType>, facts: FactType) {
+        _ruleListeners.forEach({ ruleListener: RuleListener<FactType> -> ruleListener.beforeExecute(rule, facts) })
     }
 
-    private fun triggerListenersBeforeEvaluate(rule: Rule, facts: Facts): Boolean {
-        return _ruleListeners.all { ruleListener: RuleListener -> ruleListener.beforeEvaluate(rule, facts) }
+    private fun triggerListenersBeforeEvaluate(rule: Rule<FactType>, facts: FactType): Boolean {
+        return _ruleListeners.all { ruleListener: RuleListener<FactType> -> ruleListener.beforeEvaluate(rule, facts) }
     }
 
-    private fun triggerListenersAfterEvaluate(rule: Rule?, facts: Facts, evaluationResult: Boolean) {
-        _ruleListeners.forEach({ ruleListener: RuleListener ->
+    private fun triggerListenersAfterEvaluate(rule: Rule<FactType>, facts: FactType, evaluationResult: Boolean) {
+        _ruleListeners.forEach({ ruleListener: RuleListener<FactType> ->
             ruleListener.afterEvaluate(
                 rule,
                 facts,
@@ -189,8 +188,8 @@ class DefaultRulesEngine : AbstractRulesEngine {
         })
     }
 
-    private fun triggerListenersOnEvaluationError(rule: Rule, facts: Facts, exception: Exception) {
-        _ruleListeners.forEach({ ruleListener: RuleListener ->
+    private fun triggerListenersOnEvaluationError(rule: Rule<FactType>, facts: FactType, exception: Exception) {
+        _ruleListeners.forEach({ ruleListener: RuleListener<FactType> ->
             ruleListener.onEvaluationError(
                 rule,
                 facts,
@@ -199,8 +198,8 @@ class DefaultRulesEngine : AbstractRulesEngine {
         })
     }
 
-    private fun triggerListenersBeforeRules(rule: Rules, facts: Facts) {
-        _rulesEngineListeners.forEach({ rulesEngineListener: RulesEngineListener ->
+    private fun triggerListenersBeforeRules(rule: Rules<FactType>, facts: FactType) {
+        _rulesEngineListeners.forEach({ rulesEngineListener: RulesEngineListener<FactType> ->
             rulesEngineListener.beforeEvaluate(
                 rule,
                 facts
@@ -208,8 +207,8 @@ class DefaultRulesEngine : AbstractRulesEngine {
         })
     }
 
-    private fun triggerListenersAfterRules(rule: Rules, facts: Facts) {
-        _rulesEngineListeners.forEach({ rulesEngineListener: RulesEngineListener ->
+    private fun triggerListenersAfterRules(rule: Rules<FactType>, facts: FactType) {
+        _rulesEngineListeners.forEach({ rulesEngineListener: RulesEngineListener<FactType> ->
             rulesEngineListener.afterExecute(
                 rule,
                 facts
@@ -217,7 +216,7 @@ class DefaultRulesEngine : AbstractRulesEngine {
         })
     }
 
-    private fun shouldBeEvaluated(rule: Rule, facts: Facts): Boolean {
+    private fun shouldBeEvaluated(rule: Rule<FactType>, facts: FactType): Boolean {
         return triggerListenersBeforeEvaluate(rule, facts)
     }
 

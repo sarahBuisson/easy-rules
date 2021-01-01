@@ -29,7 +29,7 @@ import org.jeasy.rules.core.InferenceRulesEngine
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-interface RulesEngineListener {
+interface RulesEngineListener<FactType> {
     /**
      * Triggered before evaluating the rule set.
      * **When this listener is used with a [InferenceRulesEngine],
@@ -39,7 +39,7 @@ interface RulesEngineListener {
      * @param rules to fire
      * @param facts present before firing rules
      */
-    fun beforeEvaluate(rules: Rules?, facts: Facts?) {}
+    fun beforeEvaluate(rules: Rules<FactType>, facts: FactType) {}
 
     /**
      * Triggered after executing the rule set
@@ -50,5 +50,5 @@ interface RulesEngineListener {
      * @param rules fired
      * @param facts present after firing rules
      */
-    fun afterExecute(rules: Rules?, facts: Facts?) {}
+    fun afterExecute(rules: Rules<FactType>, facts: FactType) {}
 }

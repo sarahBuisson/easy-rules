@@ -28,7 +28,7 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-interface RuleListener {
+interface RuleListener<FactType> {
     /**
      * Triggered before the evaluation of a rule.
      *
@@ -36,7 +36,7 @@ interface RuleListener {
      * @param facts known before evaluating the rule
      * @return true if the rule should be evaluated, false otherwise
      */
-    fun beforeEvaluate(rule: Rule?, facts: Facts?): Boolean {
+    fun beforeEvaluate(rule: Rule<FactType>, facts: FactType): Boolean {
         return true
     }
 
@@ -47,7 +47,7 @@ interface RuleListener {
      * @param facts known after evaluating the rule
      * @param evaluationResult true if the rule evaluated to true, false otherwise
      */
-    fun afterEvaluate(rule: Rule?, facts: Facts?, evaluationResult: Boolean) {}
+    fun afterEvaluate(rule: Rule<FactType>, facts: FactType, evaluationResult: Boolean) {}
 
     /**
      * Triggered on condition evaluation error due to any runtime exception.
@@ -56,7 +56,7 @@ interface RuleListener {
      * @param facts known while evaluating the rule
      * @param exception that happened while attempting to evaluate the condition.
      */
-    fun onEvaluationError(rule: Rule?, facts: Facts?, exception: Exception?) {}
+    fun onEvaluationError(rule: Rule<FactType>, facts: FactType, exception: Exception) {}
 
     /**
      * Triggered before the execution of a rule.
@@ -64,7 +64,7 @@ interface RuleListener {
      * @param rule the current rule
      * @param facts known facts before executing the rule
      */
-    fun beforeExecute(rule: Rule?, facts: Facts?) {}
+    fun beforeExecute(rule: Rule<FactType>, facts: FactType?) {}
 
     /**
      * Triggered after a rule has been executed successfully.
@@ -72,7 +72,7 @@ interface RuleListener {
      * @param rule the current rule
      * @param facts known facts after executing the rule
      */
-    fun onSuccess(rule: Rule?, facts: Facts?) {}
+    fun onSuccess(rule: Rule<FactType>, facts: FactType) {}
 
     /**
      * Triggered after a rule has failed.
@@ -81,5 +81,5 @@ interface RuleListener {
      * @param facts known facts after executing the rule
      * @param exception the exception thrown when attempting to execute the rule
      */
-    fun onFailure(rule: Rule?, facts: Facts?, exception: Exception?) {}
+    fun onFailure(rule: Rule<FactType>, facts: FactType, exception: Exception) {}
 }

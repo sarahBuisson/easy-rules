@@ -34,15 +34,15 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class Rules : Iterable<Rule?> {
-    private var rules: MutableSet<Rule> = mutableSetOf()
+class Rules<FactType> : Iterable<Rule<FactType>> {
+    private var rules: MutableSet<Rule<FactType>> = mutableSetOf()
 
     /**
      * Create a new [Rules] object.
      *
      * @param rules to register
      */
-    constructor(rules: MutableSet<Rule>) {
+    constructor(rules: Set<Rule<FactType>>) {
         this.rules = rules.toMutableSet()
     }
 
@@ -51,7 +51,7 @@ class Rules : Iterable<Rule?> {
      *
      * @param rules to register
      */
-    constructor(vararg rules: Rule) {
+    constructor(vararg rules: Rule<FactType>) {
         this.rules.addAll(rules)
     }
 
@@ -60,7 +60,7 @@ class Rules : Iterable<Rule?> {
      *
      * @param rules to register, must not be null
      */
-    fun register(vararg rules: Rule) {
+    fun register(vararg rules: Rule<FactType>) {
         for (rule in rules) {
             this.rules.add(rule)
         }
@@ -71,7 +71,7 @@ class Rules : Iterable<Rule?> {
      *
      * @param rules to unregister, must not be null
      */
-    fun unregister(vararg rules: Rule) {
+    fun unregister(vararg rules: Rule<FactType>) {
         for (rule in rules) {
             this.rules.remove(rule)
         }
@@ -116,13 +116,13 @@ class Rules : Iterable<Rule?> {
      * using this iterator.
      * @return an iterator on the rules set
      */
-    override fun iterator(): Iterator<Rule> {
+    override fun iterator(): Iterator<Rule<FactType>> {
         return rules.toList().sorted().iterator()
     }
 
-    private fun findRuleByName(ruleName: String): Rule? {
+    private fun findRuleByName(ruleName: String): Rule<FactType>? {
         return rules
-            .filter { rule: Rule -> rule.name.equals(ruleName, ignoreCase = true) }
+            .filter { rule: Rule<FactType> -> rule.name.equals(ruleName, ignoreCase = true) }
             .firstOrNull()
     }
 }

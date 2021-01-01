@@ -37,9 +37,9 @@ import jdk.nashorn.internal.objects.NativeArray.every
 
 class DefaultRulesEngineTest : AbstractTest() {
     @MockK
-    private lateinit var rule1: Rule
+    private lateinit var rule1: Rule<Facts>
     @MockK
-    private lateinit var rule2: Rule
+    private lateinit var rule2: Rule<Facts>
 
     @MockK
     private lateinit var ruleListener: RuleListener

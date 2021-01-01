@@ -33,10 +33,10 @@ class ConditionalRuleGroupTest {
     private lateinit var rule1: TestRule
     private lateinit var rule2: TestRule
     private lateinit var conditionalRule: TestRule
-    private lateinit var conditionalRuleGroup: ConditionalRuleGroup
+    private lateinit var conditionalRuleGroup: ConditionalRuleGroup<Facts>
     private val facts: Facts = Facts()
-    private val rules: Rules = Rules()
-    private val rulesEngine: DefaultRulesEngine = DefaultRulesEngine()
+    private val rules: Rules<Facts> = Rules()
+    private val rulesEngine: DefaultRulesEngine<Facts> = DefaultRulesEngine()
 
     @BeforeTest
     fun setUp() {
@@ -213,7 +213,7 @@ class ConditionalRuleGroupTest {
         assertEquals(actions.size, 3)
     }
 
-    class MyRule : BasicRule(priority = 2) {
+    class MyRule : BasicRule<Facts>(priority = 2) {
         private var executed = false
 
         override fun evaluate(facts: Facts): Boolean {
@@ -229,7 +229,7 @@ class ConditionalRuleGroupTest {
         }
     }
 
-    class MyAnnotatedRule : BasicRule(priority = 3) {
+    class MyAnnotatedRule : BasicRule<Facts>(priority = 3) {
         private var executed = false
 
 
@@ -247,7 +247,7 @@ class ConditionalRuleGroupTest {
         }
     }
 
-    class MyOtherRule(priority: Int) : BasicRule(priority = priority) {
+    class MyOtherRule(priority: Int) : BasicRule<Facts>(priority = priority) {
         private var executed = false
 
         override fun evaluate(facts: Facts): Boolean {
@@ -263,7 +263,7 @@ class ConditionalRuleGroupTest {
         }
     }
 
-    class UnprioritizedRule : BasicRule() {
+    class UnprioritizedRule : BasicRule<Facts>() {
         var executed = false
         override fun evaluate(facts: Facts): Boolean {
             return true
@@ -284,7 +284,7 @@ class ConditionalRuleGroupTest {
         description: String,
         priority: Int,
         var evaluationResult: Boolean
-    ) : BasicRule(name, description, priority) {
+    ) : BasicRule<Facts>(name, description, priority) {
         var executed = false
         override fun evaluate(facts: Facts): Boolean {
             return evaluationResult

@@ -76,11 +76,11 @@ class InferenceRulesEngineTest {
         internal class StubRulesEngineListener : RulesEngineListener {
             private var executedBeforeEvaluate = false
             private var executedAfterExecute = false
-            override fun beforeEvaluate(rules: Rules?, facts: Facts?) {
+            override fun beforeEvaluate(rules: Rules?, facts: FactType?) {
                 executedBeforeEvaluate = true
             }
 
-            override fun afterExecute(rules: Rules?, facts: Facts?) {
+            override fun afterExecute(rules: Rules?, facts: FactType?) {
                 executedAfterExecute = true
             }
 
@@ -121,7 +121,7 @@ class InferenceRulesEngineTest {
         }
 
         @Action
-        fun then(facts: Facts) {
+        fun then(facts: FactType) {
             isExecuted = true
             timestamp = System.currentTimeMillis()
             facts.remove("foo")
@@ -151,7 +151,7 @@ class InferenceRulesEngineTest {
         }
 
         @Action
-        fun then(facts: Facts) {
+        fun then(facts: FactType) {
             isExecuted = true
             timestamp = System.currentTimeMillis()
             facts.remove("bar")

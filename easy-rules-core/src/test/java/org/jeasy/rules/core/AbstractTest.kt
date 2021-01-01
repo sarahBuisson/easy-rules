@@ -31,17 +31,17 @@ import kotlin.test.BeforeTest
 abstract class AbstractTest {
 
     @MockK
-    protected lateinit var rule1: Rule
+    protected lateinit var rule1: Rule<Facts>
     @MockK
-    protected lateinit var rule2: Rule
+    protected lateinit var rule2: Rule<Facts>
     @MockK
     protected lateinit var fact1: Any 
 
     @MockK
     protected lateinit var fact2: Any 
-    protected lateinit var facts: Facts 
-    protected lateinit var rules: Rules
-    protected lateinit var rulesEngine: DefaultRulesEngine
+    protected lateinit var facts: Facts
+    protected lateinit var rules: Rules<Facts>
+    protected lateinit var rulesEngine: DefaultRulesEngine<Facts>
 
     @BeforeTest
     @Throws(Exception::class)

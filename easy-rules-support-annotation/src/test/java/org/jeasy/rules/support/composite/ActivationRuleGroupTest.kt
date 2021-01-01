@@ -37,7 +37,7 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivationRuleGroupTest {
-    private val facts: Facts = Facts()
+    private val facts: FactType = Facts()
     private val rules: Rules = Rules()
     private val rulesEngine: DefaultRulesEngine  = DefaultRulesEngine()
 
@@ -102,11 +102,11 @@ class ActivationRuleGroupTest {
     class Rule1 : BasicRule() {
         private var executed = false
 
-        override fun evaluate(facts: Facts): Boolean {
+        override fun evaluate(facts: FactType): Boolean {
             return true
         }
 
-        override fun execute(facts: Facts) {
+        override fun execute(facts: FactType) {
             executed = true
         }
 
@@ -119,11 +119,11 @@ class ActivationRuleGroupTest {
     class Rule2 : BasicRule() {
         private var executed = false
 
-        override fun evaluate(facts: Facts): Boolean {
+        override fun evaluate(facts: FactType): Boolean {
             return true
         }
 
-        override fun execute(facts: Facts) {
+        override fun execute(facts: FactType) {
             executed = true
         }
 
@@ -136,11 +136,11 @@ class ActivationRuleGroupTest {
     class Rule3 : BasicRule() {
         private var executed = false
 
-        override fun evaluate(facts: Facts): Boolean {
+        override fun evaluate(facts: FactType): Boolean {
             return true
         }
 
-        override fun execute(facts: Facts) {
+        override fun execute(facts: FactType) {
             executed = true
         }
 
@@ -153,11 +153,11 @@ class ActivationRuleGroupTest {
     class Rule4 : BasicRule()  {
         private var executed = false
 
-        override fun evaluate(facts: Facts): Boolean {
+        override fun evaluate(facts: FactType): Boolean {
             return false
         }
 
-        override fun execute(facts: Facts) {
+        override fun execute(facts: FactType) {
             executed = true
         }
 

@@ -73,7 +73,7 @@ public class MVELRuleFactoryTest {
 
         // then
         assertThat(rules.asMap().size, 2);
-        Iterator<Rule> iterator = rules.iterator();
+        Iterator<Rule<FactType>> iterator = rules.iterator();
 
         Rule rule = iterator.next();
         assertThat(rule).isNotNull();
@@ -127,7 +127,7 @@ public class MVELRuleFactoryTest {
 
         // then
         assertThat(rules.asMap().size, 2);
-        Iterator<Rule> iterator = rules.iterator();
+        Iterator<Rule<FactType>> iterator = rules.iterator();
 
         Rule rule = iterator.next();
         assertThat(rule).isNotNull();

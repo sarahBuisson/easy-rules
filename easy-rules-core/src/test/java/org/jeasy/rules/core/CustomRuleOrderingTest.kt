@@ -26,6 +26,8 @@ package org.jeasy.rules.core
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.MockKAnnotations
+import io.mockk.verifyOrder
+import org.jeasy.rules.api.Facts
 import org.jeasy.rules.api.Rule
 import kotlin.test.Test
 import kotlin.test.BeforeTest
@@ -67,14 +69,14 @@ class CustomRuleOrderingTest : AbstractTest() {
          * But in this case, the compareTo method order rules by their name, so myRule1 should be executed first ("a" < "b")
          */
 
-        //TODO
-        //val inOrder = Mockito.inOrder(myRule1, myRule2)
-        //inOrder.verify<MyRule?>(myRule1).execute(facts)
-        //inOrder.verify<MyRule?>(myRule2).execute(facts)
+        verifyOrder {
+            (myRule1).execute(facts)
+            (myRule2).execute(facts)
+        }
     }
 
-    open class MyRule : BasicRule() {
-        override fun compareTo(rule: Rule): Int {
+    open class MyRule : BasicRule<Facts>() {
+        override fun compareTo(rule: Rule<Facts>): Int {
             return name.compareTo(rule.name)
         }
     }

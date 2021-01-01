@@ -49,7 +49,7 @@ class JexlCondition : Condition {
         compiledScript = jexl.createScript(expression)
     }
 
-    override fun evaluate(facts: Facts): Boolean {
+    override fun evaluate(facts: FactType): Boolean {
         Objects.requireNonNull(facts, "facts cannot be null")
         val ctx = MapContext(facts.asMap())
         return compiledScript.execute(ctx) as Boolean

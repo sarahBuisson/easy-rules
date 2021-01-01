@@ -28,7 +28,7 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-fun interface Action {
+fun interface Action<FactType> {
     /**
      * Execute the action when the rule's condition evaluates to true.
      *
@@ -36,5 +36,5 @@ fun interface Action {
      * @throws Exception when unable to execute the action
      */
     @Throws(Exception::class)
-    fun execute(facts: Facts)
+    fun execute(facts: FactType)
 }

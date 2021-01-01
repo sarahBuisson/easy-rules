@@ -28,7 +28,7 @@ package org.jeasy.rules.api
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-interface RulesEngine {
+interface RulesEngine<FactType> {
     /**
      * Return the rules engine parameters.
      *
@@ -41,7 +41,7 @@ interface RulesEngine {
      *
      * @return the list of registered rule listeners
      */
-    open fun getRuleListeners(): List<RuleListener> {
+    open fun getRuleListeners(): List<RuleListener<FactType>> {
         return mutableListOf()
     }
 
@@ -50,20 +50,20 @@ interface RulesEngine {
      *
      * @return the list of registered rules engine listeners
      */
-    open fun getRulesEngineListeners(): List<RulesEngineListener> {
+    open fun getRulesEngineListeners(): List<RulesEngineListener<FactType>> {
         return mutableListOf()
     }
 
     /**
      * Fire all registered rules on given facts.
      */
-    open fun fire(rules: Rules, facts: Facts)
+    open fun fire(rules: Rules<FactType>, facts: FactType)
 
     /**
      * Check rules without firing them.
      * @return a map with the result of evaluation of each rule
      */
-    fun check(rules: Rules, facts: Facts): MutableMap<Rule, Boolean> {
+    fun check(rules: Rules<FactType>, facts: FactType): MutableMap<Rule<FactType>, Boolean> {
         return mutableMapOf()
     }
 }

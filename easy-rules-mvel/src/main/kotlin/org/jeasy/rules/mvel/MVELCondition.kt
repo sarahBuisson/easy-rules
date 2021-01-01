@@ -57,7 +57,7 @@ class MVELCondition : Condition {
         compiledExpression = MVEL.compileExpression(expression, parserContext)
     }
 
-    override fun evaluate(facts: Facts): Boolean {
+    override fun evaluate(facts: FactType): Boolean {
         // MVEL.evalToBoolean does not accept compiled expressions..
         return MVEL.executeExpression(compiledExpression, facts!!.asMap()) as Boolean
     }

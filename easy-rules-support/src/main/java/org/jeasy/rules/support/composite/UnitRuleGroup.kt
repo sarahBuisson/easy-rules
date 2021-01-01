@@ -33,7 +33,7 @@ import org.jeasy.rules.api.Facts
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-open class UnitRuleGroup : CompositeRule {
+open class UnitRuleGroup<FactType> : CompositeRule<FactType> {
     /**
      * Create a unit rule group.
      */
@@ -60,7 +60,7 @@ open class UnitRuleGroup : CompositeRule {
      */
     constructor(name: String, description: String, priority: Int) : super(name, description, priority) {}
 
-    override fun evaluate(facts: Facts): Boolean {
+    override fun evaluate(facts: FactType): Boolean {
         if (!rules.isEmpty()) {
             for (rule in rules) {
                 if (!rule.evaluate(facts)) {
@@ -73,7 +73,7 @@ open class UnitRuleGroup : CompositeRule {
     }
 
     @Throws(Exception::class)
-    override fun execute(facts: Facts) {
+    override fun execute(facts: FactType) {
         for (rule in rules) {
             rule.execute(facts)
         }

@@ -32,7 +32,7 @@ import kotlin.test.assertFalse
 class BasicRuleTest : AbstractTest() {
     @Test
     fun basicRuleEvaluateShouldReturnFalse() {
-        val basicRule = BasicRule()
+        val basicRule = BasicRule<Facts>()
         assertFalse(basicRule.evaluate(facts))
     }
 
@@ -56,19 +56,19 @@ class BasicRuleTest : AbstractTest() {
         assertEquals(rules.toList().get(2), rule2)
     }
 
-    internal class FirstRule : BasicRule(name = "rule1", priority = 1) {
+    internal class FirstRule : BasicRule<Facts>(name = "rule1", priority = 1) {
         override fun evaluate(facts: Facts): Boolean {
             return true
         }
     }
 
-    internal class SecondRule : BasicRule(name = "rule2", priority = 3) {
+    internal class SecondRule : BasicRule<Facts>(name = "rule2", priority = 3) {
         override fun evaluate(facts: Facts): Boolean {
             return true
         }
     }
 
-    internal class ThirdRule : BasicRule(name = "rule3", priority = 2) {
+    internal class ThirdRule : BasicRule<Facts>(name = "rule3", priority = 2) {
         override fun evaluate(facts: Facts): Boolean {
             return true
         }

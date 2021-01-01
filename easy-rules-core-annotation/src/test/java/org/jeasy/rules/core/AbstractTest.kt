@@ -39,7 +39,7 @@ abstract class AbstractTest {
 
     @MockK
     protected lateinit var fact2: Any 
-    protected lateinit var facts: Facts 
+    protected lateinit var facts: FactType
     protected lateinit var rules: Rules
     protected lateinit var rulesEngine: DefaultRulesEngine
 

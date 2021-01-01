@@ -26,9 +26,9 @@ package org.jeasy.rules.tutorials.airco
 import org.jeasy.rules.api.Condition
 import org.jeasy.rules.api.Facts
 
-class HighTemperatureCondition : Condition {
+class HighTemperatureCondition : Condition<Facts> {
     override fun evaluate(facts: Facts): Boolean {
-        val temperature = facts!!.get<Int>("temperature")
+        val temperature = facts.get<Int>("temperature")
         return temperature!! > 25
     }
 

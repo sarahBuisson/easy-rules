@@ -45,7 +45,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class SpELAction : Action {
+class SpELAction : Action<Facts> {
     private val parser: ExpressionParser = SpelExpressionParser()
     private val expression: String
     private val compiledExpression: Expression

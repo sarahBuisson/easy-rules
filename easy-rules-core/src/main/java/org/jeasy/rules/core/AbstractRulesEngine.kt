@@ -33,10 +33,10 @@ import org.jeasy.rules.api.RulesEngineParameters
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-abstract class AbstractRulesEngine internal constructor(protected var _parameters: RulesEngineParameters = RulesEngineParameters()) :
-    RulesEngine {
-    protected var _ruleListeners = mutableListOf<RuleListener>()
-    protected var _rulesEngineListeners = mutableListOf<RulesEngineListener> ()
+abstract class AbstractRulesEngine<FactType> internal constructor(protected var _parameters: RulesEngineParameters = RulesEngineParameters()) :
+    RulesEngine<FactType> {
+    protected var _ruleListeners = mutableListOf<RuleListener<FactType>>()
+    protected var _rulesEngineListeners = mutableListOf<RulesEngineListener<FactType>> ()
 
     /**
      * Return a copy of the rules engine parameters.
@@ -55,7 +55,7 @@ abstract class AbstractRulesEngine internal constructor(protected var _parameter
      * Return an unmodifiable list of the registered rule listeners.
      * @return an unmodifiable list of the registered rule listeners
      */
-    override fun getRuleListeners(): List<RuleListener> {
+    override fun getRuleListeners(): List<RuleListener<FactType>> {
         return _ruleListeners.toList()
     }
 
@@ -63,23 +63,23 @@ abstract class AbstractRulesEngine internal constructor(protected var _parameter
      * Return an unmodifiable list of the registered rules engine listeners
      * @return an unmodifiable list of the registered rules engine listeners
      */
-    override fun getRulesEngineListeners(): List<RulesEngineListener> {
+    override fun getRulesEngineListeners(): List<RulesEngineListener<FactType>> {
         return _rulesEngineListeners.toList()
     }
 
-    open fun registerRuleListener(ruleListener: RuleListener) {
+    open fun registerRuleListener(ruleListener: RuleListener<FactType>) {
         _ruleListeners.add(ruleListener)
     }
 
-    open fun registerRuleListeners(ruleListeners: List<RuleListener>) {
+    open fun registerRuleListeners(ruleListeners: List<RuleListener<FactType>>) {
         this._ruleListeners.addAll(ruleListeners)
     }
 
-    open fun registerRulesEngineListener(rulesEngineListener: RulesEngineListener) {
+    open fun registerRulesEngineListener(rulesEngineListener: RulesEngineListener<FactType>) {
         _rulesEngineListeners.add(rulesEngineListener)
     }
 
-    open fun registerRulesEngineListeners(rulesEngineListeners: List<RulesEngineListener>) {
+    open fun registerRulesEngineListeners(rulesEngineListeners: List<RulesEngineListener<FactType>>) {
         this._rulesEngineListeners.addAll(rulesEngineListeners)
     }
 }

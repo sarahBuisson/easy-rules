@@ -34,10 +34,10 @@ import kotlin.test.*
 class DefaultRulesEngineTest : AbstractTest() {
 
     @MockK
-    private lateinit var ruleListener: RuleListener
+    private lateinit var ruleListener: RuleListener<Facts>
 
     @MockK
-    private lateinit var rulesEngineListener: RulesEngineListener
+    private lateinit var rulesEngineListener: RulesEngineListener<Facts>
 
     @BeforeTest
     @Throws(Exception::class)
@@ -136,7 +136,7 @@ class DefaultRulesEngineTest : AbstractTest() {
         // Given
         every {rule1.evaluate(facts)} returns(true)
         every {ruleListener.beforeEvaluate(rule1, facts)} returns(true)
-        val rulesEngine = DefaultRulesEngine()
+        val rulesEngine = DefaultRulesEngine<Facts>()
         rulesEngine.registerRuleListener(ruleListener)
         rules.register(rule1)
 
@@ -155,7 +155,7 @@ class DefaultRulesEngineTest : AbstractTest() {
             .skipOnFirstFailedRule(true)
             .skipOnFirstNonTriggeredRule(true)
             .priorityThreshold(42)
-        val rulesEngine = DefaultRulesEngine(parameters)
+        val rulesEngine = DefaultRulesEngine<Facts>(parameters)
 
         // When
         val engineParameters = rulesEngine.getParameters()
@@ -171,7 +171,7 @@ class DefaultRulesEngineTest : AbstractTest() {
     @Test
     fun testGetRuleListeners() {
         // Given
-        val rulesEngine = DefaultRulesEngine()
+        val rulesEngine = DefaultRulesEngine<Facts>()
         rulesEngine.registerRuleListener(ruleListener)
 
         // When
@@ -184,7 +184,7 @@ class DefaultRulesEngineTest : AbstractTest() {
     @Test
     fun testGetRulesEngineListeners() {
         // Given
-        val rulesEngine = DefaultRulesEngine()
+        val rulesEngine = DefaultRulesEngine<Facts>()
         rulesEngine.registerRulesEngineListener(rulesEngineListener)
 
         // When
@@ -200,7 +200,7 @@ class DefaultRulesEngineTest : AbstractTest() {
     }
 
 
-    class DummyRule: BasicRule() {
+    class DummyRule: BasicRule<Facts>() {
 
         override fun evaluate(facts: Facts): Boolean {
             return true

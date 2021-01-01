@@ -36,11 +36,11 @@ import org.jeasy.rules.core.InferenceRulesEngine
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-class InferenceRulesEngine constructor(parameters: RulesEngineParameters = RulesEngineParameters()) :
-    AbstractRulesEngine(parameters) {
-    private val delegate: DefaultRulesEngine
-    override fun fire(rules: Rules, facts: Facts) {
-        var selectedRules: MutableSet<Rule>
+class InferenceRulesEngine<FactType> constructor(parameters: RulesEngineParameters = RulesEngineParameters()) :
+    AbstractRulesEngine<FactType>(parameters) {
+    private val delegate: DefaultRulesEngine<FactType>
+    override fun fire(rules: Rules<FactType>, facts: FactType) {
+        var selectedRules: MutableSet<Rule<FactType>>
         do {
             LOGGER.debug { "Selecting candidate rules based on the following facts: ${facts}" }
             selectedRules = selectCandidates(rules, facts)
@@ -52,8 +52,8 @@ class InferenceRulesEngine constructor(parameters: RulesEngineParameters = Rules
         } while (!selectedRules.isEmpty())
     }
 
-    private fun selectCandidates(rules: Rules, facts: Facts): MutableSet<Rule> {
-        val candidates: MutableSet<Rule> = mutableSetOf()
+    private fun selectCandidates(rules: Rules<FactType>, facts: FactType): MutableSet<Rule<FactType>> {
+        val candidates: MutableSet<Rule<FactType>> = mutableSetOf()
         for (rule in rules) {
             if (rule.evaluate(facts)) {
                 candidates.add(rule)
@@ -62,7 +62,7 @@ class InferenceRulesEngine constructor(parameters: RulesEngineParameters = Rules
         return candidates
     }
 
-    override fun check(rules: Rules, facts: Facts): MutableMap<Rule, Boolean> {
+    override fun check(rules: Rules<FactType>, facts: FactType): MutableMap<Rule<FactType>, Boolean> {
         return delegate.check(rules, facts)
     }
 
@@ -70,7 +70,7 @@ class InferenceRulesEngine constructor(parameters: RulesEngineParameters = Rules
      * Register a rule listener.
      * @param ruleListener to register
      */
-    override fun registerRuleListener(ruleListener: RuleListener) {
+    override fun registerRuleListener(ruleListener: RuleListener<FactType>) {
         super.registerRuleListener(ruleListener)
         delegate.registerRuleListener(ruleListener)
     }
@@ -79,7 +79,7 @@ class InferenceRulesEngine constructor(parameters: RulesEngineParameters = Rules
      * Register a list of rule listener.
      * @param ruleListeners to register
      */
-    override fun registerRuleListeners(ruleListeners: List<RuleListener>) {
+    override fun registerRuleListeners(ruleListeners: List<RuleListener<FactType>>) {
         super.registerRuleListeners(ruleListeners)
         delegate.registerRuleListeners(ruleListeners)
     }
@@ -88,7 +88,7 @@ class InferenceRulesEngine constructor(parameters: RulesEngineParameters = Rules
      * Register a rules engine listener.
      * @param rulesEngineListener to register
      */
-    override fun registerRulesEngineListener(rulesEngineListener: RulesEngineListener) {
+    override fun registerRulesEngineListener(rulesEngineListener: RulesEngineListener<FactType>) {
         super.registerRulesEngineListener(rulesEngineListener)
         delegate.registerRulesEngineListener(rulesEngineListener)
     }
@@ -97,7 +97,7 @@ class InferenceRulesEngine constructor(parameters: RulesEngineParameters = Rules
      * Register a list of rules engine listener.
      * @param rulesEngineListeners to register
      */
-    override fun registerRulesEngineListeners(rulesEngineListeners: List<RulesEngineListener>) {
+    override fun registerRulesEngineListeners(rulesEngineListeners: List<RulesEngineListener<FactType>>) {
         super.registerRulesEngineListeners(rulesEngineListeners)
         delegate.registerRulesEngineListeners(rulesEngineListeners)
     }

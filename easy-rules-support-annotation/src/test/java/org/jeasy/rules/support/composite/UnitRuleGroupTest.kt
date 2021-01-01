@@ -45,7 +45,7 @@ class UnitRuleGroupTest {
 
     @MockK
     private lateinit var rule2: Rule
-    private val facts: Facts = Facts()
+    private val facts: FactType = Facts()
     private val rules: Rules = Rules()
     private val rulesEngine: DefaultRulesEngine = DefaultRulesEngine()
     private lateinit var unitRuleGroup: UnitRuleGroup

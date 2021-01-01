@@ -36,8 +36,8 @@ import org.jeasy.rules.support.composite.UnitRuleGroup
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-abstract class AbstractRuleFactory {
-    protected fun createRule(ruleDefinition: RuleDefinition): Rule {
+abstract class AbstractRuleFactory<FactType> {
+    protected fun createRule(ruleDefinition: RuleDefinition): Rule<FactType> {
         return if (ruleDefinition.isCompositeRule()) {
             createCompositeRule(ruleDefinition)
         } else {
@@ -45,8 +45,8 @@ abstract class AbstractRuleFactory {
         }
     }
 
-    protected abstract fun createSimpleRule(ruleDefinition: RuleDefinition): Rule
-    protected fun createCompositeRule(ruleDefinition: RuleDefinition): Rule {
+    protected abstract fun createSimpleRule(ruleDefinition: RuleDefinition): Rule<FactType>
+    protected fun createCompositeRule(ruleDefinition: RuleDefinition): Rule<FactType> {
         if (ruleDefinition.condition != null) {
             LOGGER.warn {
                 "Condition '${ruleDefinition.condition}' in composite rule '${ruleDefinition.name}' of type ${ruleDefinition.compositeRuleType} will be ignored."
@@ -59,12 +59,12 @@ abstract class AbstractRuleFactory {
 
             }
         }
-        val compositeRule: CompositeRule
+        val compositeRule: CompositeRule<FactType>
         val name = ruleDefinition.name
         compositeRule = when (ruleDefinition.compositeRuleType) {
-            "UnitRuleGroup" -> UnitRuleGroup(name)
-            "ActivationRuleGroup" -> ActivationRuleGroup(name)
-            "ConditionalRuleGroup" -> ConditionalRuleGroup(name)
+            "UnitRuleGroup" -> UnitRuleGroup<FactType>(name)
+            "ActivationRuleGroup" -> ActivationRuleGroup<FactType>(name)
+            "ConditionalRuleGroup" -> ConditionalRuleGroup<FactType>(name)
             else -> throw IllegalArgumentException("Invalid composite rule type, must be one of " + ALLOWED_COMPOSITE_RULE_TYPES)
         }
         compositeRule.description = (ruleDefinition.description)

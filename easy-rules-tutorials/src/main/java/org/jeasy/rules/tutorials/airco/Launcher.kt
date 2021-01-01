@@ -36,16 +36,16 @@ object Launcher {
         facts.put("temperature", 30)
 
         // define rules
-        val airConditioningRule = RuleBuilder()
+        val airConditioningRule = RuleBuilder<Facts>()
             .name("air conditioning rule")
-            .`when`(HighTemperatureCondition.Companion.itIsHot())
-            .then(DecreaseTemperatureAction.Companion.decreaseTemperature())
+            .`when`(HighTemperatureCondition.itIsHot())
+            .then(DecreaseTemperatureAction.decreaseTemperature())
             .build()
-        val rules = Rules()
+        val rules = Rules<Facts>()
         rules.register(airConditioningRule)
 
         // fire rules on known facts
-        val rulesEngine: RulesEngine = InferenceRulesEngine()
+        val rulesEngine: RulesEngine<Facts> = InferenceRulesEngine()
         rulesEngine.fire(rules, facts)
     }
 }

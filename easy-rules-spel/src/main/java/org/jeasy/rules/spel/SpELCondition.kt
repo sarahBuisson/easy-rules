@@ -88,7 +88,7 @@ class SpELCondition : Condition {
         compiledExpression = parser.parseExpression(expression, parserContext)
     }
 
-    override fun evaluate(facts: Facts): Boolean {
+    override fun evaluate(facts: FactType): Boolean {
         val context = StandardEvaluationContext()
         context.setRootObject(facts!!.asMap())
         context.setVariables(facts.asMap())

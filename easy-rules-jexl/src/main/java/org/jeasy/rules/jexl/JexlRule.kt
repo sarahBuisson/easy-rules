@@ -68,13 +68,13 @@ class JexlRule @JvmOverloads constructor(jexl: JexlEngine? = DEFAULT_JEXL) :
         return this
     }
 
-    override fun evaluate(facts: Facts): Boolean {
+    override fun evaluate(facts: FactType): Boolean {
         Objects.requireNonNull(facts, "facts cannot be null")
         return condition.evaluate(facts)
     }
 
     @Throws(Exception::class)
-    override fun execute(facts: Facts) {
+    override fun execute(facts: FactType) {
         Objects.requireNonNull(facts, "facts cannot be null")
         for (action in actions) {
             action.execute(facts)

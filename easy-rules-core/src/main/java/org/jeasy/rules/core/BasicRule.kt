@@ -34,7 +34,7 @@ import org.jeasy.rules.api.Rule
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-open class BasicRule
+open class BasicRule<FactType>
 /**
  * Create a new [BasicRule].
  *
@@ -53,11 +53,11 @@ open class BasicRule
      * Rule priority.
      */
     override var priority: Int = Rule.DEFAULT_PRIORITY
-) : Rule {
+) : Rule<FactType> {
     /**
      * {@inheritDoc}
      */
-    override fun evaluate(facts: Facts): Boolean {
+    override fun evaluate(facts: FactType): Boolean {
         return false
     }
 
@@ -65,7 +65,7 @@ open class BasicRule
      * {@inheritDoc}
      */
     @Throws(Exception::class)
-    override fun execute(facts: Facts) {
+    override fun execute(facts: FactType) {
         // no op
     }
 
@@ -75,7 +75,7 @@ open class BasicRule
     override fun equals(o: Any?): Boolean {
         if (this === o) return true
         if (o == null) return false
-        val basicRule = o as BasicRule
+        val basicRule = o as BasicRule<FactType>
         if (priority != basicRule.priority) return false
         return if (name != basicRule.name) false else description == basicRule.description
     }
@@ -91,7 +91,7 @@ open class BasicRule
         return name
     }
 
-    override fun compareTo(rule: Rule): Int {
+    override fun compareTo(rule: Rule<FactType>): Int {
         return if (priority < rule.priority) {
             -1
         } else if (priority > rule.priority) {
