@@ -30,7 +30,7 @@ jobs:
           DISTRO_NODEJS: 191 # nodejs packages
           PACKAGECLOUD_REPO: 'sarahBuisson/snapshot'
         run: |
-          ARTIFACTS=("easy-rules-api" "easy-rules-core")
+          ARTIFACTS=("easy-rules-core")
           ARTIFACT_TYPE=("jvm" "js" "npm" "js-klib" "common" "kotlin")
            for ARTIFACT in "${ARTIFACTS[@]}"
            do
