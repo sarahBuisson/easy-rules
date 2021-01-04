@@ -13,7 +13,7 @@ kotlin {
             useJUnit()
         }
     }
-    js(IR) {
+    js(LEGACY) {
         browser {
             binaries.executable()
             testTask {
