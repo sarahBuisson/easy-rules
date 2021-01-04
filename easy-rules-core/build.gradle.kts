@@ -13,21 +13,7 @@ kotlin {
             useJUnit()
         }
     }
-    js("js", LEGACY) {
-        browser {
-            binaries.executable()
-            testTask {
-                useKarma {
-                    useChromeHeadless()
-                    webpackConfig.cssSupport.enabled = true
-                }
-            }
-
-
-        }
-    }
-    js("jsir", IR) {
-
+    js {
         browser {
             binaries.executable()
             testTask {
