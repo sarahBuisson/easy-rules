@@ -65,7 +65,7 @@ jobs:
                           'js')
                               DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
                               FILE_NAME="$ARTIFACT-js-${{env.BUILD_VERSION}}.jar"
-                              COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-jslegacy:${{env.BUILD_VERSION}}"
+                              COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-js:${{env.BUILD_VERSION}}"
                           ;;
                           'js-klib')
                               DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
