@@ -31,7 +31,7 @@ jobs:
           PACKAGECLOUD_REPO: 'sarahBuisson/snapshot'
         run: |
           ARTIFACTS=("easy-rules-core")
-          ARTIFACT_TYPE=("jvm" "js" "npm" "js-klib" "common" "kotlin")
+          ARTIFACT_TYPE=("jvm" "js" "npm" "js-klib" "common" "kotlin" "metadata")
            for ARTIFACT in "${ARTIFACTS[@]}"
            do
                for ART_TYPE in "${ARTIFACT_TYPE[@]}"
@@ -64,7 +64,7 @@ jobs:
                           ;;
                           'js')
                               DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
-                              FILE_NAME="$ARTIFACT-jslegacy-${{env.BUILD_VERSION}}.jar"
+                              FILE_NAME="$ARTIFACT-js-${{env.BUILD_VERSION}}.jar"
                               COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-jslegacy:${{env.BUILD_VERSION}}"
                           ;;
                           'js-klib')
@@ -80,6 +80,7 @@ jobs:
                         esac
                         echo $DISTRIBUTION_PACKAGECLOUD
                         FILE_PATH="$ARTIFACT/build/libs/$FILE_NAME"
+                        echo $FILE_PATH
                         if test -f "$FILE_PATH"; then
                           echo "$FILE_NAME $DISTRIBUTION_PACKAGECLOUD"
 
