@@ -31,7 +31,7 @@ jobs:
           PACKAGECLOUD_REPO: 'sarahBuisson/snapshot'
         run: |
           ARTIFACTS=("easy-rules-core")
-          ARTIFACT_TYPE=("jvm" "js" "npm" "js-klib" "common" "kotlin" "metadata")
+          ARTIFACT_TYPE=("jvm" "js" "common" "kotlin" "metadata")
            for ARTIFACT in "${ARTIFACTS[@]}"
            do
                for ART_TYPE in "${ARTIFACT_TYPE[@]}"
@@ -55,7 +55,7 @@ jobs:
                           'metadata')
                             DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
                             FILE_NAME="$ARTIFACT-metadata-${{env.BUILD_VERSION}}.jar"
-                            COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}-metadata:${{env.BUILD_VERSION}}"
+                            COORDINATES="${{env.BUILD_GROUP_ID}}:${ARTIFACT}:${{env.BUILD_VERSION}}"
                           ;;
                           'npm')
                               DISTRIBUTION_PACKAGECLOUD="$DISTRO_MAVEN"
